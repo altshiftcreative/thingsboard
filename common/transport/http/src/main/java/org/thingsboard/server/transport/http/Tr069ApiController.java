@@ -49,13 +49,28 @@ public class Tr069ApiController {
                     .url("http://localhost:3000/api/devices")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
-            System.out.println(request.headers());
             Response  response = client.newCall(request).execute();
             acsResponse = response.body().string();
         }catch (Exception e){
         }
         return acsResponse;
     }
+
+    private void deleteTR69DeviceById(String deviceId){
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/devices/"+deviceId)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .delete()
+                    .build();
+            client.newCall(request).execute();
+        }catch (Exception e){
+        }
+    }
+
     private String editTasks(String taskRequest, String deviceID){
         String taskResponse = "";
         try{
@@ -71,11 +86,51 @@ public class Tr069ApiController {
                     .build();
             Response  response = client.newCall(request).execute();
             taskResponse = response.body().string();
-            System.out.println(taskResponse);
         }catch (Exception e){
         }
         return taskResponse;
     }
+
+    private String editAction(String actionRequest, String deviceID){
+        String actionResponse = "";
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,actionRequest);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/devices/"+deviceID)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .post(formBody)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            actionResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return actionResponse;
+    }
+
+    private String addTag(String tagRequest, String deviceID){
+        String tagResponse = "";
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,tagRequest);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/devices/" + deviceID + "/tags")
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .post(formBody)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            tagResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return tagResponse;
+    }
+    ////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/tr69/devices", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getTr069Devices() {
         System.out.println("Received async-deferredresult request");
@@ -89,6 +144,21 @@ public class Tr069ApiController {
         });
         return output;
     }
+
+    @RequestMapping(value = "/tr69/devices", method = RequestMethod.DELETE,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> deleteTr069Devices(@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
+        System.out.println("Received async-deferredresult request");
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            System.out.println("Processing in separate thread");
+            deleteTR69DeviceById(deviceID);
+            output.setResult(new ResponseEntity<String>(
+
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
     @RequestMapping(value = "/tr69/tasks", method = RequestMethod.POST,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> editDeviceValues(@RequestBody String deviceTask,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
         System.out.println("Received async-deferredresult request");
@@ -102,19 +172,31 @@ public class Tr069ApiController {
         });
         return output;
     }
+
+    @RequestMapping(value = "/tr69/actions", method = RequestMethod.POST,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> actionDevice(@RequestBody String deviceAction,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = editAction(deviceAction,deviceID);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/tr69/tag", method = RequestMethod.POST,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> tagDevice(@RequestBody String deviceTag,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = addTag(deviceTag,deviceID);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
