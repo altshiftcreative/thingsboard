@@ -19,10 +19,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import {AcsComponent} from './acs.component'
 import { TenantsTableConfigResolver } from '@modules/home/pages/tenant/tenants-table-config.resolver';
-import { AcsOverview } from './overview/overview.component';
-import { ChartsModule } from 'ng2-charts';
+
 
 const routes: Routes = [
+
   {
     path: 'acs',
     component: AcsComponent,
@@ -31,21 +31,8 @@ const routes: Routes = [
         label: 'acs.acs',
         icon: 'supervisor_account'
       }
-    },
-    
-  },
-  {
-    path: 'acs-overview',
-    component: AcsOverview,
-    data: {
-      breadcrumb: {
-        label: 'acs.acs',
-        icon: 'supervisor_account'
-      }
-    },
-    
-  },
-  
+    }
+  }
 ];
 
 @NgModule({

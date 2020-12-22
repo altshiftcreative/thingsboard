@@ -2,8 +2,7 @@ import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter } fro
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { AcsService } from './acs-service';
-import { AcsComponent } from './acs.component';
+import { AcsService } from '../acs-service';
 
 @Component({
     selector: 'dialog-data-example-dialog',
