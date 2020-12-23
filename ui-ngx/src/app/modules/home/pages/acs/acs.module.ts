@@ -18,22 +18,31 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@shared/shared.module';
 import { AcsComponent } from '@modules/home/pages/acs/acs.component';
-import { DialogDataDialog } from '@modules/home/pages/acs/Dialog.component';
+import { DialogDataDialog } from '@modules/home/pages/acs/devices/Dialog.component';
 
 import { AcsRoutingModule } from '@modules/home/pages/acs/acs-routing.module';
 import { HomeComponentsModule } from '@modules/home/components/home-components.module';
+import { ChartsModule } from 'ng2-charts';
+import { AcsOverview } from './overview/overview.component';
+import { AcsDeciveComponent } from './devices/device.component';
+
 
 @NgModule({
   declarations: [
    AcsComponent,
-   DialogDataDialog
-   
+   DialogDataDialog,
+   AcsDeciveComponent,
+   AcsOverview
+
   ],
   imports: [
+    ChartsModule,
     CommonModule,
     SharedModule,
     HomeComponentsModule,
-    AcsRoutingModule
+    AcsRoutingModule,
+    
   ]
+  
 })
 export class ACSModule { }

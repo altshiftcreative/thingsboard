@@ -20,7 +20,9 @@ import { RouterModule, Routes } from '@angular/router';
 import {AcsComponent} from './acs.component'
 import { TenantsTableConfigResolver } from '@modules/home/pages/tenant/tenants-table-config.resolver';
 
+
 const routes: Routes = [
+
   {
     path: 'acs',
     component: AcsComponent,
@@ -29,8 +31,7 @@ const routes: Routes = [
         label: 'acs.acs',
         icon: 'supervisor_account'
       }
-    },
-    
+    }
   }
 ];
 
