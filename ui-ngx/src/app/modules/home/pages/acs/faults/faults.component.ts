@@ -5,7 +5,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ThemePalette } from '@angular/material/core';
 import _, { kebabCase } from 'lodash';
-import { DialogDataDialog } from './Dialog.component';
 import { AcsService } from '../acs-service';
 export interface Task {
     name: string;
@@ -13,21 +12,17 @@ export interface Task {
     color: ThemePalette;
     subtasks?: Task[];
 }
-export interface DialogData {
-    animal: 'panda' | 'unicorn' | 'lion';
-}
-
 
 
 @Component({
-    selector: 'acs-device',
-    templateUrl: './device.component.html'
+    selector: 'acs-faults',
+    templateUrl: './faults.component.html'
 })
 
 
 
 
-export class AcsDeciveComponent implements OnInit, AfterViewInit {
+export class AcsFaultsComponent implements OnInit, AfterViewInit {
     isTag: Boolean = false;
     tagValue: string;
     // test: string = 'Tags.qq';
@@ -35,10 +30,9 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
-    displayedColumns: string[] = ['Device Name', 'SSID', 'Last Inform', 'IP', 'Tag', 'Action'];
+    displayedColumns: string[] = ['Device Name','SSID', 'Last Inform', 'IP', 'Tag', 'Action','Timestamp'];
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
-
         // this.http.post('http://127.0.0.1:3000/login', {
         //     "username": "admin",
         //     "password": "admin"
@@ -58,23 +52,12 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         // })
 
 
-      
+       
     }
 
     ngAfterViewInit() {
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
-            this.dataSource = new MatTableDataSource(deviceData)
-            this.dataSource.paginator = this.paginator;
-            
-
-    //     })
-    // })
-
-    this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').subscribe((deviceData) => {
-                this.dataSource = new MatTableDataSource(deviceData)
-                this.dataSource.paginator = this.paginator;
-
-            })
+        this.http.get<any[]>('http://localhost:3000/api/faults/?filter=true').subscribe((deviceData) => {
+            console.log(deviceData);
         })
     }
 
@@ -82,23 +65,6 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         console.log(row)
     }
 
-    openDialog(row) {
-        console.log("rowwwwwww", row)
-        this.isLoading = true;
-        let myObject: [];
-        let DeviceObject = Object.values(row)
-        let DeviceKeys = Object.keys(row)
-        const deviceArray = DeviceKeys.map((item, index) => ({ parameter: DeviceKeys[index], deviceData: DeviceObject[index] }))
-
-        const dialogRef = this.dialog.open(DialogDataDialog, {
-            data: deviceArray,
-
-
-        });
-        dialogRef.afterOpened().subscribe(() => {
-            this.isLoading = false
-        })
-    }
 
     updateValue(deviceID, SSIDvalue, parameterName) {
         let newValue = prompt(parameterName, SSIDvalue);
@@ -164,30 +130,5 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // ll(e){
-        // e['new'] = 'poo';
-        // console.log("ll",e);
-        // e['Tags'].forEach((t) => {
-        //     console.log('Tag:', t);
-            
-        // });
-        // console.log('normaal',e);
-        
-            
-            // function(k){ return ~k.indexOf("Tags.") }));
-        
-        // if(Object.keys(e).some(function(k){ return ~k.indexOf("Tags.") })){
-        //     // it has addr property
-        //     console.log('eeeeee',e);
-            
-        //  }
-        
-    // }
-
-
-
     
 }
-
-
-

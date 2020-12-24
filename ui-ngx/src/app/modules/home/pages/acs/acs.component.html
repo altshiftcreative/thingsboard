@@ -1,23 +1,17 @@
-<div>
-  <!-- <mat-tab-group>
-    <mat-tab label="First"> Content 1 </mat-tab>
-    <mat-tab label="Second"> Content 2 </mat-tab>
-    <mat-tab label="Third"> Content 3 </mat-tab>
-  </mat-tab-group> -->
+<div >
+  <mat-tab-group selectedIndex="0" (selectedTabChange)="changeTab($event)" class="myDiv3">
 
-  <mat-tab-group selectedIndex="0" (selectedTabChange)="changeTab($event)">
-    <mat-tab label="Overview">
-      <asc-overview></asc-overview>
+    <mat-tab label="Overview"  >
+      <asc-overview ></asc-overview>      
     </mat-tab>
     <mat-tab label="Device">
       <acs-device *ngIf="tabIndex === 1"></acs-device>
     </mat-tab>
     <mat-tab label="Faults">
-      <asc-overview></asc-overview>
+      <acs-faults></acs-faults>
     </mat-tab>
     <mat-tab label="Admin">
-      <acs-device></acs-device>
+      <asc-overview ></asc-overview>
     </mat-tab>
   </mat-tab-group>
-
 </div>

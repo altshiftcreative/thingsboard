@@ -4,7 +4,10 @@ import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, Elem
     templateUrl: './acs.component.html',
     styleUrls: ['./acs.component.scss']
 })
-export class AcsComponent {
+export class AcsComponent implements OnInit{
+    ngOnInit(): void {
+
+}
 
     tabIndex = 0;
     changeTab(event) {

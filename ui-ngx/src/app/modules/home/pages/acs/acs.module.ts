@@ -25,6 +25,7 @@ import { HomeComponentsModule } from '@modules/home/components/home-components.m
 import { ChartsModule } from 'ng2-charts';
 import { AcsOverview } from './overview/overview.component';
 import { AcsDeciveComponent } from './devices/device.component';
+import { AcsFaultsComponent } from './faults/faults.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { AcsDeciveComponent } from './devices/device.component';
    AcsComponent,
    DialogDataDialog,
    AcsDeciveComponent,
-   AcsOverview
+   AcsOverview,
+   AcsFaultsComponent
 
   ],
   imports: [
