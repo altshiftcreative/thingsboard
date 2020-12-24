@@ -3,20 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ThemePalette } from '@angular/material/core';
-import _, { kebabCase } from 'lodash';
 import { DialogDataDialog } from './Dialog.component';
 import { AcsService } from '../acs-service';
+import { ThemePalette } from '@angular/material/core';
+import _, { kebabCase } from 'lodash';
 export interface Task {
     name: string;
     completed: boolean;
     color: ThemePalette;
     subtasks?: Task[];
-// import { ChartSize, ChartType } from 'chart.js';
-// import { MultiDataSet, Label ,Color} from 'ng2-charts';
-}
-export interface DialogData {
-    animal: 'panda' | 'unicorn' | 'lion';
 }
 
 
@@ -32,47 +27,32 @@ export interface DialogData {
 export class AcsDeciveComponent implements OnInit, AfterViewInit {
     isTag: Boolean = false;
     tagValue: string;
-    // test: string = 'Tags.qq';
     isLoading: Boolean = false;
+    isOnline: Boolean = false;
+    isPast: Boolean = false;
+    isOther: Boolean = false;
+    csvDataArray: string[][] = [['Device Name', 'SSID', 'Last Inform', 'IP', 'Online', 'Tag']]
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
-    displayedColumns: string[] = ['Device Name', 'SSID', 'Last Inform', 'IP', 'Tag', 'Action'];
+    displayedColumns: string[] = ['Device Name', 'SSID', 'Last Inform', 'IP', 'Online', 'Tag', 'Action'];
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
-        // this.http.post('http://127.0.0.1:3000/login', {
-        //     "username": "admin",
-        //     "password": "admin"
-        // }, { withCredentials: true }).subscribe(data => {
-        //     this.http.get<any[]>('http://localhost:3000/api/devices', { withCredentials: true }).subscribe((deviceData) => {
-        //         this.dataSource = new MatTableDataSource(deviceData)
-        //         this.dataSource.paginator = this.paginator;
-        // this.http.post('http://127.0.0.1:3000/login', {
-        //     "username": "admin",
-        //     "password": "admin"
-        // }, { withCredentials: true }).subscribe(data => {
-        //     this.http.get<any[]>('http://localhost:3000/api/devices', { withCredentials: true }).subscribe((deviceData) => {
-        //         this.dataSource = new MatTableDataSource(deviceData)
-        //         this.dataSource.paginator = this.paginator;
-
-        //     })
-        // })
-
-
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
-                this.dataSource = new MatTableDataSource(deviceData)
-                this.dataSource.paginator = this.paginator;
-                
-
-        //     })
-        // })
 
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').subscribe((deviceData) => {
-                    this.dataSource = new MatTableDataSource(deviceData)
-                    this.dataSource.paginator = this.paginator;
-    
-                })
-            })
+            this.dataSource = new MatTableDataSource(deviceData)
+            this.dataSource.paginator = this.paginator;
+            this.onlineStatus();
+        })
+        
+        
+
+
+
+    }
+    onlineStatus() {
+        this.acsService.onlineStatus(this.dataSource);
+
     }
 
     ngAfterViewInit() {
@@ -83,7 +63,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     }
 
     openDialog(row) {
-        console.log("rowwwwwww", row)
+
         this.isLoading = true;
         let myObject: [];
         let DeviceObject = Object.values(row)
@@ -98,6 +78,8 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         dialogRef.afterOpened().subscribe(() => {
             this.isLoading = false
         })
+
+
     }
 
     updateValue(deviceID, SSIDvalue, parameterName) {
@@ -122,7 +104,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         }
     }
 
-    operations(type,e) {
+    operations(type, e) {
         if (this.checkedItems.length == 0) { alert("choose a device"); }
         else {
             switch (type) {
@@ -164,30 +146,54 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // ll(e){
-        // e['new'] = 'poo';
-        // console.log("ll",e);
-        // e['Tags'].forEach((t) => {
-        //     console.log('Tag:', t);
-            
-        // });
-        // console.log('normaal',e);
-        
-            
-            // function(k){ return ~k.indexOf("Tags.") }));
-        
-        // if(Object.keys(e).some(function(k){ return ~k.indexOf("Tags.") })){
-        //     // it has addr property
-        //     console.log('eeeeee',e);
-            
-        //  }
-        
-    // }
+    dateConvertor(timestamp) {
+        let date = new Date(timestamp);
+        return date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    }
 
+    downloadCSV() {
+        this.dataSource['filteredData'].forEach((item) => {
+            let newArray = [];
+            newArray.push(item['DeviceID.ID']['value'][0]);
+            newArray.push(item['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0]);
+            newArray.push(this.dateConvertor(item['Events.Inform']['value'][0]));
+            newArray.push(item['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0]);
+            this.csvDataArray.push(newArray);
+        })
 
+        let d = new Date().toISOString();
+        let csvContent = "data:text/csv;charset=utf-8," + this.csvDataArray.map(e => e.join(",")).join("\n");
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "devices-" + d + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        this.csvDataArray = [['Device Name', 'SSID', 'Last Inform', 'IP', 'Tag']];
 
-    
+    }
+
+     liveSearch(event){
+        // this.dataSource.data = ELEMENT_DATA;
+        // console.log("online: ", this.acsService.online_devices,'  past: ',this.acsService.past_devices,' others: ',this.acsService.others_devices)
+        //  this.acsService.searchBySerialNumber(event.target.value);
+        // console.log('result',result);
+        // console.log(ELEMENT_DATA.length);
+        
+        this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber='+event.target.value).subscribe((result: any[]) => {
+            this.dataSource.data = result;
+            this.onlineStatus();
+            
+            })
+            
+            
+        
+        
+
+    }
+
 }
+
 
 const ELEMENT_DATA = [
     {

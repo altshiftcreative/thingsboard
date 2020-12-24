@@ -6,7 +6,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class AcsService {
-
+    public online_devices = 0;
+    public past_devices =0;
+    public others_devices=0;
+    public online_counter=1;
     private httpOptions = {
         headers: new HttpHeaders({
             'Content-Type': 'application/json',
@@ -142,6 +145,39 @@ export class AcsService {
                 console.log("untag");
 
             })
+    }
+
+    // public searchBySerialNumber(searchValue): any {
+    //     setTimeout(()=>{})
+    //       this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber='+searchValue).subscribe((result) => {
+    //             return result;
+                 
+
+    //         })
+    // }
+
+    public onlineStatus(dataSource) {
+        dataSource['filteredData'].forEach((item) => {
+            if (item['Events.Inform']['value'][0] > Date.now() - 5 * 60 * 1000) {
+                item['onlineStatus'] = 'Online';
+                if(this.online_counter ==1)
+                this.online_devices++;
+                
+            }
+            else if (item['Events.Inform']['value'][0] > (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000) && item['Events.Inform']['value'][0] < (Date.now() -5 * 60 * 1000)) {
+                item['onlineStatus'] = 'Past 24 hours';
+                if(this.online_counter ==1)
+                this.past_devices++;
+            }
+            else if (item['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000)){
+                item['onlineStatus'] = 'Others';
+                if(this.online_counter ==1)
+                this.others_devices++;
+            }
+        })
+        this.online_counter++;
+        // console.log('online: ',this.online_devices,' past: ',this.past_devices);
+
     }
 
 

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import okhttp3.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.async.DeferredResult;
 import sun.rmi.runtime.Log;
+
+import java.net.URLEncoder;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 @RestController
@@ -130,6 +133,26 @@ public class Tr069ApiController {
         }
         return tagResponse;
     }
+//    http://localhost:3000/api/devices/?filter=LOWER(DeviceID.SerialNumber)%20LIKE%20%22000001%22
+    private String search(String serialNumber){
+        String acsResponse = null;
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            URIBuilder ub = new URIBuilder("http://localhost:3000/api/devices/");
+            ub.addParameter("filter", "LOWER(DeviceID.SerialNumber) LIKE \"%" + serialNumber + "%\"");
+            String url = ub.toString();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
     ////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/tr69/devices", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getTr069Devices() {
@@ -190,6 +213,17 @@ public class Tr069ApiController {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = addTag(deviceTag,deviceID);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+    @RequestMapping(value = "/tr69/search", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> searchDevice(@RequestParam(value = "serialNumber", required = true, defaultValue = "") String serialNumber) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = search(serialNumber);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));
