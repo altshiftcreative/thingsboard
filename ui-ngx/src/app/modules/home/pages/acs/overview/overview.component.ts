@@ -11,7 +11,7 @@ import { MultiDataSet, Label ,Color,PluginServiceGlobalRegistrationAndOptions} f
 
 export class AcsOverview implements OnInit{
   ngOnInit(): void {
-    alert('hasan overview')
+    // alert('hasan overview')
   }
   hasan(){
     alert(this.doughnutChartLabels)

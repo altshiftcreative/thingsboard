@@ -58,6 +58,22 @@ public class Tr069ApiController {
         }
         return acsResponse;
     }
+    private String getTR69Faults(){
+        String acsResponse = null;
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/faults")
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
 
     private void deleteTR69DeviceById(String deviceId){
         try{
@@ -66,6 +82,26 @@ public class Tr069ApiController {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url("http://localhost:3000/api/devices/"+deviceId)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .delete()
+                    .build();
+            client.newCall(request).execute();
+        }catch (Exception e){
+        }
+    }
+
+    private void deleteTR69FaultsById(String faultsId){
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+
+            URIBuilder ub = new URIBuilder("http://localhost:3000/api/faults/" + faultsId);
+//            ub.addParameter("filter", "LOWER(DeviceID.SerialNumber) LIKE \"%" + faultsId + "%\"");
+            String url = ub.toString();
+
+            Request request = new Request.Builder()
+                    .url(url)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .delete()
                     .build();
@@ -134,6 +170,7 @@ public class Tr069ApiController {
         return tagResponse;
     }
 //    http://localhost:3000/api/devices/?filter=LOWER(DeviceID.SerialNumber)%20LIKE%20%22000001%22
+    //http://localhost:3000/api/faults/?filter=LOWER(device)%20LIKE%20%22202bc1-bm632w-000001%22
     private String search(String serialNumber){
         String acsResponse = null;
         try{
@@ -153,7 +190,27 @@ public class Tr069ApiController {
         }
         return acsResponse;
     }
+    private String searchfaults(String device){
+        String acsResponse = null;
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            URIBuilder ub = new URIBuilder("http://localhost:3000/api/faults/");
+            ub.addParameter("filter", "LOWER(device) LIKE \"%" + device + "%\"");
+            String url = ub.toString();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
     ////////////////////////////////////////////////////////////////////
+    //getTR69Faults
     @RequestMapping(value = "/tr69/devices", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getTr069Devices() {
         System.out.println("Received async-deferredresult request");
@@ -168,13 +225,41 @@ public class Tr069ApiController {
         return output;
     }
 
+    @RequestMapping(value = "/tr69/faults", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> getTr069Faults() {
+        System.out.println("Received async-deferredresult request");
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            System.out.println("Processing in separate thread");
+            String res =  getTR69Faults();
+            output.setResult(new ResponseEntity<String>(
+                    res,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/tr69/faults", method = RequestMethod.DELETE,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> deleteTr069Faults(@RequestParam(value = "faultsId", required = true, defaultValue = "") String faultsId) {
+        System.out.println("Received async-deferredresult request");
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            System.out.println("Processing in separate thread");
+            System.out.println("faults id: "+ faultsId);
+            deleteTR69FaultsById(faultsId);
+            output.setResult(new ResponseEntity<String>(
+
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
     @RequestMapping(value = "/tr69/devices", method = RequestMethod.DELETE,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> deleteTr069Devices(@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
         System.out.println("Received async-deferredresult request");
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             System.out.println("Processing in separate thread");
-            deleteTR69DeviceById(deviceID);
             output.setResult(new ResponseEntity<String>(
 
                     HttpStatus.OK));
@@ -230,6 +315,20 @@ public class Tr069ApiController {
         });
         return output;
     }
+    @RequestMapping(value = "/tr69/searchfaults", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> searchDeviceFaults(@RequestParam(value = "device", required = true, defaultValue = "") String device) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = searchfaults(device);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+
+
 
 
 

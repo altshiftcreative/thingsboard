@@ -1,8 +1,10 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef , ViewEncapsulation} from '@angular/core';
 @Component({
     selector: 'tb-acs',
     templateUrl: './acs.component.html',
-    styleUrls: ['./acs.component.scss']
+    styleUrls: ['./acs.component.scss'],
+    encapsulation: ViewEncapsulation.None
+
 })
 export class AcsComponent implements OnInit{
     ngOnInit(): void {

@@ -39,38 +39,17 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
 
-        // this.http.post('http://127.0.0.1:3000/login', {
-        //     "username": "admin",
-        //     "password": "admin"
-        // }, { withCredentials: true }).subscribe(data => {
-        //     this.http.get<any[]>('http://localhost:3000/api/devices', { withCredentials: true }).subscribe((deviceData) => {
-        //         this.dataSource = new MatTableDataSource(deviceData)
-        //         this.dataSource.paginator = this.paginator;
-        // this.http.post('http://127.0.0.1:3000/login', {
-        //     "username": "admin",
-        //     "password": "admin"
-        // }, { withCredentials: true }).subscribe(data => {
-        //     this.http.get<any[]>('http://localhost:3000/api/devices', { withCredentials: true }).subscribe((deviceData) => {
-        //         this.dataSource = new MatTableDataSource(deviceData)
-        //         this.dataSource.paginator = this.paginator;
-
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').subscribe((deviceData) => {
-            this.dataSource = new MatTableDataSource(deviceData)
-            this.dataSource.paginator = this.paginator;
-            this.onlineStatus();
-        })
-        
-        
-
-
-      
     }
+    // onlineStatus() {
+    //     this.acsService.onlineStatus(this.dataSource);
+    // }
 
     ngAfterViewInit() {
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
             this.dataSource = new MatTableDataSource(deviceData)
             this.dataSource.paginator = this.paginator;
-            
+            console.log("hasan is here");
+
 
     //     })
     // })
@@ -78,9 +57,11 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').subscribe((deviceData) => {
                 this.dataSource = new MatTableDataSource(deviceData)
                 this.dataSource.paginator = this.paginator;
-
+                // this.onlineStatus();
+                console.log("hasan is here");
             })
         })
+
     }
 
     getRecord(row) {
@@ -207,7 +188,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         
         this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber='+event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
-            this.onlineStatus();
+            // this.onlineStatus();
             
             })
             
