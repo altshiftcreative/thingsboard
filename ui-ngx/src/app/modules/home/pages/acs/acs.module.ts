@@ -26,6 +26,12 @@ import { ChartsModule } from 'ng2-charts';
 import { AcsOverview } from './overview/overview.component';
 import { AcsDeciveComponent } from './devices/device.component';
 import { AcsFaultsComponent } from './faults/faults.component';
+import { AcsAdminComponent } from './admin/admin.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AcsAdminConfigComponent } from './admin/Config/admin-config.component';
+import { AcsAdminPresetsComponent } from './admin/Presets/admin-presets.component';
+import { AcsAdminProvisionsComponent } from './admin/Provisions/admin-provisions.component';
+import { PresetsDialog } from './admin/Presets/presets-dialog.component';
 
 
 @NgModule({
@@ -34,7 +40,13 @@ import { AcsFaultsComponent } from './faults/faults.component';
    DialogDataDialog,
    AcsDeciveComponent,
    AcsOverview,
-   AcsFaultsComponent
+   AcsFaultsComponent,
+   AcsAdminComponent,
+   AcsAdminConfigComponent,
+   AcsAdminPresetsComponent,
+   AcsAdminProvisionsComponent,
+   PresetsDialog,
+   
 
   ],
   imports: [
@@ -43,6 +55,8 @@ import { AcsFaultsComponent } from './faults/faults.component';
     SharedModule,
     HomeComponentsModule,
     AcsRoutingModule,
+    MatButtonToggleModule,
+
     
   ]
   

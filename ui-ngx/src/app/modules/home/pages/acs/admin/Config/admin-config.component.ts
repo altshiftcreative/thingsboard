@@ -1,10 +1,11 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ThemePalette } from '@angular/material/core';
-import { AcsService } from '../acs-service';
+import _, { kebabCase } from 'lodash';
+import { AcsService } from '../../acs-service';
 export interface Task {
     name: string;
     completed: boolean;
@@ -14,27 +15,49 @@ export interface Task {
 
 
 @Component({
-    selector: 'acs-faults',
-    templateUrl: './faults.component.html'
+    selector: 'admin-config',
+    templateUrl: './admin-config.component.html',
+
+
 })
 
 
 
 
-export class AcsFaultsComponent implements  AfterViewInit {
-
+export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
+    isTag: Boolean = false;
+    tagValue: string;
+    // test: string = 'Tags.qq';
+    isLoading: Boolean = false;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
     displayedColumns: string[] = ['Device','Channel', 'Code', 'Message', 'Detail', 'Retries','Timestamp'];
     csvDataArray: string[][] = [['Device', 'Channel', 'Code', 'Message', 'Detail', 'Retries','Timestamp']]
-    dataSource: MatTableDataSource<any>;
 
+    dataSource: MatTableDataSource<any>;
+    ngOnInit(): void {
+
+       
+    }
 
     ngAfterViewInit() {
         this.deviceFaults()
     }
-// ========================Faults Methods============================ //
+
+    getRecord(row) {
+        console.log(row)
+    }
+
+
+    updateValue(deviceID, SSIDvalue, parameterName) {
+        let newValue = prompt(parameterName, SSIDvalue);
+        this.acsService.change(deviceID, parameterName, newValue);
+        console.log('comeonnn', parameterName);
+
+
+    };
+
 
     toggleVisibility(event) {
         console.log("eventtt", event.target.name);
@@ -61,10 +84,17 @@ export class AcsFaultsComponent implements  AfterViewInit {
 
 
     }
+    
+
     deleteFaults(){
         this.checkedItems.forEach((id) => {
+            console.log("hasan is here"+id)
             let ide = encodeURIComponent(id);
+            console.log("hasan is here "+ ide)
+
             this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId='+ide).subscribe((dta) => {
+                console.log("deleted!!!")
+    
             })
 
         });
@@ -100,10 +130,8 @@ export class AcsFaultsComponent implements  AfterViewInit {
     }
 
     faultsSearch(event){
-        event.toLowerCase;
         let str1: string=event.target.value;
         let deviceId=str1.split(':',1);
-        
         // 202BC1-BM632w-000004:task_5fe5aac3ae942d20943c50fa => target.value
        this.http.get('http://localhost:8080/api/v1/tr69/searchfaults/?device='+deviceId).subscribe((result: any[]) => {
             this.dataSource.data = result;
@@ -111,7 +139,8 @@ export class AcsFaultsComponent implements  AfterViewInit {
             })
             
     }
-
-    // ========================Faults Methods============================ //
+    changePage(){
+        
+    }
     
 }
