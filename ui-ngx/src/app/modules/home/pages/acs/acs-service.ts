@@ -7,24 +7,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class AcsService {
     public online_devices = 0;
-    public past_devices =0;
-    public others_devices=0;
-    public online_counter=1;
-    private httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }),
-        withCredentials: true
-    };
+    public past_devices = 0;
+    public others_devices = 0;
+    public online_counter = 1;
+    public deviceArrayData = [];
 
-
-
-    //   return this.http.get(this.heroesUrl, httpOptions)
-
-    constructor(private http: HttpClient) {
-        // this.login();
-    }
+    constructor(private http: HttpClient) { }
 
     public removeItem(array, item) {
         for (var i in array) {
@@ -35,21 +23,8 @@ export class AcsService {
         }
     }
 
-
-
-    // public login(): void {
-    //     this.http.post('http://127.0.0.1:3000/login', {
-    //         "username": "admin",
-    //         "password": "admin"
-    //     }, { withCredentials: true }).subscribe((tokenObj: string) => {
-    //         console.log('Token:', tokenObj);
-    //         this.httpOptions.headers = this.httpOptions.headers.set('Cookie', 'genieacs-ui-jwt=' + tokenObj);
-
-    //     })
-    // }
-
     public change(id, parameterName, newValue): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id  ,
+        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "device": id,
@@ -64,14 +39,11 @@ export class AcsService {
                     "status": "pending"
                 }
             ],
-            ).subscribe((dta) => {
-                console.log("obada hereee", dta)
-
-            })
+        ).subscribe((dta) => { })
     }
 
     public refresh(id, parameterName): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id  ,
+        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "getParameterValues",
@@ -82,104 +54,79 @@ export class AcsService {
                     "status": "pending"
                 }
             ],
-            ).subscribe((dta) => {
-                console.log("obada hereee", dta)
-
-            })
+        ).subscribe((dta) => { })
     }
 
 
     public deleteDevice(id): void {
-        this.http.delete('http://localhost:8080/api/v1/tr69/devices/?deviceID='+id).subscribe((dta) => {
-            console.log("deleted!!!")
-
-        })
+        this.http.delete('http://localhost:8080/api/v1/tr69/devices/?deviceID=' + id).subscribe((dta) => { })
     }
 
 
 
     public rebootDevice(id): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID='+id,
+        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID=' + id,
             [
                 {
                     "name": "reboot",
                     "device": id,
                     "status": "pending"
                 }
-            ],
-            this.httpOptions).subscribe((dta) => {
-                console.log("reboot");
-
-            })
+            ]).subscribe((dta) => { })
     }
 
     public resetDevice(id): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID='+id,
+        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID=' + id,
             [
                 {
                     "name": "factoryReset",
                     "device": id,
                     "status": "pending"
                 }
-            ],
-            this.httpOptions).subscribe((dta) => {
-                console.log("reset");
-
-            })
+            ]).subscribe((dta) => { })
     }
 
     public tagDevice(id, tagValue: Record<string, boolean>): void {
-
-        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID='+id,
-            tagValue,
-            this.httpOptions).subscribe((dta) => {
-                console.log("tag");
-
-            })
+        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
+            tagValue).subscribe((dta) => { })
     }
 
     public untagDevice(id, untagValue: Record<string, boolean>): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID='+id,
-            untagValue,
-            this.httpOptions).subscribe((dta) => {
-                console.log("untag");
-
-            })
+        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
+            untagValue).subscribe((dta) => { })
     }
-
-    // public searchBySerialNumber(searchValue): any {
-    //     setTimeout(()=>{})
-    //       this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber='+searchValue).subscribe((result) => {
-    //             return result;
-                 
-
-    //         })
-    // }
 
     public onlineStatus(dataSource) {
         dataSource['filteredData'].forEach((item) => {
             if (item['Events.Inform']['value'][0] > Date.now() - 5 * 60 * 1000) {
                 item['onlineStatus'] = 'Online';
-                if(this.online_counter ==1)
-                this.online_devices++;
-                
+                if (this.online_counter == 1)
+                    this.online_devices++;
             }
-            else if (item['Events.Inform']['value'][0] > (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000) && item['Events.Inform']['value'][0] < (Date.now() -5 * 60 * 1000)) {
+            else if (item['Events.Inform']['value'][0] > (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000) && item['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000)) {
                 item['onlineStatus'] = 'Past 24 hours';
-                if(this.online_counter ==1)
-                this.past_devices++;
+                if (this.online_counter == 1)
+                    this.past_devices++;
             }
-            else if (item['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000)){
+            else if (item['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000)) {
                 item['onlineStatus'] = 'Others';
-                if(this.online_counter ==1)
-                this.others_devices++;
+                if (this.online_counter == 1)
+                    this.others_devices++;
             }
         })
         this.online_counter++;
-        // console.log('online: ',this.online_devices,' past: ',this.past_devices);
-
     }
 
-
-
+    public addInstance(id, name): void {
+        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
+            [
+                {
+                    "name": "addObject",
+                    "device": "202BC1-BM632w-000001",
+                    "objectName": "InternetGatewayDevice.X_HUAWEI_FireWall",
+                    "status": "pending"
+                }
+            ],
+        ).subscribe((dta) => { })
+    }
 }

@@ -1,91 +1,55 @@
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
-<div class="mat-table-padding" style="margin: 10px;padding: 10px;">
-  <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
-    *ngIf="isLoading">
+
+<div class="mat-table-padding">
+  <mat-progress-bar class="mat-progress" color="warn" mode="indeterminate" *ngIf="isLoading">
   </mat-progress-bar>
-  <div
-    style="box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);">
-    <div mat-header style="margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;">
+  <div class="shadow-div">
+    <div class="header-of-table" mat-header>
 
-    <div style="float: left;
-    text-align-last: auto;
-    margin-left: 30px;
-    margin-top: 10px;
-    height: 40px;
-    padding: 8px 12px 8px 7px;
-    border-radius: 4px;
-    box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;">
-    <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-    <input type="text" placeholder="Search" (keyup)="liveSearch($event)" style="position: static;
-width: 225px;
-height: 24px;
-left: 35px;
-top: 8px;
+      <div class="search-div" *ngIf="devices">
+        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+        <input class="search-input" type="text" placeholder="Search" (keyup)="liveSearch($event)" />
+      </div>
 
-/* P16 / Regular */
 
-font-family: SF Pro Display;
-font-style: normal;
-font-weight: normal;
-font-size: 16px;
-line-height: 24px;
-/* identical to box height, or 150% */
+      <div *ngIf="!devices" class="leftArrowBack" (click)="devices = true"><img
+          src="../../../../../../assets/img/leftArrow.svg"><span> &nbsp; Devices</span></div>
 
-display: flex;
-align-items: center;
+          
 
-/* Shade of Greys / Grey 06 */
-
-color: #000000;
-
-/* Inside Auto Layout */
-
-flex: none;
-order: 1;
-flex-grow: 1;
-border: none;
-display: inline;
-outline: none;
-border-bottom-style: inset;" /></div>
-  
-      <button mat-button [matMenuTriggerFor]="menu"
-        style="text-align-last: auto; z-index: 10; margin-bottom: -4px; width: 121px; height: 40px; border: 1px solid #1890FF; background: #1890FF; color: white;"
-        mat-raised-button > Actions &nbsp; | &nbsp; <img src="../../../../../assets/img/action-arrow.svg"></button>
+      <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
+          src="../../../../../assets/img/action-arrow.svg"></button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="operations('reboot')" style="width: 121px;"> <img
             src="../../../../../assets/img/reboot-icon.svg"> &nbsp; Reboot</button>
         <button mat-menu-item (click)="operations('reset')" style="width: 121px;"><img
             src="../../../../../assets/img/reset-icon.svg"> &nbsp; Reset</button>
-        <button mat-menu-item style="width: 121px;" (click)="pushFile()" ><img src="../../../../../assets/img/pushFile-icon.svg"> &nbsp; Push File</button>
-        <button mat-menu-item (click)="operations('tag')" style="width: 121px;"><img src="../../../../../assets/img/tag-icon.svg"> &nbsp; Tag</button>
-        <button mat-menu-item (click)="operations('untag')" style="width: 121px;"><img src="../../../../../assets/img/untag-icon.svg"> &nbsp; Untag</button>
-        <button mat-menu-item (click)="operations('delete')" style="width: 121px;"><img src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
+        <button mat-menu-item style="width: 121px;" (click)="pushFile()"><img
+            src="../../../../../assets/img/pushFile-icon.svg"> &nbsp; Push File</button>
+        <button mat-menu-item (click)="operations('tag')" style="width: 121px;" *ngIf="devices"><img
+            src="../../../../../assets/img/tag-icon.svg"> &nbsp; Tag</button>
+        <button mat-menu-item (click)="operations('untag')" style="width: 121px;" *ngIf="devices"><img
+            src="../../../../../assets/img/untag-icon.svg"> &nbsp; Untag</button>
+        <button mat-menu-item (click)="operations('delete')" style="width: 121px;"><img
+            src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
       </mat-menu>
-      <div style=" width:15px; height:auto; display:inline-block;"></div>
-      <button (click)="downloadCSV()"
-        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto;"
-        mat-stroked-button>Download</button>
+
+
+      <div class="between-btn-download"></div>
+
+
+      <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button>Download</button>
+
+
     </div>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="devices">
 
       <!-- Position Column -->
       <ng-container matColumnDef="Device Name">
 
-        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all"> Device Name </th>
-        <td mat-cell *matCellDef="let element"> <input type="checkbox" (change)="toggleVisibility($event)"
+        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Device Name </th>
+        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
             name="{{element['DeviceID.ID']['value'][0]}}"> {{element['DeviceID.ID']['value'][0]}} </td>
       </ng-container>
 
@@ -93,10 +57,10 @@ border-bottom-style: inset;" /></div>
       <ng-container matColumnDef="SSID">
         <th mat-header-cell *matHeaderCellDef> SSID </th>
         <td mat-cell *matCellDef="let element">
-          {{element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0]}}
+          {{element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0]}} &nbsp;
           <img src="../../../../../assets/img/write_img.svg"
             (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0],'InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID')"
-            style="cursor: pointer;" /> &nbsp;
+            style="cursor: pointer;" />
 
         </td>
       </ng-container>
@@ -113,20 +77,25 @@ border-bottom-style: inset;" /></div>
         <th mat-header-cell *matHeaderCellDef> IP </th>
         <td mat-cell *matCellDef="let element">
           {{element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0]}}
+          &nbsp;
           <img src="../../../../../assets/img/write_img.svg"
             (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0],'InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress')"
-            style="cursor: pointer;" /> &nbsp;
+            style="cursor: pointer;" />
 
         </td>
       </ng-container>
 
       <ng-container matColumnDef="Online">
         <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element" >
-          <span *ngIf="element['onlineStatus'] == 'Online'"><img src="../../../../../../assets/img/online-status.svg"></span>
-          <span *ngIf="element['onlineStatus'] == 'Past 24 hours'"><img src="../../../../../../assets/img/pass-24-hours.svg"></span>
-          <span *ngIf="element['onlineStatus'] == 'Others'"><img src="../../../../../../assets/img/other-status.svg"></span>
-          {{element['onlineStatus']}} </td>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element['onlineStatus'] == 'Online'"><img
+              src="../../../../../../assets/img/online-status.svg"></span>
+          <span *ngIf="element['onlineStatus'] == 'Past 24 hours'"><img
+              src="../../../../../../assets/img/pass-24-hours.svg"></span>
+          <span *ngIf="element['onlineStatus'] == 'Others'"><img
+              src="../../../../../../assets/img/other-status.svg"></span>
+          {{element['onlineStatus']}}
+        </td>
         <!-- <td mat-cell *ngIf="isPast"> Past 24 hours</td>
         <td mat-cell *ngIf="isOther"> Others</td> -->
 
@@ -134,7 +103,9 @@ border-bottom-style: inset;" /></div>
 
       <ng-container matColumnDef="Tag">
         <th mat-header-cell *matHeaderCellDef> Tags </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element"><span *ngIf="element['Tags_Pure']"><span class="tag-span"
+              *ngFor="let i of element['Tags_Pure']">{{i}}
+              &nbsp;</span></span>
         </td>
       </ng-container>
 
@@ -153,6 +124,8 @@ border-bottom-style: inset;" /></div>
       <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
 
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="devices"></mat-paginator>
+    <dialog-data-example-dialog *ngIf="!devices"></dialog-data-example-dialog>
   </div>
+
 </div>

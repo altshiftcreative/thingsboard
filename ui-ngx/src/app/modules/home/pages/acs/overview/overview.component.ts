@@ -1,28 +1,28 @@
 
 import { Component, OnInit, } from '@angular/core';
-import { ChartSize, ChartType } from 'chart.js';
+import {  ChartType } from 'chart.js';
 import { MultiDataSet, Label ,Color} from 'ng2-charts';
 
 @Component({
   selector: 'asc-overview',
   templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.sass']
+  styleUrls: ['./overview.component.scss']
 })
 
 export class AcsOverview implements OnInit{
   ngOnInit(): void {
+    // alert('hasan overview')
   }
   hasan(){
     alert(this.doughnutChartLabels)
 
   }
-  title = 'myFirstApp';
-  doughnutChartLabels: Label[] = ['Online now', 'Past 24 hours', 'Others'];
-  
+  doughnutChartLabels: Label[] = ['Online now', 'Past 24 hours', 'Others'];  
   doughnutChartData: MultiDataSet = [
     [50, 50, 0]
   ];
-  doughnutChartType: ChartType = 'doughnut';  
+  doughnutChartType: ChartType = 'doughnut';
+  
 
   colors: Color[] = [
     {
@@ -33,4 +33,8 @@ export class AcsOverview implements OnInit{
       ]
     }
   ];
+  public barChartOptions:any = {
+    legend: {position: 'bottom'},
+  }  
+
 }
