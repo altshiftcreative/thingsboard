@@ -1,7 +1,7 @@
 
 import { Component, OnInit, } from '@angular/core';
-import { ChartSize, ChartType } from 'chart.js';
-import { MultiDataSet, Label ,Color,PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
+import {  ChartType } from 'chart.js';
+import { MultiDataSet, Label ,Color} from 'ng2-charts';
 
 @Component({
   selector: 'asc-overview',

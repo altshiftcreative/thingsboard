@@ -254,7 +254,6 @@ public class Tr069ApiController {
         return tagResponse;
     }
 //    http://localhost:3000/api/devices/?filter=LOWER(DeviceID.SerialNumber)%20LIKE%20%22000001%22
-    //http://localhost:3000/api/faults/?filter=LOWER(device)%20LIKE%20%22202bc1-bm632w-000001%22
     private String search(String serialNumber){
         String acsResponse = null;
         try{
@@ -428,6 +427,7 @@ public class Tr069ApiController {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             System.out.println("Processing in separate thread");
+            deleteTR69DeviceById(deviceID);
             output.setResult(new ResponseEntity<String>(
 
                     HttpStatus.OK));
