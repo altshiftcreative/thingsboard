@@ -1,16 +1,16 @@
 <div >
   <mat-tab-group selectedIndex="0" (selectedTabChange)="changeTab($event)" class="myDiv3">
     <mat-tab label="Overview"  >
-      <asc-overview ></asc-overview>      
+      <asc-overview *ngIf="tabIndex === 0"></asc-overview>      
     </mat-tab>
     <mat-tab label="Device">
       <acs-device *ngIf="tabIndex === 1"></acs-device>
     </mat-tab>
     <mat-tab label="Faults">
-      <acs-faults></acs-faults>
+      <acs-faults *ngIf="tabIndex === 2"></acs-faults>
     </mat-tab>
     <mat-tab label="Admin">
-      <acs-admin></acs-admin>
+      <acs-admin *ngIf="tabIndex === 3"></acs-admin>
     </mat-tab>
   </mat-tab-group>
 </div>

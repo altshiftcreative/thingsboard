@@ -67,12 +67,18 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
 
 
     deletePresets() {
-        this.checkedItems.forEach((id) => {
-            let ide = encodeURIComponent(id);
-            this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + ide).subscribe((dta) => {
-            })
+        if (this.checkedItems.length == 0) { alert("choose a device"); }
+        else {
+            let confirmation = confirm('Deleting ' + this.checkedItems.length + ' presets. Are you sure?');
+            if (confirmation == true) {
+                this.checkedItems.forEach((id) => {
+                    let ide = encodeURIComponent(id);
+                    this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + ide).subscribe((dta) => {
+                    })
 
-        });
+                });
+            }
+        }
     }
     toggleVisibility(event) {
         // console.log("eventtt", event.target.name);
@@ -121,26 +127,42 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
         })
     }
 
-    newPresets(id){
-        this.http.post('http://localhost:8080/api/v1/tr69/presets/?presetsId='+id.target.value,
-        [
-            {
-                "channel": "asda",
-                "weight": "0",
-                "schedule": "qaaaa",
-                "events": "2",
-                "precondition": "asdaqwq",
-                "provision": "default",
-                "provisionArgs": "8874"
-            }
-        ],
-        this.httpOptions).subscribe((dta) => {
-            console.log("reset");
+    newPresets(id) {
+        this.http.post('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + id.target.value,
+            [
+                {
+                    "channel": "asda",
+                    "weight": "0",
+                    "schedule": "qaaaa",
+                    "events": "2",
+                    "precondition": "asdaqwq",
+                    "provision": "default",
+                    "provisionArgs": "8874"
+                }
+            ],
+            this.httpOptions).subscribe((dta) => {
+                console.log("reset");
 
-        })
+            })
     }
-    openDialog(){
+    openDialog() {
         this.dialog.open(PresetsDialog);
+    }
+
+    checkAll(event) {
+        let x = document.getElementsByClassName('checkboxes');
+        if (event.target.checked) {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = true;
+                this.checkedItems.push(x[i]['name']);
+            }
+        }
+        else {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = false;
+                this.checkedItems = [];
+            }
+        }
     }
 
 }

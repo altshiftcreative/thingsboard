@@ -129,4 +129,22 @@ export class AcsService {
             ],
         ).subscribe((dta) => { })
     }
+
+    public statusCounter(deviceData) {
+        deviceData.forEach((element) => {
+            if (element['Events.Inform']['value'][0] > Date.now() - 5 * 60 * 1000) {
+                if (this.online_counter == 1)
+                    this.online_devices++;
+            }
+            else if (element['Events.Inform']['value'][0] > (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000) && element['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000)) {
+                if (this.online_counter == 1)
+                    this.past_devices++;
+            }
+            else if (element['Events.Inform']['value'][0] < (Date.now() - 5 * 60 * 1000) - (24 * 60 * 60 * 1000)) {
+                if (this.online_counter == 1)
+                    this.others_devices++;
+            }
+        })
+        this.online_counter = 2;
+    }
 }

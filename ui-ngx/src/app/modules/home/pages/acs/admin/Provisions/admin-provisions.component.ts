@@ -35,7 +35,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
-    displayedColumns: string[] = ['_id', 'script','Action'];
+    displayedColumns: string[] = ['_id', 'script', 'Action'];
     dataSource: MatTableDataSource<any>;
 
     ngOnInit(): void {
@@ -52,26 +52,33 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
             this.dataSource = new MatTableDataSource(ProvisionsData)
             this.dataSource.paginator = this.paginator;
-            console.log(ProvisionsData)
+            let firstLine = ProvisionsData[0]['script'].split('\n')[0];
+            console.log(firstLine)
         })
 
     }
 
 
     deleteProvisionsData() {
-        this.checkedItems.forEach((id) => {
-            let ide = encodeURIComponent(id);
-            this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + ide).subscribe((dta) => {
-            })
+        if (this.checkedItems.length == 0) { alert("choose a device"); }
+        else {
+            let confirmation = confirm('Deleting ' + this.checkedItems.length + ' provisions. Are you sure?');
+            if (confirmation == true) {
+                this.checkedItems.forEach((id) => {
+                    let ide = encodeURIComponent(id);
+                    this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + ide).subscribe((dta) => {
+                    })
 
-        });
+                });
+            }
+        }
     }
 
     getRecord(row) {
         console.log(row)
     }
 
-    
+
 
     updateValue(deviceID, SSIDvalue, parameterName) {
         let newValue = prompt(parameterName, SSIDvalue);
@@ -95,47 +102,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    operations(type, e) {
-        if (this.checkedItems.length == 0) { alert("choose a device"); }
-        else {
-            switch (type) {
-                case "delete":
-                    this.checkedItems.forEach((i) => {
-                        this.acsService.deleteDevice(i);
-                    });
-                    break;
-                case "reboot":
-                    this.checkedItems.forEach((i) => {
-                        this.acsService.rebootDevice(i);
-                    });
-                    break;
-                case "reset":
-                    this.checkedItems.forEach((i) => {
-                        this.acsService.resetDevice(i);
-                    });
-                    break;
-                case "tag":
-                    let tagValue = prompt("Enter tag to assign to " + this.checkedItems.length + " devices:");
-                    this.tagValue = tagValue;
-                    this.isTag = true;
-                    // let tagsArray = Object.keys(e).filter(k => k.startsWith('Tags.'));
-                    this.checkedItems.forEach((i) => {
-                        this.acsService.tagDevice(i, { [tagValue]: true });
-                    });
-                    break;
-                case "untag":
-                    let untagValue = prompt("Enter tag to unassign from " + this.checkedItems.length + " devices:");
-                    if (untagValue == this.tagValue) {
-                        this.tagValue = "";
-                        this.isTag = false;
-                        this.checkedItems.forEach((i) => {
-                            this.acsService.untagDevice(i, { [untagValue]: false });
-                        });
-                    }
-                    break;
-            }
-        }
-    }
+
 
     dateConvertor(timestamp) {
         let date = new Date(timestamp);
@@ -169,5 +136,21 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
         })
     }
-    
+
+    checkAll(event) {
+        let x = document.getElementsByClassName('checkboxes');
+        if (event.target.checked) {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = true;
+                this.checkedItems.push(x[i]['name']);
+            }
+        }
+        else {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = false;
+                this.checkedItems = [];
+            }
+        }
+    }
+
 }

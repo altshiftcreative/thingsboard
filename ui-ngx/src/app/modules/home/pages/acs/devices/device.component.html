@@ -34,16 +34,15 @@
             src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
       </mat-menu>
       <div style=" width:15px; height:auto; display:inline-block;"></div>
-      <button (click)="downloadCSV()"
-        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF"
-        mat-stroked-button>Download</button>
+      <div class="between-btn-download"></div>
+      <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button>Download</button>
     </div>
 
 
-      <div class="between-btn-download"></div>
+      
 
 
-      <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button>Download</button>
+      
 
 
     </div>
@@ -133,4 +132,3 @@
     <dialog-data-example-dialog *ngIf="!devices"></dialog-data-example-dialog>
   </div>
 
-</div>
