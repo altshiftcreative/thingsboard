@@ -1,41 +1,89 @@
-<div *ngIf="error" class="alert alert-danger">{{error}}</div>
-<h2>Register</h2>
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
-        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-            <div *ngIf="f.firstName.errors.required">First Name is required</div>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div id="user-data" ngModelGroup="presetData" #userData="ngModelGroup">
+          <div class="form-group">
+            <mat-form-field appearance="standard">
+              <mat-label for="username">Name</mat-label>
+              <input matInput type="text" id="name" class="form-control" ngModel name="name">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <label for="channel">channel</label>
+            <mat-form-field appearance="standard">
+              <mat-label>default</mat-label>
+              <input matInput type="text" id="channel" class="form-control" ngModel name="channel">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <label for="channel">weight</label>
+            <mat-form-field appearance="standard">
+              <mat-label>0</mat-label>
+              <input matInput type="text" id="channel" class="form-control" ngModel name="weight">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label for="schedule">Schedule</label>
+            <mat-form-field appearance="standard">
+              <mat-label>Input</mat-label>
+              <input matInput type="text" id="schedule" class="form-control" ngModel name="schedule">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label for="event">Events</label>
+            <mat-form-field appearance="standard">
+              <mat-label>Input</mat-label>
+              <input matInput type="text" id="event" class="form-control" ngModel name="event">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label for="event">provision</label>
+            <mat-form-field appearance="standard">
+              <mat-label>Input</mat-label>
+              <mat-select id="provision" class="form-control" name="provision" >
+                <mat-option value="option">Option</mat-option>
+                <mat-option value="option">Option</mat-option>
+                <mat-option value="option">Option</mat-option>
+                <mat-option value="option">Option</mat-option>
+                <mat-option value="option">Option</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label for="precondition">precondition</label>
+            <mat-form-field appearance="standard">
+              <mat-label>Text field placeholder</mat-label>
+              <textarea matInput type="text" id="precondition" class="form-control" ngModel
+                name="precondition"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label for="precondition">Arguments</label>
+            <mat-form-field appearance="standard">
+              <mat-label>Text field placeholder</mat-label>
+              <textarea matInput type="text" id="arguments" class="form-control" ngModel name="Arguments"></textarea>
+            </mat-form-field>
+          </div>
         </div>
+        <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Submit</button>
+      </form>
     </div>
-    <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
-        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
-            <div *ngIf="f.lastName.errors.required">Last Name is required</div>
-        </div>
+  </div>
+  <hr>
+  <div class="row" *ngIf="submitted">
+    <div class="col-xs-12">
+      <h3>Your Data</h3>
+      <p>Username: {{ presetsData.name }}</p>
+      <p>Mail: {{ user.email }}</p>
+      <p>Secret Question: Your first {{ user.secretQuestion }}</p>
+      <p>Answer: {{ user.answer }}</p>
+      <p>Gender: {{ user.gender }}</p>
     </div>
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
-        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-            <div *ngIf="f.username.errors.required">Username is required</div>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Password is required</div>
-            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
-        </div>
-    </div>
-    <div class="form-group">
-        <button [disabled]="loading" class="btn btn-primary">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Register
-        </button>
-        <a routerLink="/login" class="btn btn-link">Cancel</a>
-    </div>
-</form>
+  </div>
+</div>
