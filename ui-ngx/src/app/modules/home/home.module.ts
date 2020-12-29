@@ -23,6 +23,7 @@ import { SharedModule } from '@app/shared/shared.module';
 import { MenuLinkComponent } from '@modules/home/menu/menu-link.component';
 import { MenuToggleComponent } from '@modules/home/menu/menu-toggle.component';
 import { SideMenuComponent } from '@modules/home/menu/side-menu.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations:
@@ -35,7 +36,8 @@ import { SideMenuComponent } from '@modules/home/menu/side-menu.component';
   imports: [
     CommonModule,
     SharedModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    ChartsModule
   ]
 })
 export class HomeModule { }
