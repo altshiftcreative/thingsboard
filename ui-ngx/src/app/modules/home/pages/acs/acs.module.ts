@@ -32,6 +32,8 @@ import { AcsAdminConfigComponent } from './admin/Config/admin-config.component';
 import { AcsAdminPresetsComponent } from './admin/Presets/admin-presets.component';
 import { AcsAdminProvisionsComponent } from './admin/Provisions/admin-provisions.component';
 import { PresetsDialog } from './admin/Presets/presets-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { provisionsDialog } from './admin/Provisions/provisions-dialog.component';
 
 
 @NgModule({
@@ -46,6 +48,8 @@ import { PresetsDialog } from './admin/Presets/presets-dialog.component';
    AcsAdminPresetsComponent,
    AcsAdminProvisionsComponent,
    PresetsDialog,
+   provisionsDialog,
+   
    
 
   ],
@@ -56,8 +60,12 @@ import { PresetsDialog } from './admin/Presets/presets-dialog.component';
     HomeComponentsModule,
     AcsRoutingModule,
     MatButtonToggleModule,
+    ReactiveFormsModule
 
     
+  ],
+  exports:[
+    ReactiveFormsModule
   ]
   
 })

@@ -1,9 +1,7 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import { FormControl, FormGroup, FormBuilder, Validators, FormsModule, NgForm } from '@angular/forms'
-import { AcsAdminPresetsComponent } from './admin-presets.component';
-import { NgModule } from '@angular/core';
-import {ACSModule} from '../../acs.module'
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Dialog } from '@material-ui/core';
 
 
 @Component({
@@ -14,38 +12,38 @@ import {ACSModule} from '../../acs.module'
 
 })
 
- 
-export class PresetsDialog {
 
-@ViewChild('f') presetsForm:NgForm;
+export class PresetsDialog implements OnInit {
+    constructor(private http: HttpClient) { }
+    name: null;
+    presetsForm: FormGroup;
+    
+    ngOnInit() {
 
-    presetsData2={
-
-        name:'',
-        channel:'',
-        weight:'',
-        schedule:'',
-        event:'',
-        provision:'',
-        precondition:'',
-        arguments:'',
-
+        this.presetsForm = new FormGroup({
+            'presetsName': new FormControl(null, Validators.required),
+            'channel': new FormControl(null),
+            'weight': new FormControl(null),
+            'schedule': new FormControl(null),
+            'event': new FormControl(null),
+            'provision': new FormControl(null, Validators.required),
+            'precondition': new FormControl(null),
+            'arguments': new FormControl(null),
+        });
     }
-onSubmit(){
-    console.log("Hi")
-    console.log("Hi again u ass hole"+this.presetsForm);
-    this.presetsData2.name = this.presetsForm.value.presetsData.name;
-    console.log("hiiiii again u ass hole"+this.presetsForm);
+    onSubmit() {
+        this.http.put('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + this.presetsForm.value.presetsName,
 
-    // this.user.email = this.signupForm.value.userData.email;
-    // this.user.secretQuestion = this.signupForm.value.secret;
-    // this.user.answer = this.signupForm.value.questionAnswer;
-    // this.user.gender = this.signupForm.value.gender;
-
-}
-
-suggestUserName() {
-    const suggestedName = 'Superuser';
-  }
+        {
+            "channel": this.presetsForm.value.channel,
+            "weight": this.presetsForm.value.weight,
+            "schedule": this.presetsForm.value.schedule,
+            "events": this.presetsForm.value.event,
+            "precondition": this.presetsForm.value.precondition,
+            "provision": this.presetsForm.value.provision,
+            "provisionArgs": this.presetsForm.value.arguments,
+        }
+    ).subscribe((dta) => { })
+    }
 
 }

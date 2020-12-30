@@ -22,4 +22,9 @@ export interface Task {
 
 export class AcsAdminComponent  {
     
+    tabIndex = 0;
+    changeTab(event) {
+        console.log(event.index)
+        this.tabIndex = event.index;
+    }
 }

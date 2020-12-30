@@ -1,51 +1,45 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form (ngSubmit)="onSubmit()" #f="ngForm">
-        <div id="user-data" ngModelGroup="presetData" #userData="ngModelGroup">
+      <form [formGroup]="presetsForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <mat-form-field appearance="standard">
               <mat-label for="username">Name</mat-label>
-              <input matInput type="text" id="name" class="form-control" ngModel name="name">
+              <input matInput type="text" id="presetsName" class="form-control"  name="presetsName" formControlName="presetsName" >
             </mat-form-field>
           </div>
           <div class="form-group">
-            <label for="channel">channel</label>
             <mat-form-field appearance="standard">
-              <mat-label>default</mat-label>
-              <input matInput type="text" id="channel" class="form-control" ngModel name="channel">
+              <mat-label>channel</mat-label>
+              <input matInput type="text" id="channel" class="form-control"  name="channel" formControlName="channel">
             </mat-form-field>
           </div>
           <div class="form-group">
-            <label for="channel">weight</label>
             <mat-form-field appearance="standard">
-              <mat-label>0</mat-label>
-              <input matInput type="text" id="channel" class="form-control" ngModel name="weight">
-            </mat-form-field>
-          </div>
-
-          <div class="form-group">
-            <label for="schedule">Schedule</label>
-            <mat-form-field appearance="standard">
-              <mat-label>Input</mat-label>
-              <input matInput type="text" id="schedule" class="form-control" ngModel name="schedule">
+              <mat-label>weight</mat-label>
+              <input matInput type="text" id="weight" class="form-control"  name="weight" formControlName="weight">
             </mat-form-field>
           </div>
 
           <div class="form-group">
-            <label for="event">Events</label>
             <mat-form-field appearance="standard">
-              <mat-label>Input</mat-label>
-              <input matInput type="text" id="event" class="form-control" ngModel name="event">
+              <mat-label>Schedule</mat-label>
+              <input matInput type="text" id="schedule" class="form-control"  name="schedule" formControlName="schedule">
             </mat-form-field>
           </div>
 
           <div class="form-group">
-            <label for="event">provision</label>
             <mat-form-field appearance="standard">
-              <mat-label>Input</mat-label>
-              <mat-select id="provision" class="form-control" name="provision" >
-                <mat-option value="option">Option</mat-option>
+              <mat-label>Events</mat-label>
+              <input matInput type="text" id="event" class="form-control"  name="event" formControlName="event">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="standard">
+              <mat-label>provision</mat-label>
+              <mat-select id="provision" class="form-control" name="provision" formControlName="provision">
+                <mat-option value="tag">tag</mat-option>
                 <mat-option value="option">Option</mat-option>
                 <mat-option value="option">Option</mat-option>
                 <mat-option value="option">Option</mat-option>
@@ -55,35 +49,21 @@
           </div>
 
           <div class="form-group">
-            <label for="precondition">precondition</label>
             <mat-form-field appearance="standard">
-              <mat-label>Text field placeholder</mat-label>
-              <textarea matInput type="text" id="precondition" class="form-control" ngModel
-                name="precondition"></textarea>
+              <mat-label>precondition</mat-label>
+              <textarea matInput type="text" id="precondition" class="form-control" 
+                name="precondition" formControlName="precondition"></textarea>
             </mat-form-field>
           </div>
 
           <div class="form-group">
-            <label for="precondition">Arguments</label>
             <mat-form-field appearance="standard">
-              <mat-label>Text field placeholder</mat-label>
-              <textarea matInput type="text" id="arguments" class="form-control" ngModel name="Arguments"></textarea>
+              <mat-label>Arguments</mat-label>
+              <textarea matInput type="text" id="arguments" class="form-control"  name="arguments" formControlName="arguments"></textarea>
             </mat-form-field>
-          </div>
         </div>
-        <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Submit</button>
+        <button class="btn btn-primary" type="submit" [mat-dialog-close]>Submit</button>
       </form>
-    </div>
-  </div>
-  <hr>
-  <div class="row" *ngIf="submitted">
-    <div class="col-xs-12">
-      <h3>Your Data</h3>
-      <p>Username: {{ presetsData.name }}</p>
-      <p>Mail: {{ user.email }}</p>
-      <p>Secret Question: Your first {{ user.secretQuestion }}</p>
-      <p>Answer: {{ user.answer }}</p>
-      <p>Gender: {{ user.gender }}</p>
     </div>
   </div>
 </div>

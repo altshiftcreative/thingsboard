@@ -108,6 +108,23 @@ public class Tr069ApiController {
         }
         return acsResponse;
     }
+
+    private String getTR69Config(){
+        String acsResponse = null;
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/config")
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
     private void deleteTR69DeviceById(String deviceId){
         try{
             String token = getToken();
@@ -245,7 +262,26 @@ public class Tr069ApiController {
             Request request = new Request.Builder()
                     .url("http://localhost:3000/api/presets/" + presetsId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
-                    .post(formBody)
+                    .put(formBody)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            tagResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return tagResponse;
+    }
+    private String newProvisions(String presetsRequest, String presetsId){
+        String tagResponse = "";
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,presetsRequest);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/provisions/" + presetsId)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .put(formBody)
                     .build();
             Response  response = client.newCall(request).execute();
             tagResponse = response.body().string();
@@ -373,7 +409,7 @@ public class Tr069ApiController {
         });
         return output;
     }
-    //provisions
+    //getTR69Config
     @RequestMapping(value = "/tr69/provisions", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getTr069Provisions() {
         System.out.println("Received async-deferredresult request");
@@ -387,6 +423,21 @@ public class Tr069ApiController {
         });
         return output;
     }
+
+    @RequestMapping(value = "/tr69/config", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> getTr069Config() {
+        System.out.println("Received async-deferredresult request");
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            System.out.println("Processing in separate thread");
+            String res =  getTR69Config();
+            output.setResult(new ResponseEntity<String>(
+                    res,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
     @RequestMapping(value = "/tr69/faults", method = RequestMethod.DELETE,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> deleteTr069Faults(@RequestParam(value = "faultsId", required = true, defaultValue = "") String faultsId) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
@@ -476,7 +527,18 @@ public class Tr069ApiController {
     public DeferredResult<ResponseEntity<?>> newAdminPresets(@RequestBody String presetsRequest,@RequestParam(value = "presetsId", required = true, defaultValue = "") String presetsId) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
-            String ResString = newPresets(presetsRequest,presetsId);   //presetsRequest, String presetsId
+            String ResString = newPresets(presetsRequest,presetsId);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+    @RequestMapping(value = "/tr69/provisions", method = RequestMethod.PUT,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> newAdminProvisions(@RequestBody String provisionsRequest,@RequestParam(value = "provisionsId", required = true, defaultValue = "") String provisionsId) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = newProvisions(provisionsRequest,provisionsId);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));

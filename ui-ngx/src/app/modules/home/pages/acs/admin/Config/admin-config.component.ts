@@ -1,146 +1,213 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ThemePalette } from '@angular/material/core';
-import _, { kebabCase } from 'lodash';
 import { AcsService } from '../../acs-service';
-export interface Task {
-    name: string;
-    completed: boolean;
-    color: ThemePalette;
-    subtasks?: Task[];
-}
 
 
 @Component({
     selector: 'admin-config',
     templateUrl: './admin-config.component.html',
-
-
+    styleUrls: ['./admin-config.component.scss']
 })
 
 
-
-
 export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
+    devices: Boolean = true;
     isTag: Boolean = false;
     tagValue: string;
-    // test: string = 'Tags.qq';
     isLoading: Boolean = false;
+    isOnline: Boolean = false;
+    isPast: Boolean = false;
+    isOther: Boolean = false;
+    csvParameter;
+    csvDataArray: string[][] = [['_id', 'value']]
+    csvDataArrayParameter: string[][] = [['Parameter', 'Object', 'Object timestamp', 'Writable', 'Writable timestamp', 'Value', 'Value type', 'Value timestamp', 'Notification', 'Notification timestamp', 'Access list', 'Access list timestamp']]
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
-    displayedColumns: string[] = ['Device','Channel', 'Code', 'Message', 'Detail', 'Retries','Timestamp'];
-    csvDataArray: string[][] = [['Device', 'Channel', 'Code', 'Message', 'Detail', 'Retries','Timestamp']]
-
+    displayedColumns: string[] = ['_id', 'value'];
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
-
-       
     }
-
     ngAfterViewInit() {
-        this.deviceFaults()
+        
+        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
+            this.dataSource = new MatTableDataSource(configData)
+            this.dataSource.paginator = this.paginator;
+            this.onlineStatus();
+            this.tagsCheck();
+        })
+    }
+    onlineStatus() {
+        this.acsService.onlineStatus(this.dataSource);
     }
 
-    getRecord(row) {
-        console.log(row)
+    tagsCheck() {
+        this.dataSource.filteredData.forEach((item) => {
+            let tagsArray = Object.keys(item).filter(k => k.startsWith('Tags.'));
+            if (tagsArray.length > 0) {
+                let tagsPureNameArray = this.stringSplit(tagsArray);
+                item['Tags_Pure'] = tagsPureNameArray;
+            }
+        })
     }
 
+    openDialog(row) {
+        this.csvParameter = row;
+        this.checkedItems = [];
+        this.isLoading = true;
+        this.checkedItems.push(row['DeviceID.ID']['value'][0]);
+        let DeviceObject = Object.values(row)
+        let DeviceKeys = Object.keys(row)
+        const deviceArray = DeviceKeys.map((item, index) => ({ parameter: DeviceKeys[index], deviceData: DeviceObject[index] }))
+        console.log('deviceArray', deviceArray);
+        this.acsService.deviceArrayData = deviceArray;
+        this.devices = false;
+        this.isLoading = false;
+    }
 
     updateValue(deviceID, SSIDvalue, parameterName) {
         let newValue = prompt(parameterName, SSIDvalue);
         this.acsService.change(deviceID, parameterName, newValue);
-        console.log('comeonnn', parameterName);
-
-
     };
+
+    stringSplit(arr) {
+        let pureTagsArray = [];
+        arr.forEach(element => {
+            let res = element.split(".");
+            pureTagsArray.push(res[1])
+        });
+        return pureTagsArray;
+    }
 
 
     toggleVisibility(event) {
-        console.log("eventtt", event.target.name);
         if (event.target.checked) {
             this.checkedItems.push(event.target.name);
-            console.log("Array Checked", this.checkedItems);
-
         }
         else {
-            // this.acsService.removeA(this.checkedItems,event.target.name)
-            // delete this.checkedItems[event.target.name];
-            this.acsService.removeItem(this.checkedItems,event.target.name);
-            console.log("Array UnChecked", this.checkedItems);
-
+            this.acsService.removeItem(this.checkedItems, event.target.name);
         }
     }
-    deviceFaults(){
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/faults').subscribe((deviceData) => {
-                this.dataSource = new MatTableDataSource(deviceData)
-                this.dataSource.paginator = this.paginator;
-                // this.onlineStatus();
-                console.log(deviceData);
-            })
+
+    operations(type, e) {
+        if (this.checkedItems.length == 0) { alert("choose a device"); }
+        else {
+            switch (type) {
+                case "delete":
+                    this.checkedItems.forEach((i) => {
+                        this.acsService.deleteDevice(i);
+                        this.devices = true;
+                    });
+                    break;
+                case "reboot":
+                    this.checkedItems.forEach((i) => {
+                        this.acsService.rebootDevice(i);
+                    });
+                    break;
+                case "reset":
+                    this.checkedItems.forEach((i) => {
+                        this.acsService.resetDevice(i);
+                    });
+                    break;
+                case "tag":
+                    let tagValue = prompt("Enter tag to assign to " + this.checkedItems.length + " devices:");
+                    this.tagValue = tagValue;
+                    this.isTag = true;
+                    this.checkedItems.forEach((i) => {
+                        this.acsService.tagDevice(i, { [tagValue]: true });
+                    });
+                    break;
+                case "untag":
+                    let untagValue = prompt("Enter tag to unassign from " + this.checkedItems.length + " devices:");
+                    console.log('kkk', untagValue);
 
 
-    }
-    
+                    this.tagValue = "";
+                    this.isTag = false;
+                    this.checkedItems.forEach((i) => {
+                        this.acsService.untagDevice(i, { [untagValue]: false });
+                    });
 
-    deleteFaults(){
-        this.checkedItems.forEach((id) => {
-            console.log("hasan is here"+id)
-            let ide = encodeURIComponent(id);
-            console.log("hasan is here "+ ide)
-
-            this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId='+ide).subscribe((dta) => {
-                console.log("deleted!!!")
-    
-            })
-
-        });
-    }
-    downloadDeviceFaultsDataCSV() {
-        this.dataSource['filteredData'].forEach((item) => {
-            let newArray = [];
-            newArray.push(item['_id']);
-            newArray.push(item['channel']);
-            newArray.push(item['code']);
-            newArray.push(item['message']);
-            newArray.push(item['detail']['faultCode']);
-            newArray.push(item['retries']);
-            newArray.push(this.timestampConvertor(item['timestamp']));
-            this.csvDataArray.push(newArray);
-        })
-
-        let d = new Date().toISOString();
-        let csvContent = "data:text/csv;charset=utf-8," + this.csvDataArray.map(e => e.join(",")).join("\n");
-        let encodedUri = encodeURI(csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "faults-" + d + ".csv");
-        document.body.appendChild(link);
-        link.click();
-        this.csvDataArray = [['Device', 'Channel', 'Code', 'Message', 'Detail', 'Retries','Timestamp']];
-
+                    break;
+            }
+        }
     }
 
-    timestampConvertor(timestamp) {
+    dateConvertor(timestamp) {
         let date = new Date(timestamp);
         return date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     }
 
-    faultsSearch(event){
-        let str1: string=event.target.value;
-        let deviceId=str1.split(':',1);
-        // 202BC1-BM632w-000004:task_5fe5aac3ae942d20943c50fa => target.value
-       this.http.get('http://localhost:8080/api/v1/tr69/searchfaults/?device='+deviceId).subscribe((result: any[]) => {
-            this.dataSource.data = result;
-            
+    downloadCSV() {
+        if (this.devices) {
+            this.dataSource['filteredData'].forEach((item) => {
+                let newArray = [];
+                newArray.push(item['DeviceID.ID']['value'][0]);
+                newArray.push(item['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0]);
+                newArray.push(this.dateConvertor(item['Events.Inform']['value'][0]));
+                newArray.push(item['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0]);
+                this.csvDataArray.push(newArray);
             })
-            
+            this.CSV(this.csvDataArray);
+            this.csvDataArray = [['Device Name', 'SSID', 'Last Inform', 'IP', 'Tag']];
+        }
+        else {
+            for (const [key, value] of Object.entries(this.csvParameter)) {
+                let newArray = [];
+                newArray.push(key);
+                newArray.push(value['object']);
+                newArray.push(value['objectTimestamp']);
+                newArray.push(value['writable']);
+                newArray.push(value['writableTimestamp']);
+                if (value['value']) {
+                    newArray.push(value['value'][0]);
+                    newArray.push(value['value'][1]);
+                    newArray.push(value['valueTimestamp']);
+                }
+                this.csvDataArrayParameter.push(newArray);
+            }
+            this.CSV(this.csvDataArrayParameter);
+            this.csvDataArrayParameter = [['Parameter', 'Object', 'Object timestamp', 'Writable', 'Writable timestamp', 'Value', 'Value type', 'Value timestamp', 'Notification', 'Notification timestamp', 'Access list', 'Access list timestamp']]
+        }
     }
-    changePage(){
-        
+
+    CSV(csvArray) {
+        let d = new Date().toISOString();
+        let csvContent = "data:text/csv;charset=utf-8," + csvArray.map(e => e.join(",")).join("\n");
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "devices-" + d + ".csv");
+        document.body.appendChild(link);
+        link.click();
     }
-    
+
+    liveSearch(event) {
+        this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber=' + event.target.value).subscribe((result: any[]) => {
+            this.dataSource.data = result;
+            this.onlineStatus();
+            this.tagsCheck();
+        })
+    }
+
+    checkAll(event) {
+        let x = document.getElementsByClassName('checkboxes');
+        if (event.target.checked) {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = true;
+                this.checkedItems.push(x[i]['name']);
+            }
+        }
+        else {
+            for (let i = 0; i < x.length; i++) {
+                x[i]['checked'] = false;
+            }
+        }
+    }
 }
+
+
+
