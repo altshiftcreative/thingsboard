@@ -1,20 +1,21 @@
-
 <html>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <body class="w3-light-grey">
-    
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<body class="w3-light-grey">
+
     <!-- Sidebar -->
-    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:17%" >
+    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:17%">
 
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" vertical class="buttons-style">
             <mat-button-toggle value="bold" (click)="isOn= false" class="buttons-style2">Presets</mat-button-toggle>
-            <mat-button-toggle value="italic" (click)="isOn= true" (click)="isOn2= true" (click)="isOn2= true" >Provisions</mat-button-toggle>
+            <mat-button-toggle value="italic" (click)="isOn= true" (click)="isOn2= true" (click)="isOn2= true">
+                Provisions</mat-button-toggle>
             <mat-button-toggle value="underline" (click)="isOn= true" class="buttons-style3">Config</mat-button-toggle>
-          </mat-button-toggle-group>
-    
-        </div>
-    
+        </mat-button-toggle-group>
+
+    </div>
+
     <!-- Page Content -->
     <div style="margin-left:20%" class="w3-light-grey">
 
@@ -23,7 +24,7 @@
     <!-- <admin-config [hidden]="!isOn"></admin-config> -->
     
     </div>
-          
-    </body>
-    </html>
- 
+
+</body>
+
+</html>

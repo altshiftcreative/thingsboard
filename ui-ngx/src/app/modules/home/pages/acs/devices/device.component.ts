@@ -38,6 +38,8 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
             this.onlineStatus();
             this.tagsCheck();
         })
+
+
     }
     onlineStatus() {
         this.acsService.onlineStatus(this.dataSource);
@@ -96,10 +98,13 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         else {
             switch (type) {
                 case "delete":
-                    this.checkedItems.forEach((i) => {
-                        this.acsService.deleteDevice(i);
-                        this.devices = true;
-                    });
+                    let confirmation = confirm('Deleting ' + this.checkedItems.length + ' devices. Are you sure?');
+                    if (confirmation == true) {
+                        this.checkedItems.forEach((i) => {
+                            this.acsService.deleteDevice(i);
+                            this.devices = true;
+                        });
+                    }
                     break;
                 case "reboot":
                     this.checkedItems.forEach((i) => {
@@ -203,6 +208,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         else {
             for (let i = 0; i < x.length; i++) {
                 x[i]['checked'] = false;
+                this.checkedItems = [];
             }
         }
     }
