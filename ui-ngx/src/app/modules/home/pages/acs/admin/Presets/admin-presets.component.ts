@@ -80,14 +80,12 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
         }
     }
     toggleVisibility(event) {
-        // console.log("eventtt", event.target.name);
         if (event.target.checked) {
             this.checkedItems.push(event.target.name);
             console.log("Array Checked", this.checkedItems);
 
         }
         else {
-            // this.acsService.removeA(this.checkedItems,event.target.name)
             this.acsService.removeItem(this.checkedItems, event.target.name);
         }
     }
@@ -126,26 +124,24 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
         })
     }
 
-    newPresets(id) {
-        this.http.post('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + id.target.value,
-            [
+    openDialog(row) {
+        if (row) {
+            this.dialog.open(PresetsDialog,
                 {
-                    "channel": "asda",
-                    "weight": "0",
-                    "schedule": "qaaaa",
-                    "events": "2",
-                    "precondition": "asdaqwq",
-                    "provision": "default",
-                    "provisionArgs": "8874"
-                }
-            ],
-            this.httpOptions).subscribe((dta) => {
-                console.log("reset");
+                    data: row,
+                    height: '400px',
+                    width: '600px',
+                  
+                },
+                
+            );
+        } else {
+            this.dialog.open(PresetsDialog,{
+                height: '400px',
+                width: '600px',
 
-            })
-    }
-    openDialog() {
-        this.dialog.open(PresetsDialog);
+            });
+        }
     }
 
     checkAll(event) {

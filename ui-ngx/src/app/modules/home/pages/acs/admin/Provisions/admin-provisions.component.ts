@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ThemePalette } from '@angular/material/core';
 import _, { kebabCase } from 'lodash';
 import { AcsService } from '../../acs-service';
+import { provisionsDialog } from './provisions-dialog.component';
 export interface Task {
     name: string;
     completed: boolean;
@@ -34,6 +35,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
     csvDataArray: string[][] = [['Name', 'Script']]
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
+    csvParameter;
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
     displayedColumns: string[] = ['_id', 'script', 'Action'];
     dataSource: MatTableDataSource<any>;
@@ -132,6 +134,29 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
         })
     }
+
+    openDialog(row) {
+
+        if (row) {
+            this.dialog.open(provisionsDialog,
+                {
+                    data: row,
+                    height: '400px',
+                    width: '600px',
+                  
+                },
+                
+            );
+        } else {
+            this.dialog.open(provisionsDialog,{
+                height: '400px',
+                width: '600px',
+
+            });
+        }
+        
+    }
+
 
     checkAll(event) {
         this.checkedItems = [];

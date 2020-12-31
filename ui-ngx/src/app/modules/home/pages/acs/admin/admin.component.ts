@@ -17,9 +17,19 @@ export interface Task {
 
 })
 
-
-
-
-export class AcsAdminComponent  {
+export class AcsAdminComponent  {   
     
+    changeButton=1;
+    changeButton1(){
+        this.changeButton = 1;
+
+    }
+    changeButton2(){
+        this.changeButton = 2;
+
+    }
+    changeButton3(){
+        this.changeButton = 3;
+
+    }
 }
