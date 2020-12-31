@@ -59,7 +59,7 @@
         <td mat-cell *matCellDef="let element">
           {{element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0]}} &nbsp;
           <img src="../../../../../assets/img/write_img.svg"
-            (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0],'InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID')"
+            (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0],'InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID',element)"
             style="cursor: pointer;" />
 
         </td>
@@ -79,7 +79,7 @@
           {{element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0]}}
           &nbsp;
           <img src="../../../../../assets/img/write_img.svg"
-            (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0],'InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress')"
+            (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0],'InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress',element)"
             style="cursor: pointer;" />
 
         </td>

@@ -32,6 +32,7 @@ import { AcsAdminConfigComponent } from './admin/Config/admin-config.component';
 import { AcsAdminPresetsComponent } from './admin/Presets/admin-presets.component';
 import { AcsAdminProvisionsComponent } from './admin/Provisions/admin-provisions.component';
 import { PresetsDialog } from './admin/Presets/presets-dialog.component';
+import { DialogAlert} from './popup/popup-show';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provisionsDialog } from './admin/Provisions/provisions-dialog.component';
 import { configDialog } from './admin/Config/config-dialog.component';
@@ -49,6 +50,7 @@ import { configDialog } from './admin/Config/config-dialog.component';
    AcsAdminPresetsComponent,
    AcsAdminProvisionsComponent,
    PresetsDialog,
+   DialogAlert,
    provisionsDialog,
    configDialog
    

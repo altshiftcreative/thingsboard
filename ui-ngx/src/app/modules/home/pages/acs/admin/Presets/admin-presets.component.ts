@@ -49,11 +49,12 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
+        this.getAdminPresets();
     }
 
     ngAfterViewInit() {
 
-        this.getAdminPresets()
+        
     }
 
     getAdminPresets() {
@@ -66,17 +67,15 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
     }
 
 
-    deletePresets() {
+    async deletePresets() {
         if (this.checkedItems.length == 0) { alert("choose a device"); }
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' presets. Are you sure?');
             if (confirmation == true) {
-                this.checkedItems.forEach((id) => {
-                    let ide = encodeURIComponent(id);
-                    this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + ide).subscribe((dta) => {
-                    })
-
-                });
+                for(let e of this.checkedItems){
+                    await this.acsService.deletePresets(e);
+                }
+                this.getAdminPresets();
             }
         }
     }
@@ -146,6 +145,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
     }
 
     checkAll(event) {
+        this.checkedItems = [];
         let x = document.getElementsByClassName('checkboxes');
         if (event.target.checked) {
             for (let i = 0; i < x.length; i++) {

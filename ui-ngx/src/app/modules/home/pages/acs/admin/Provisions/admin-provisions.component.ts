@@ -41,12 +41,12 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<any>;
 
     ngOnInit(): void {
-
+        this.getAdminProvisions()
     }
 
     ngAfterViewInit() {
 
-        this.getAdminProvisions()
+        
     }
 
     getAdminProvisions() {
@@ -54,24 +54,20 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
             this.dataSource = new MatTableDataSource(ProvisionsData)
             this.dataSource.paginator = this.paginator;
-            let firstLine = ProvisionsData[0]['script'].split('\n')[0];
-            console.log(firstLine)
         })
 
     }
 
 
-    deleteProvisionsData() {
+    async deleteProvisionsData() {
         if (this.checkedItems.length == 0) { alert("choose a device"); }
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' provisions. Are you sure?');
             if (confirmation == true) {
-                this.checkedItems.forEach((id) => {
-                    let ide = encodeURIComponent(id);
-                    this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + ide).subscribe((dta) => {
-                    })
-
-                });
+                for(let e of this.checkedItems){
+                    await this.acsService.deleteProvisions(e);
+                }
+                this.getAdminProvisions();
             }
         }
     }
@@ -82,13 +78,13 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
 
 
-    updateValue(deviceID, SSIDvalue, parameterName) {
-        let newValue = prompt(parameterName, SSIDvalue);
-        this.acsService.change(deviceID, parameterName, newValue);
-        console.log('comeonnn', parameterName);
+    // updateValue(deviceID, SSIDvalue, parameterName) {
+    //     let newValue = prompt(parameterName, SSIDvalue);
+    //     this.acsService.change(deviceID, parameterName, newValue);
+    //     console.log('comeonnn', parameterName);
 
 
-    };
+    // };
 
 
     toggleVisibility(event) {
@@ -163,6 +159,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
 
     checkAll(event) {
+        this.checkedItems = [];
         let x = document.getElementsByClassName('checkboxes');
         if (event.target.checked) {
             for (let i = 0; i < x.length; i++) {

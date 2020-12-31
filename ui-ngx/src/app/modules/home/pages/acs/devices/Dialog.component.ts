@@ -17,19 +17,21 @@ export class DialogDataDialog implements OnInit, AfterViewInit {
     constructor(private acsService: AcsService) { }
     displayedColumns: string[] = ['Parameter', 'Value', 'Action'];
     ngOnInit(): void {
-        this.myDataSouce = new MatTableDataSource(this.acsService.deviceArrayData);
+        this.myDataSouce = new MatTableDataSource(this.acsService.deviceArrayData);        
         this.myDataSouce.paginator = this.paginator;
-
     }
     ngAfterViewInit(): void {
         this.myDataSouce.paginator = this.paginator;
-
     }
 
     updateValue(parameterName, value) {
+        let onlineS ;
+        this.acsService.deviceArrayData.forEach((e,i)=>{
+            if(e.parameter == 'onlineStatus') onlineS = e.deviceData;
+        })
         let newValue = prompt(parameterName, value);
         let deviceID = this.acsService.deviceArrayData[0].deviceData['value'][0];
-        this.acsService.change(deviceID, parameterName, newValue);
+        this.acsService.change(deviceID, parameterName, newValue,onlineS);
     };
 
     refreshValue(parameterName) {
@@ -49,9 +51,9 @@ export class DialogDataDialog implements OnInit, AfterViewInit {
         }
     }
 
-    addInstance(element){
+    addInstance(element){        
         let parameterName = element.parameter;
-        let id = element['deviceData']['value'][0];
+        let id = this.acsService.deviceArrayData[0].deviceData['value'][0];
         this.acsService.addInstance(id,parameterName)
     }
 }
