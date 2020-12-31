@@ -25,7 +25,7 @@
     border-radius: 4px;
     box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;">
         <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-        <input type="text" placeholder="Search" (keyup)="provisionsSearch($event)" style="position: static;
+        <input type="text" placeholder="Search" (keyup)="liveSearchParameter($event)" style="position: static;
 width: 225px;
 height: 24px;
 left: 35px;
@@ -60,18 +60,8 @@ border-bottom-style: inset;" />
       <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
         src="../../../../../assets/img/action-arrow.svg"></button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="operations('reboot')" style="width: 121px;"> <img
-          src="../../../../../assets/img/reboot-icon.svg"> &nbsp; New Config</button>
-      <button mat-menu-item (click)="operations('reset')" style="width: 121px;"><img
-          src="../../../../../assets/img/reset-icon.svg"> &nbsp; Reset</button>
-      <button mat-menu-item style="width: 121px;" (click)="pushFile()"><img
-          src="../../../../../assets/img/pushFile-icon.svg"> &nbsp; Push File</button>
-      <button mat-menu-item (click)="operations('tag')" style="width: 121px;" *ngIf="devices"><img
-          src="../../../../../assets/img/tag-icon.svg"> &nbsp; Tag</button>
-      <button mat-menu-item (click)="operations('untag')" style="width: 121px;" *ngIf="devices"><img
-          src="../../../../../assets/img/untag-icon.svg"> &nbsp; Untag</button>
-      <button mat-menu-item (click)="operations('delete')" style="width: 121px;"><img
-          src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
+      <button mat-menu-item (click)="openDialog()" style="width: 121px;"> <img
+          src="../../../../../assets/img/plus-dialog.svg"> &nbsp; New Config</button>
     </mat-menu>
     </div>
 
@@ -79,9 +69,8 @@ border-bottom-style: inset;" />
 
       <!-- Position Column -->
       <ng-container matColumnDef="_id">
-        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all"> Config </th>
-        <td mat-cell *matCellDef="let element"> <input type="checkbox" (change)="toggleVisibility($event)"
-            name="{{element['_id']}}"> {{element['_id']}} </td>
+        <th mat-header-cell *matHeaderCellDef> Config </th>
+        <td mat-cell *matCellDef="let element"> {{element['_id']}} </td>
       </ng-container>
 
       <!-- Name Column -->
@@ -95,8 +84,9 @@ border-bottom-style: inset;" />
       <!-- Action Column -->
       <ng-container matColumnDef="Action">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
-          <img src="../../../../../assets/img/actions-eye.svg" style="cursor: pointer;" />
+        <td mat-cell *matCellDef="let element" >
+          <img src="../../../../../assets/img/write_img.svg" (click)="openDialog(element)" style="cursor: pointer;" />
+          <img src="../../../../../assets/img/close-delete.svg" (click)="deleteConfig(element['_id'])"style="cursor: pointer;" />
         </td>
       </ng-container>
 

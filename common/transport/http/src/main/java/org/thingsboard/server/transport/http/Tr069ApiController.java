@@ -191,6 +191,22 @@ public class Tr069ApiController {
         }catch (Exception e){
         }
     }
+    private void deleteTR69ConfigById(String configId){
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            OkHttpClient client = new OkHttpClient();
+            URIBuilder ub = new URIBuilder("http://localhost:3000/api/config/" + configId);
+            String url = ub.toString();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .delete()
+                    .build();
+            client.newCall(request).execute();
+        }catch (Exception e){
+        }
+    }
 
     private String editTasks(String taskRequest, String deviceID){
         String taskResponse = "";
@@ -280,6 +296,26 @@ public class Tr069ApiController {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url("http://localhost:3000/api/provisions/" + presetsId)
+                    .addHeader("Cookie","genieacs-ui-jwt="+token)
+                    .put(formBody)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            tagResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return tagResponse;
+    }
+
+    private String newConfig(String configRequest, String configId){
+        String tagResponse = "";
+        try{
+            String token = getToken();
+            token = token.replaceAll("^\"|\"$", "");
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,configRequest);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:3000/api/config/" + configId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .put(formBody)
                     .build();
@@ -471,6 +507,17 @@ public class Tr069ApiController {
         });
         return output;
     }
+    @RequestMapping(value = "/tr69/config", method = RequestMethod.DELETE,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> deleteTr069Config(@RequestParam(value = "configId", required = true, defaultValue = "") String configId) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            deleteTR69ConfigById(configId);
+            output.setResult(new ResponseEntity<String>(
+
+                    HttpStatus.OK));
+        });
+        return output;
+    }
 
     @RequestMapping(value = "/tr69/devices", method = RequestMethod.DELETE,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> deleteTr069Devices(@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
@@ -534,11 +581,23 @@ public class Tr069ApiController {
         });
         return output;
     }
+    //newConfig
     @RequestMapping(value = "/tr69/provisions", method = RequestMethod.PUT,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> newAdminProvisions(@RequestBody String provisionsRequest,@RequestParam(value = "provisionsId", required = true, defaultValue = "") String provisionsId) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = newProvisions(provisionsRequest,provisionsId);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+    @RequestMapping(value = "/tr69/config", method = RequestMethod.PUT,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> newAdminConfig(@RequestBody String configRequest,@RequestParam(value = "configId", required = true, defaultValue = "") String configId) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = newConfig(configRequest,configId);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));

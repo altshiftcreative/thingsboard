@@ -34,6 +34,7 @@ import { AcsAdminProvisionsComponent } from './admin/Provisions/admin-provisions
 import { PresetsDialog } from './admin/Presets/presets-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provisionsDialog } from './admin/Provisions/provisions-dialog.component';
+import { configDialog } from './admin/Config/config-dialog.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { provisionsDialog } from './admin/Provisions/provisions-dialog.component
    AcsAdminProvisionsComponent,
    PresetsDialog,
    provisionsDialog,
+   configDialog
    
    
 

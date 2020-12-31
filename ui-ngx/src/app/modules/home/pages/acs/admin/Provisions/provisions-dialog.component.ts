@@ -15,6 +15,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 export class provisionsDialog implements OnInit {
+    
     constructor(private http: HttpClient,@Inject(MAT_DIALOG_DATA) public data: {_id: string, script: string}) { }
     name: null;
     provisionsForm: FormGroup;

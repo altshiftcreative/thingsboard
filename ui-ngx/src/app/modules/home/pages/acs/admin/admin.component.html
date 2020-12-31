@@ -7,22 +7,21 @@
     <!-- Sidebar -->
     <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:17%">
 
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" vertical class="buttons-style">
-            <mat-button-toggle value="bold" (click)="isOn= false" class="buttons-style2">Presets</mat-button-toggle>
-            <mat-button-toggle value="italic" (click)="isOn= true" (click)="isOn2= true" (click)="isOn2= true">
-                Provisions</mat-button-toggle>
-            <mat-button-toggle value="underline" (click)="isOn= true" class="buttons-style3">Config</mat-button-toggle>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" vertical class="buttons-style" selectedIndex="0" (selectedTabChange)="changeTab($event)">
+            <mat-button-toggle value="Presets" (click)="changeButton1()" class="buttons-style2"  >Presets</mat-button-toggle>
+            <mat-button-toggle value="Provisions" (click)="changeButton2()"> Provisions</mat-button-toggle>
+            <mat-button-toggle value="Config" (click)="changeButton3()" class="buttons-style3">Config</mat-button-toggle>
         </mat-button-toggle-group>
 
     </div>
 
     <!-- Page Content -->
-    <div style="margin-left:20%" class="w3-light-grey">
+    <div style="margin-left:20%" class="w3-light-grey" [ngSwitch]="changeButton">
 
-        <admin-presets [hidden]="isOn"></admin-presets>
-        <admin-provisions [hidden]="!isOn"></admin-provisions>
-    <!-- <admin-config [hidden]="!isOn"></admin-config> -->
-    
+        <admin-presets  *ngIf="changeButton === 1"></admin-presets>
+        <admin-provisions  *ngIf="changeButton === 2"></admin-provisions>
+        <admin-config  *ngIf="changeButton === 3"></admin-config>
+
     </div>
 
 </body>

@@ -1,23 +1,24 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form [formGroup]="provisionsForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <mat-form-field appearance="standard">
-              <mat-label>Name</mat-label>
-              <input matInput type="text" id="provisionsName" class="form-control"  name="provisionsName" formControlName="provisionsName" >
-            </mat-form-field>
-          </div>
+      <form [formGroup]="provisionsForm" (ngSubmit)="onSubmit()" class="example-form">
+        <div class="form-group">
+          <mat-form-field appearance="standard">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" id="provisionsName" class="form-control" name="provisionsName"
+              formControlName="provisionsName" class="example-full">
+          </mat-form-field>
+        </div>
 
-          <div class="form-group">
-            <mat-form-field appearance="standard">
-              <mat-label>script</mat-label>
-              <textarea matInput type="text" id="script" class="form-control" 
-                name="script" formControlName="script"></textarea>
-            </mat-form-field>
-          </div>
+        <div class="form-group">
+          <mat-form-field appearance="standard">
+            <mat-label>script</mat-label>
+            <textarea matInput type="text" id="script"
+              class="form-control" name="script" formControlName="script" class="example-full"></textarea>
+          </mat-form-field>
+        </div>
         <button mat-button cdkFocusInitial type="submit" [mat-dialog-close]>Submit</button>
       </form>
     </div>
   </div>
-</div>
+</div> 
