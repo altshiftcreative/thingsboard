@@ -194,26 +194,7 @@ public class Tr069ApiController {
         }
         return taskResponse;
     }
-
-    private String editAction(String actionRequest, String deviceID){
-        String actionResponse = "";
-        try{
-            String token = getToken();
-            token = token.replaceAll("^\"|\"$", "");
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,actionRequest);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("http://localhost:3000/api/devices/"+deviceID)
-                    .addHeader("Cookie","genieacs-ui-jwt="+token)
-                    .post(formBody)
-                    .build();
-            Response  response = client.newCall(request).execute();
-            actionResponse = response.body().string();
-        }catch (Exception e){
-        }
-        return actionResponse;
-    }
+    
 
     private String addTag(String tagRequest, String deviceID){
         String tagResponse = "";
@@ -438,6 +419,8 @@ public class Tr069ApiController {
     @RequestMapping(value = "/tr69/tasks", method = RequestMethod.POST,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> editDeviceValues(@RequestBody String deviceTask,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
         System.out.println("Received async-deferredresult request");
+        System.out.println("task: "+deviceTask);
+        System.out.println("device ID: "+deviceID);
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             System.out.println("Processing in separate thread");
@@ -449,17 +432,6 @@ public class Tr069ApiController {
         return output;
     }
 
-    @RequestMapping(value = "/tr69/actions", method = RequestMethod.POST,produces = "application/json")
-    public DeferredResult<ResponseEntity<?>> actionDevice(@RequestBody String deviceAction,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {
-        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
-        ForkJoinPool.commonPool().submit(() -> {
-            String ResString = editAction(deviceAction,deviceID);
-            output.setResult(new ResponseEntity<>(
-                    ResString,
-                    HttpStatus.OK));
-        });
-        return output;
-    }
 
     @RequestMapping(value = "/tr69/tag", method = RequestMethod.POST,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> tagDevice(@RequestBody String deviceTag,@RequestParam(value = "deviceID", required = true, defaultValue = "") String deviceID) {

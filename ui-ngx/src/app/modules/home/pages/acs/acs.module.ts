@@ -32,6 +32,7 @@ import { AcsAdminConfigComponent } from './admin/Config/admin-config.component';
 import { AcsAdminPresetsComponent } from './admin/Presets/admin-presets.component';
 import { AcsAdminProvisionsComponent } from './admin/Provisions/admin-provisions.component';
 import { PresetsDialog } from './admin/Presets/presets-dialog.component';
+import { DialogAlert} from './popup/popup-show';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { PresetsDialog } from './admin/Presets/presets-dialog.component';
    AcsAdminPresetsComponent,
    AcsAdminProvisionsComponent,
    PresetsDialog,
+   DialogAlert,
    
 
   ],

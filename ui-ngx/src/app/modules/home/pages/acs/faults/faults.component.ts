@@ -31,14 +31,19 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     csvDataArray: string[][] = [['Device', 'Channel', 'Code', 'Message', 'Detail', 'Retries', 'Timestamp']]
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/faults', { withCredentials: true }).subscribe((deviceData) => {
-            this.dataSource = new MatTableDataSource(deviceData)
-            this.dataSource.paginator = this.paginator;
-        })
+       this.getFaults();
     }
 
     ngAfterViewInit() {
 
+    }
+
+    getFaults(){
+        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/faults', { withCredentials: true }).subscribe((deviceData) => {
+            this.dataSource = new MatTableDataSource(deviceData)
+            this.dataSource.paginator = this.paginator;
+            this.checkedItems=[]
+        })
     }
     // ========================Faults Methods============================ //
 
@@ -58,17 +63,15 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    deleteFaults() {
+     async deleteFaults() {
         if (this.checkedItems.length == 0) { alert("choose a device"); }
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' faults. Are you sure?');
             if (confirmation == true) {
-                this.checkedItems.forEach((id) => {
-                    let ide = encodeURIComponent(id);
-                    this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId=' + ide).subscribe((dta) => {
-                    })
-
-                });
+                for(let e of this.checkedItems){
+                    await this.acsService.deleteFault(e);
+                }
+                this.getFaults();
             }
         }
     }
@@ -116,6 +119,7 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     }
 
     checkAll(event) {
+        this.checkedItems = [];
         let x = document.getElementsByClassName('checkboxes');
         if (event.target.checked) {
             for (let i = 0; i < x.length; i++) {

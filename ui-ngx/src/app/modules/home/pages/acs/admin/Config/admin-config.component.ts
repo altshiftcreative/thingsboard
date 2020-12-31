@@ -50,13 +50,13 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     }
 
 
-    updateValue(deviceID, SSIDvalue, parameterName) {
-        let newValue = prompt(parameterName, SSIDvalue);
-        this.acsService.change(deviceID, parameterName, newValue);
-        console.log('comeonnn', parameterName);
+    // updateValue(deviceID, SSIDvalue, parameterName) {
+    //     let newValue = prompt(parameterName, SSIDvalue);
+    //     this.acsService.change(deviceID, parameterName, newValue);
+    //     console.log('comeonnn', parameterName);
 
 
-    };
+    // };
 
 
     toggleVisibility(event) {

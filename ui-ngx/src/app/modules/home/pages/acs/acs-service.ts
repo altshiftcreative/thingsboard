@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DialogAlert } from './popup/popup-show';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root'
@@ -11,9 +13,11 @@ export class AcsService {
     public others_devices = 0;
     public online_counter = 1;
     public deviceArrayData = [];
+    
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,public dialog: MatDialog) { }
 
+    
     public removeItem(array, item) {
         for (var i in array) {
             if (array[i] == item) {
@@ -23,8 +27,9 @@ export class AcsService {
         }
     }
 
-    public change(id, parameterName, newValue): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
+    public async change(id, parameterName, newValue,element): Promise<any> {        
+        if(element['onlineStatus'] == 'Online' || element == 'Online'){        
+        await this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "device": id,
@@ -39,7 +44,12 @@ export class AcsService {
                     "status": "pending"
                 }
             ],
-        ).subscribe((dta) => { })
+        ).toPromise().then((dta) => { })
+        this.progress('Committed',true);
+        }
+        else{
+            this.progress('device offline',false);
+        }
     }
 
     public refresh(id, parameterName): void {
@@ -58,14 +68,30 @@ export class AcsService {
     }
 
 
-    public deleteDevice(id): void {
-        this.http.delete('http://localhost:8080/api/v1/tr69/devices/?deviceID=' + id).subscribe((dta) => { })
+    public async deleteDevice(id): Promise<any> {
+        await this.http.delete('http://localhost:8080/api/v1/tr69/devices/?deviceID=' + id).toPromise().then((dta) => { })
+        
+    }
+
+
+    public async deleteFault(id): Promise<any> {
+        await this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId=' + id).toPromise().then((dta) => {})
+    }
+
+
+    public async deletePresets(id): Promise<any> {
+        await this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + id).toPromise().then((dta) => {})
+    }
+
+
+    public async deleteProvisions(id): Promise<any> {
+        await this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => {})
     }
 
 
 
     public rebootDevice(id): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID=' + id,
+        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "reboot",
@@ -76,7 +102,7 @@ export class AcsService {
     }
 
     public resetDevice(id): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/actions/?deviceID=' + id,
+        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "factoryReset",
@@ -86,14 +112,14 @@ export class AcsService {
             ]).subscribe((dta) => { })
     }
 
-    public tagDevice(id, tagValue: Record<string, boolean>): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
-            tagValue).subscribe((dta) => { })
+    public async tagDevice(id, tagValue: Record<string, boolean>): Promise<any> {
+        await this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
+            tagValue).toPromise().then((dta) => { })
     }
 
-    public untagDevice(id, untagValue: Record<string, boolean>): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
-            untagValue).subscribe((dta) => { })
+    public async untagDevice(id, untagValue: Record<string, boolean>): Promise<any> {
+        await this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
+            untagValue).toPromise().then((dta) => { })
     }
 
     public onlineStatus(dataSource) {
@@ -122,8 +148,8 @@ export class AcsService {
             [
                 {
                     "name": "addObject",
-                    "device": "202BC1-BM632w-000001",
-                    "objectName": "InternetGatewayDevice.X_HUAWEI_FireWall",
+                    "device": id,
+                    "objectName": name,
                     "status": "pending"
                 }
             ],
@@ -147,4 +173,13 @@ export class AcsService {
         })
         this.online_counter = 2;
     }
+
+    progress(res,stat){
+        this.dialog.open(DialogAlert, {
+          data: {
+            response: res,
+            status: stat,
+          }
+        });
+}
 }
