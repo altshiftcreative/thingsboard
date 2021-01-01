@@ -10,7 +10,7 @@ export interface DialogData {
  */
 
 @Component({
-  selector: 'dialog-data-example-dialog',
+  selector: 'popup-pogrss',
   templateUrl: 'popup-show.html',
 })
 export class DialogAlert {

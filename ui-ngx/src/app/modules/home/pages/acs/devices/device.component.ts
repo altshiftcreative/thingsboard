@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../acs-service';
-import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogAlert } from '../popup/popup-show';
 
 
@@ -65,7 +65,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         this.checkedItems = [];
         this.isLoading = true;
         this.checkedItems.push(row['DeviceID.ID']['value'][0]);
-        
+
         let deviceArray = [];
         for (const key in row) {
             deviceArray.push({ parameter: key, deviceData: row[key] });
@@ -79,7 +79,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         let newValue = prompt(parameterName, SSIDvalue);
         await this.acsService.change(deviceID, parameterName, newValue, element);
         this.getDevices();
-        
+
 
     };
 
@@ -109,11 +109,11 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                 case "delete":
                     let confirmation = confirm('Deleting ' + this.checkedItems.length + ' devices. Are you sure?');
                     if (confirmation == true) {
-                        for(let e of this.checkedItems){
+                        for (let e of this.checkedItems) {
                             await this.acsService.deleteDevice(e);
                             this.devices = true;
                         }
-                        this.acsService.progress('Deleted',true);
+                        this.acsService.progress('Deleted', true);
                         this.getDevices();
 
                     }
@@ -132,10 +132,11 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                     let tagValue = prompt("Enter tag to assign to " + this.checkedItems.length + " devices:");
                     this.tagValue = tagValue;
                     this.isTag = true;
-                    if (tagValue != null) {
-                        for(let e of this.checkedItems){
+                    if (tagValue != null && tagValue != "") {
+                        for (let e of this.checkedItems) {
                             await this.acsService.tagDevice(e, { [tagValue]: true });
                         }
+                        this.acsService.progress('Taged', true);
                         this.getDevices();
                     }
                     break;
@@ -143,11 +144,13 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                     let untagValue = prompt("Enter tag to unassign from " + this.checkedItems.length + " devices:");
                     this.tagValue = "";
                     this.isTag = false;
-                    for(let e of this.checkedItems){
-                        await this.acsService.untagDevice(e, { [untagValue]: false });
+                    if (tagValue != null && tagValue != "") {
+                        for (let e of this.checkedItems) {
+                            await this.acsService.untagDevice(e, { [untagValue]: false });
+                        }
+                        this.acsService.progress('Untaged', true);
+                        this.getDevices();
                     }
-                    this.getDevices();
-
                     break;
             }
             this.getDevices();
@@ -228,7 +231,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         }
     }
 
-    
+
 }
 
 

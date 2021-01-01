@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Dialog } from '@material-ui/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AcsService } from '../../acs-service';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class provisionsDialog implements OnInit {
     
-    constructor(private http: HttpClient,@Inject(MAT_DIALOG_DATA) public data: {_id: string, script: string}) { }
+    constructor(private http: HttpClient,@Inject(MAT_DIALOG_DATA) public data: {_id: string, script: string},private acsService: AcsService) { }
     name: null;
     provisionsForm: FormGroup;
 
@@ -46,6 +47,7 @@ export class provisionsDialog implements OnInit {
   
         }
     ).subscribe((dta) => { })
+    this.acsService.progress('Created', true);
     }
    
 }

@@ -71,6 +71,7 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
                 for(let e of this.checkedItems){
                     await this.acsService.deleteFault(e);
                 }
+                this.acsService.progress('Deleted', true);
                 this.getFaults();
             }
         }

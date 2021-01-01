@@ -75,6 +75,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
                 for(let e of this.checkedItems){
                     await this.acsService.deletePresets(e);
                 }
+                this.acsService.progress('Deleted', true);
                 this.getAdminPresets();
             }
         }

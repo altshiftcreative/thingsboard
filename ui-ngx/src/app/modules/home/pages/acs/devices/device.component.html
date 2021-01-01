@@ -15,10 +15,7 @@
 
 
 
-      <button (click)="downloadCSV()" class="downloadCSV"
-        mat-stroked-button>Download</button>
-
-        <div class="between-btn-download"></div>
+      
 
       <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
           src="../../../../../assets/img/action-arrow.svg"></button>
@@ -37,7 +34,12 @@
             src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
       </mat-menu>
 
+      <div class="between-btn-download"></div>
+      
+      <button (click)="downloadCSV()" class="downloadCSV"
+      mat-stroked-button>Download</button>
 
+      
 
 
 

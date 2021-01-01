@@ -17,7 +17,7 @@ import { configDialog } from './config-dialog.component';
 export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public configArrayData = [];
-    constructor(private http: HttpClient, public dialog: MatDialog) { }
+    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
     displayedColumns: string[] = ['_id', 'value', 'Action'];
     dataSource: MatTableDataSource<any>;
     private httpOptions = {
@@ -35,7 +35,7 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
             this.dataSource = new MatTableDataSource(configData)
             this.dataSource.paginator = this.paginator;
-            this.configArrayData=configData;
+            this.configArrayData = configData;
         })
     }
 
@@ -62,17 +62,22 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
 
     }
     deleteConfig(id) {
-        this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).subscribe((dta) => {
-        })
+        let confirmation = confirm('Deleting ' + id + ' config. Are you sure?');
+        if (confirmation == true) {
+            this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).subscribe((dta) => {
+            })
+            this.acsService.progress('Deleted', true);
+        }
     }
-    liveSearchParameter(event){
+    liveSearchParameter(event) {
         console.log('this is event', this.configArrayData)
         console.log('this is event', this.dataSource)
 
-        if(event.target.value == "") this.dataSource.data = this.configArrayData;
-        else{let arrayContainer=[];
-            this.configArrayData.forEach((element)=>{
-                if(element.parameter.toLowerCase().includes(event.target.value.toLowerCase())){
+        if (event.target.value == "") this.dataSource.data = this.configArrayData;
+        else {
+            let arrayContainer = [];
+            this.configArrayData.forEach((element) => {
+                if (element.parameter.toLowerCase().includes(event.target.value.toLowerCase())) {
                     arrayContainer.push(element);
                 }
             })
