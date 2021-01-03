@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../../acs-service';
 import { configDialog } from './config-dialog.component';
+import { el } from 'date-fns/locale';
 
 
 @Component({
@@ -78,14 +79,11 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
         }
     }
     liveSearchParameter(event) {
-        console.log('this is event', this.configArrayData)
-        console.log('this is event', this.dataSource)
-
         if (event.target.value == "") this.dataSource.data = this.configArrayData;
         else {
             let arrayContainer = [];
             this.configArrayData.forEach((element) => {
-                if (element.parameter.toLowerCase().includes(event.target.value.toLowerCase())) {
+                if (element._id.toLowerCase().includes(event.target.value.toLowerCase())) {
                     arrayContainer.push(element);
                 }
             })
