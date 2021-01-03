@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
     selector: 'presets-dialog',
     templateUrl: './presets-dialog.component.html',
-    // styleUrls: ['./presets-dialog.component.scss'],
+    styleUrls: ['./presets-dialog.component.scss'],
 
 
 })
@@ -18,11 +18,13 @@ export class PresetsDialog implements OnInit {
     constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {_id: string, channel: string,weight: string, schedule: string,events: string, precondition: string,provision: string,provisionArgs: string} ) { }
     name: null;
     presetsForm: FormGroup;
+    public  flag;
 
     ngOnInit() {
 
 
         if (this.data) {
+            this.flag=true;
             this.presetsForm = new FormGroup({
                 'presetsName': new FormControl(this.data._id, Validators.required),
                 'channel': new FormControl(this.data.channel),
@@ -34,7 +36,7 @@ export class PresetsDialog implements OnInit {
                 'arguments': new FormControl(this.data.provisionArgs),
                 });
         } else {
-           
+           this.flag=false;
         this.presetsForm = new FormGroup({
 
             'presetsName': new FormControl(null, Validators.required),

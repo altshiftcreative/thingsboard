@@ -20,6 +20,7 @@ export interface Task {
 @Component({
     selector: 'admin-presets',
     templateUrl: './admin-presets.component.html'
+    
 })
 
 
@@ -129,7 +130,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
             this.dialog.open(PresetsDialog,
                 {
                     data: row,
-                    height: '400px',
+                    height: '600px',
                     width: '600px',
                   
                 },
@@ -137,7 +138,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
             );
         } else {
             this.dialog.open(PresetsDialog,{
-                height: '400px',
+                height: '600px',
                 width: '600px',
 
             });

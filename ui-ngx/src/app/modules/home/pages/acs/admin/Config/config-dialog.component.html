@@ -5,7 +5,7 @@
             <div class="form-group">
               <mat-form-field appearance="standard">
                 <mat-label>Config</mat-label>
-                <input matInput type="text" id="configName" class="form-control"  name="configName" formControlName="configName" >
+                <input matInput type="text" id="configName" class="form-control"  name="configName" formControlName="configName" [readonly]='flag' >
               </mat-form-field>
             </div>
   
@@ -15,7 +15,7 @@
                 <input matInput type="text" id="value" class="form-control"  name="value" formControlName="value" >
               </mat-form-field>
             </div>
-          <button mat-button cdkFocusInitial type="submit" [mat-dialog-close]>Submit</button>
+          <button mat-button cdkFocusInitial type="submit" [mat-dialog-close] [disabled]="!configForm.valid">Submit</button>
         </form>
       </div>
     </div>
