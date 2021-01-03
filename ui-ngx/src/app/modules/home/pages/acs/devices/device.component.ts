@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../acs-service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogAlert } from '../popup/popup-show';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     csvDataArrayParameter: string[][] = [['Parameter', 'Object', 'Object timestamp', 'Writable', 'Writable timestamp', 'Value', 'Value type', 'Value timestamp', 'Notification', 'Notification timestamp', 'Access list', 'Access list timestamp']]
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
-    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
+    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService,private _snackBar: MatSnackBar) { }
     displayedColumns: string[] = ['Device Name', 'SSID', 'Last Inform', 'IP', 'Online', 'Tag', 'Action'];
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
@@ -102,8 +103,8 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
         }
     }
 
-    async operations(type, e) {
-        if (this.checkedItems.length == 0) { alert("choose a device"); }
+    async operations(type) {
+        if (this.checkedItems.length == 0) { this.acsService.progress('Choose a device', false);}
         else {
             switch (type) {
                 case "delete":
@@ -122,6 +123,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                     this.checkedItems.forEach((i) => {
                         this.acsService.rebootDevice(i);
                     });
+                    
                     break;
                 case "reset":
                     this.checkedItems.forEach((i) => {
@@ -144,7 +146,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                     let untagValue = prompt("Enter tag to unassign from " + this.checkedItems.length + " devices:");
                     this.tagValue = "";
                     this.isTag = false;
-                    if (tagValue != null && tagValue != "") {
+                    if (untagValue != null && untagValue != "") {
                         for (let e of this.checkedItems) {
                             await this.acsService.untagDevice(e, { [untagValue]: false });
                         }

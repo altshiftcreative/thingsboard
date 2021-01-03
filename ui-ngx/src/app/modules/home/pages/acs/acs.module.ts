@@ -36,6 +36,7 @@ import { DialogAlert} from './popup/popup-show';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provisionsDialog } from './admin/Provisions/provisions-dialog.component';
 import { configDialog } from './admin/Config/config-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -52,7 +53,7 @@ import { configDialog } from './admin/Config/config-dialog.component';
    PresetsDialog,
    DialogAlert,
    provisionsDialog,
-   configDialog
+   configDialog,
    
    
 
@@ -64,7 +65,8 @@ import { configDialog } from './admin/Config/config-dialog.component';
     HomeComponentsModule,
     AcsRoutingModule,
     MatButtonToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
 
     
   ],

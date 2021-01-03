@@ -47,6 +47,7 @@ export class configDialog implements OnInit {
   
         }
     ).subscribe((dta) => { })
+    
     this.acsService.progress('Created', true);
     }
    

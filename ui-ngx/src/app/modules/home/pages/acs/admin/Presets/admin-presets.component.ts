@@ -68,7 +68,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
 
 
     async deletePresets() {
-        if (this.checkedItems.length == 0) { alert("choose a device"); }
+        if (this.checkedItems.length == 0) { this.acsService.progress('Choose a preset', false); }
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' presets. Are you sure?');
             if (confirmation == true) {
@@ -135,13 +135,17 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
                   
                 },
                 
-            );
+            ).afterClosed().subscribe(result =>{
+                this.getAdminPresets();
+            })
         } else {
             this.dialog.open(PresetsDialog,{
                 height: '400px',
                 width: '600px',
 
-            });
+            }).afterClosed().subscribe(result =>{
+                this.getAdminPresets();
+            })
         }
     }
 

@@ -147,13 +147,17 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
                   
                 },
                 
-            );
+            ).afterClosed().subscribe(result =>{
+                this.getAdminProvisions();
+            })
         } else {
             this.dialog.open(provisionsDialog,{
                 height: '400px',
                 width: '600px',
 
-            });
+            }).afterClosed().subscribe(result =>{
+                this.getAdminProvisions();
+            })
         }
         
     }

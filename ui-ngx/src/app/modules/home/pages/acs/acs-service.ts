@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DialogAlert } from './popup/popup-show';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class AcsService {
     public deviceArrayData = [];
     
 
-    constructor(private http: HttpClient,public dialog: MatDialog) { }
+    constructor(private http: HttpClient,public dialog: MatDialog,private _snackBar: MatSnackBar) { }
 
     
     public removeItem(array, item) {
@@ -48,7 +49,7 @@ export class AcsService {
         this.progress('Committed',true);
         }
         else{
-            this.progress('device offline',false);
+            this.progress('device is offline',false);
         }
     }
 
@@ -88,6 +89,10 @@ export class AcsService {
         await this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => {})
     }
 
+    public async deleteConfig(id): Promise<any> {
+        await this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).toPromise().then((dta) => {})
+    }
+
 
 
     public rebootDevice(id): void {
@@ -118,6 +123,8 @@ export class AcsService {
     }
 
     public async untagDevice(id, untagValue: Record<string, boolean>): Promise<any> {
+        console.log('untaaaaag');
+        
         await this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
             untagValue).toPromise().then((dta) => { })
     }
@@ -182,4 +189,5 @@ export class AcsService {
           }
         });
 }
+
 }

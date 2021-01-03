@@ -31,7 +31,10 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
     ngAfterViewInit() {
+        this.getConfig();
+    }
 
+    getConfig(){
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
             this.dataSource = new MatTableDataSource(configData)
             this.dataSource.paginator = this.paginator;
@@ -51,21 +54,26 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
 
                 },
 
-            );
+            ).afterClosed().subscribe(result =>{
+                this.getConfig();
+            })
+           
         } else {
             this.dialog.open(configDialog, {
                 height: '400px',
                 width: '600px',
 
-            });
+            }).afterClosed().subscribe(result =>{
+                this.getConfig();
+            })
         }
 
     }
-    deleteConfig(id) {
+    async deleteConfig(id) {
         let confirmation = confirm('Deleting ' + id + ' config. Are you sure?');
         if (confirmation == true) {
-            this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).subscribe((dta) => {
-            })
+            await this.acsService.deleteConfig(id);
+            this.getConfig();
             this.acsService.progress('Deleted', true);
         }
     }
