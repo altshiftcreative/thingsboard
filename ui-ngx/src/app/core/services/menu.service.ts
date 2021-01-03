@@ -248,10 +248,10 @@ export class MenuService {
       },
       {
         id: guid(),
-        name: 'acs.acs',
+        name: 'TR-69',
         type: 'link',
         path: '/acs',
-        icon: 'devices_other'
+        icon: 'cloud_queue'
       },
       {
         id: guid(),

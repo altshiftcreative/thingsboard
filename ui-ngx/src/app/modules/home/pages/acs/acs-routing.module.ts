@@ -28,8 +28,8 @@ const routes: Routes = [
     component: AcsComponent,
     data: {
       breadcrumb: {
-        label: 'acs.acs',
-        icon: 'supervisor_account'
+        label: 'TR-69',
+        icon: 'cloud_queue'
       }
     }
   }

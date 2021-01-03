@@ -6,19 +6,19 @@
           <mat-form-field appearance="standard">
             <mat-label>Name</mat-label>
             <input matInput type="text" id="provisionsName" class="form-control" name="provisionsName"
-              formControlName="provisionsName" class="example-full">
+              formControlName="provisionsName" class="example-full" [readonly]='flag'>
           </mat-form-field>
         </div>
 
-        <div class="form-group">
-          <mat-form-field appearance="standard">
+        <div class="form-group" style="width: 100%;">
+          <mat-form-field appearance="standard" style="width: 100%; height: 35%;">
             <mat-label>script</mat-label>
             <textarea matInput type="text" id="script"
-              class="form-control" name="script" formControlName="script" class="example-full"></textarea>
+              class="form-control" name="script" formControlName="script" class="example-full" style="background-color: #FFF1F0;" ></textarea>
           </mat-form-field>
         </div>
-        <button mat-button cdkFocusInitial type="submit" [mat-dialog-close]>Submit</button>
+        <button mat-button cdkFocusInitial type="submit" [mat-dialog-close] [disabled]="!provisionsForm.valid">Submit</button>
       </form>
     </div>
   </div>
-</div> 
+</div>     

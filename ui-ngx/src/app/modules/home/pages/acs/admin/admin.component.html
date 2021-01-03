@@ -1,11 +1,6 @@
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-<body class="w3-light-grey">
 
     <!-- Sidebar -->
-    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:17%">
+    <div  style="width:17%; display: inline-block;">
 
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" vertical class="buttons-style" selectedIndex="0" (selectedTabChange)="changeTab($event)">
             <mat-button-toggle value="Presets" (click)="changeButton1()" class="buttons-style2"  >Presets</mat-button-toggle>
@@ -16,14 +11,10 @@
     </div>
 
     <!-- Page Content -->
-    <div style="margin-left:20%" class="w3-light-grey" [ngSwitch]="changeButton">
+    <div  [ngSwitch]="changeButton" style="width:73%; display: inline-grid; padding-left: 90px;">
 
         <admin-presets  *ngIf="changeButton === 1"></admin-presets>
         <admin-provisions  *ngIf="changeButton === 2"></admin-provisions>
         <admin-config  *ngIf="changeButton === 3"></admin-config>
 
     </div>
-
-</body>
-
-</html>

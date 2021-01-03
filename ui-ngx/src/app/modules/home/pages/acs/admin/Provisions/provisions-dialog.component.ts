@@ -20,16 +20,19 @@ export class provisionsDialog implements OnInit {
     constructor(private http: HttpClient,@Inject(MAT_DIALOG_DATA) public data: {_id: string, script: string},private acsService: AcsService) { }
     name: null;
     provisionsForm: FormGroup;
+    public flag;
 
 
     ngOnInit() {
 
         if (this.data) {
+            this.flag=true;
             this.provisionsForm = new FormGroup({
                 'provisionsName': new FormControl(this.data._id, Validators.required),
                 'script': new FormControl(this.data.script),
             });
         } else {
+            this.flag=false;
             this.provisionsForm = new FormGroup({
                 'provisionsName': new FormControl(null, Validators.required),
                 'script': new FormControl(null),
