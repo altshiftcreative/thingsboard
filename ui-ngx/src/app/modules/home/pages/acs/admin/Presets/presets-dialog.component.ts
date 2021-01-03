@@ -19,11 +19,11 @@ export class PresetsDialog implements OnInit {
     constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {_id: string, channel: string,weight: string, schedule: string,events: string, precondition: string,provision: string,provisionArgs: string},private acsService: AcsService) { }
     name: null;
     presetsForm: FormGroup;
-    public  flag;
+    provisionsArr: string[]=[];
+    public  flag: boolean;
 
     ngOnInit() {
-
-
+        this.getAdminProvisions();
         if (this.data) {
             this.flag=true;
             this.presetsForm = new FormGroup({
@@ -53,6 +53,18 @@ export class PresetsDialog implements OnInit {
         }
 
     }
+
+    getAdminProvisions() {
+
+        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
+            // console.log(JSON.stringify(ProvisionsData));
+            for(let i of ProvisionsData){
+                this.provisionsArr.push(i['_id'])
+            }
+        })
+
+    }
+
     onSubmit() {
         this.http.put('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + this.presetsForm.value.presetsName,
 
@@ -68,5 +80,7 @@ export class PresetsDialog implements OnInit {
     ).subscribe((dta) => { })
     this.acsService.progress('Ceated', true);
     }
+
+    
 
 }

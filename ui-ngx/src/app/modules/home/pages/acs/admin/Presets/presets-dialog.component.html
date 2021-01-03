@@ -39,11 +39,8 @@
             <mat-form-field appearance="standard">
               <mat-label>provision</mat-label>
               <mat-select id="provision" class="form-control" name="provision" formControlName="provision">
-                <mat-option value="tag">tag</mat-option>
-                <mat-option value="option">Option</mat-option>
-                <mat-option value="option">Option</mat-option>
-                <mat-option value="option">Option</mat-option>
-                <mat-option value="option">Option</mat-option>
+                <mat-option *ngFor="let i of provisionsArr" value="{{i}}">{{i}}</mat-option>
+                
               </mat-select>
             </mat-form-field>
           </div>

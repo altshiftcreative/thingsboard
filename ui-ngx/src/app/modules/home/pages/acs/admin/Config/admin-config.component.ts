@@ -26,7 +26,7 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }),
-        withCredentials: true
+        withCredentials: true 
     };
 
     ngOnInit(): void {
