@@ -67,6 +67,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
                 for(let e of this.checkedItems){
                     await this.acsService.deleteProvisions(e);
                 }
+                this.acsService.progress('Deleted', true);
                 this.getAdminProvisions();
             }
         }
@@ -146,13 +147,17 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
                   
                 },
                 
-            );
+            ).afterClosed().subscribe(result =>{
+                this.getAdminProvisions();
+            })
         } else {
             this.dialog.open(provisionsDialog,{
                 height: '400px',
                 width: '600px',
 
-            });
+            }).afterClosed().subscribe(result =>{
+                this.getAdminProvisions();
+            })
         }
         
     }

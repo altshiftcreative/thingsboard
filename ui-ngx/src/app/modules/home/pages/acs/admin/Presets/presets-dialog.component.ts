@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Dialog } from '@material-ui/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AcsService } from '../../acs-service';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 export class PresetsDialog implements OnInit {
-    constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {_id: string, channel: string,weight: string, schedule: string,events: string, precondition: string,provision: string,provisionArgs: string} ) { }
+    constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {_id: string, channel: string,weight: string, schedule: string,events: string, precondition: string,provision: string,provisionArgs: string},private acsService: AcsService) { }
     name: null;
     presetsForm: FormGroup;
     public  flag;
@@ -65,6 +66,7 @@ export class PresetsDialog implements OnInit {
             "provisionArgs": this.presetsForm.value.arguments,
         }
     ).subscribe((dta) => { })
+    this.acsService.progress('Ceated', true);
     }
 
 }

@@ -1,5 +1,3 @@
-
-
 <div class="mat-table-padding">
   <mat-progress-bar class="mat-progress" color="warn" mode="indeterminate" *ngIf="isLoading">
   </mat-progress-bar>
@@ -15,7 +13,9 @@
       <div *ngIf="!devices" class="leftArrowBack" (click)="devices = true"><img
           src="../../../../../../assets/img/leftArrow.svg"><span> &nbsp; Devices</span></div>
 
-          
+
+
+      
 
       <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
           src="../../../../../assets/img/action-arrow.svg"></button>
@@ -34,11 +34,16 @@
             src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
       </mat-menu>
 
+      <div class="between-btn-download"></div>
+      
+      <button (click)="downloadCSV()" class="downloadCSV"
+      mat-stroked-button>Download</button>
 
       
 
 
-      
+
+
 
 
     </div>
@@ -48,9 +53,11 @@
       <!-- Position Column -->
       <ng-container matColumnDef="Device Name">
 
-        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Device Name </th>
-        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
-            name="{{element['DeviceID.ID']['value'][0]}}"> {{element['DeviceID.ID']['value'][0]}} </td>
+        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)">
+          Device Name </th>
+        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes"
+            (change)="toggleVisibility($event)" name="{{element['DeviceID.ID']['value'][0]}}">
+          {{element['DeviceID.ID']['value'][0]}} </td>
       </ng-container>
 
       <!-- Name Column -->
@@ -127,4 +134,3 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="devices"></mat-paginator>
     <dialog-data-example-dialog *ngIf="!devices"></dialog-data-example-dialog>
   </div>
-

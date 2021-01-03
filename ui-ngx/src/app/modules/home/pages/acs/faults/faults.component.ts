@@ -64,13 +64,14 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     }
 
      async deleteFaults() {
-        if (this.checkedItems.length == 0) { alert("choose a device"); }
+        if (this.checkedItems.length == 0) {this.acsService.progress('Choose a fault', false); }
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' faults. Are you sure?');
             if (confirmation == true) {
                 for(let e of this.checkedItems){
                     await this.acsService.deleteFault(e);
                 }
+                this.acsService.progress('Deleted', true);
                 this.getFaults();
             }
         }

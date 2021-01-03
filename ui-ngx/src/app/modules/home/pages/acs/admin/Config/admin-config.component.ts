@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../../acs-service';
 import { configDialog } from './config-dialog.component';
+import { el } from 'date-fns/locale';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { configDialog } from './config-dialog.component';
 export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public configArrayData = [];
-    constructor(private http: HttpClient, public dialog: MatDialog) { }
+    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
     displayedColumns: string[] = ['_id', 'value', 'Action'];
     dataSource: MatTableDataSource<any>;
     private httpOptions = {
@@ -31,11 +32,14 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
     ngAfterViewInit() {
+        this.getConfig();
+    }
 
+    getConfig(){
         this.http.get<any[]>('http://localhost:8080/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
             this.dataSource = new MatTableDataSource(configData)
             this.dataSource.paginator = this.paginator;
-            this.configArrayData=configData;
+            this.configArrayData = configData;
         })
     }
 
@@ -51,28 +55,35 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
 
                 },
 
-            );
+            ).afterClosed().subscribe(result =>{
+                this.getConfig();
+            })
+           
         } else {
             this.dialog.open(configDialog, {
                 height: '400px',
                 width: '600px',
 
-            });
+            }).afterClosed().subscribe(result =>{
+                this.getConfig();
+            })
         }
 
     }
-    deleteConfig(id) {
-        this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).subscribe((dta) => {
-        })
+    async deleteConfig(id) {
+        let confirmation = confirm('Deleting ' + id + ' config. Are you sure?');
+        if (confirmation == true) {
+            await this.acsService.deleteConfig(id);
+            this.getConfig();
+            this.acsService.progress('Deleted', true);
+        }
     }
-    liveSearchParameter(event){
-        console.log('this is event', this.configArrayData)
-        console.log('this is event', this.dataSource)
-
-        if(event.target.value == "") this.dataSource.data = this.configArrayData;
-        else{let arrayContainer=[];
-            this.configArrayData.forEach((element)=>{
-                if(element.parameter.toLowerCase().includes(event.target.value.toLowerCase())){
+    liveSearchParameter(event) {
+        if (event.target.value == "") this.dataSource.data = this.configArrayData;
+        else {
+            let arrayContainer = [];
+            this.configArrayData.forEach((element) => {
+                if (element._id.toLowerCase().includes(event.target.value.toLowerCase())) {
                     arrayContainer.push(element);
                 }
             })
