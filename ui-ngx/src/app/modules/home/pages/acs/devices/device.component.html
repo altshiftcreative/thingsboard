@@ -15,7 +15,7 @@
 
 
 
-      
+
 
       <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
           src="../../../../../assets/img/action-arrow.svg"></button>
@@ -35,11 +35,10 @@
       </mat-menu>
 
       <div class="between-btn-download"></div>
-      
-      <button (click)="downloadCSV()" class="downloadCSV"
-      mat-stroked-button>Download</button>
 
-      
+      <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button>Download</button>
+
+
 
 
 
@@ -134,3 +133,5 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="devices"></mat-paginator>
     <dialog-data-example-dialog *ngIf="!devices"></dialog-data-example-dialog>
   </div>
+
+</div>

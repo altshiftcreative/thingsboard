@@ -399,6 +399,7 @@ public class Tr069ApiController {
         return output;
     }
 
+
     @RequestMapping(value = "/tr69/presets", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getTr069Presets() {
         System.out.println("Received async-deferredresult request");

@@ -6,6 +6,9 @@ import { AcsService } from '../acs-service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogAlert } from '../popup/popup-show';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { AppState } from '@core/core.state';
+import { ActionNotificationShow } from '@app/core/notification/notification.actions';
 
 
 @Component({
@@ -16,6 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 export class AcsDeciveComponent implements OnInit, AfterViewInit {
+
+    toastTargetId = 'Snack Bar Test';
+
     devices: Boolean = true;
     isTag: Boolean = false;
     tagValue: string;
@@ -232,7 +238,6 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
 
 }
 

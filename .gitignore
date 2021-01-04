@@ -8,10 +8,6 @@ output/**
 .idea
 *.log
 *.log.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]
-*/.classpath
-.classpath
-*/.project
-.project
 .cache/**
 target/
 build/
@@ -35,3 +31,11 @@ pom.xml.versionsBackup
 rebuild-docker.sh
 .run/**
 .run
+
+*/.classpath
+.classpath
+*/.project
+.project
+*/.factorypath
+.factorypath
+
