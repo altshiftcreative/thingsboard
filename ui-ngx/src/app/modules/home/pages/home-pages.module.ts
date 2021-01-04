@@ -38,6 +38,7 @@ import { AcsComponent } from './acs/acs.component';
 import {ACSModule} from '@home/pages/acs/acs.module'
 import { CookieService } from 'ngx-cookie-service';
 import {ChartsModule} from 'ng2-charts'
+import { LwModule } from './LwM2M/Lw.module';
 
 @NgModule({
   imports:[ChartsModule],
@@ -59,7 +60,8 @@ import {ChartsModule} from 'ng2-charts'
     AuditLogModule,
     ApiUsageModule,
     UserModule,
-    ACSModule
+    ACSModule,
+    LwModule
   ],
   providers: [
     {
