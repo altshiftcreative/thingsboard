@@ -1,0 +1,104 @@
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+<div class="mat-table-padding" style="margin: 10px;padding: 10px;">
+  <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
+    *ngIf="isLoading">
+  </mat-progress-bar>
+  <div
+    style="box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);">
+    <div mat-header style="margin: 0px;
+  padding: 33px;
+  width: 100%;
+  float: right;
+  text-align-last: end;
+  background: white;">
+
+      <div
+        style="float: left;
+    text-align-last: auto;
+    margin-left: 30px;
+    margin-top: 10px;
+    height: 40px;
+    padding: 8px 12px 8px 7px;
+    border-radius: 4px;
+    box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;">
+        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+        <input type="text" placeholder="Search" (keyup)="provisionsSearch($event)" style="position: static;
+width: 225px;
+height: 24px;
+left: 35px;
+top: 8px;
+
+/* P16 / Regular */
+
+font-family: SF Pro Display;
+font-style: normal;
+font-weight: normal;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+display: flex;
+align-items: center;
+
+/* Shade of Greys / Grey 06 */
+
+color: #000000;
+
+/* Inside Auto Layout */
+
+flex: none;
+order: 1;
+flex-grow: 1;
+border: none;
+display: inline;
+outline: none;
+border-bottom-style: inset;" />
+      </div>
+      <button (click)="openDialog()"
+        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF "
+        mat-stroked-button>New</button>
+      <div style=" width:15px; height:auto; display:inline-block;"></div>
+      <button (click)="downloadDeviceProvisionsDataCSV()"
+        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF "
+        mat-stroked-button>Download</button>
+      <div style=" width:15px; height:auto; display:inline-block;"></div>
+      <button mat-stroked-button color="warn"
+        style="width: 136px; height: 40px; border: 1px solid #eb4224;  text-align-last: auto;"
+        (click)="deleteProvisionsData()">Delete</button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="_id">
+        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Name </th>
+        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
+            name="{{element['_id']}}"> {{element['_id']}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="script">
+        <th mat-header-cell *matHeaderCellDef> Script </th>
+        <td mat-cell *matCellDef="let element">
+          {{element['script'].split('\n')[0]}}
+        </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
+          <img src="../../../../../assets/img/actions-eye.svg" style="cursor: pointer;" />
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</div>

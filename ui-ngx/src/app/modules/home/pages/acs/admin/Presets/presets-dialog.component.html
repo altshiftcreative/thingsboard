@@ -1,0 +1,67 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <form [formGroup]="presetsForm" (ngSubmit)="onSubmit()">
+          <div class="form-group" style="width: 50%; display: inline-block;">
+            <mat-form-field appearance="standard">
+              <mat-label for="username">Name</mat-label>
+              <input matInput type="text" id="presetsName" class="form-control"  name="presetsName" formControlName="presetsName" [readonly]='flag'>
+            </mat-form-field>
+          </div>
+          <div class="form-group" style="width: 50%; display: inline-block;">
+            <mat-form-field appearance="standard">
+              <mat-label>channel</mat-label>
+              <input matInput type="text" id="channel" class="form-control"  name="channel" formControlName="channel">
+            </mat-form-field>
+          </div>
+          <div class="form-group" style="width: 50%; display: inline-block;">
+            <mat-form-field appearance="standard">
+              <mat-label>weight</mat-label>
+              <input matInput type="text" id="weight" class="form-control"  name="weight" formControlName="weight">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="width: 50%; display: inline-block;">
+            <mat-form-field appearance="standard">
+              <mat-label>Schedule</mat-label>
+              <input matInput type="text" id="schedule" class="form-control"  name="schedule" formControlName="schedule">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="width: 50%; display: inline-block;"> 
+            <mat-form-field appearance="standard">
+              <mat-label>Events</mat-label>
+              <input matInput type="text" id="event" class="form-control"  name="event" formControlName="event">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="width: 50%; display: inline-block;">
+            <mat-form-field appearance="standard">
+              <mat-label>provision</mat-label>
+              <mat-select id="provision" class="form-control" name="provision" formControlName="provision">
+                <mat-option *ngFor="let i of provisionsArr" value="{{i}}">{{i}}</mat-option>
+                
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="width: 100%;">
+            <mat-form-field appearance="standard" style="width: 100%;">
+              <mat-label>precondition</mat-label>
+              <textarea matInput type="text" id="precondition" class="form-control" 
+                name="precondition" formControlName="precondition"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="width: 100%;">
+            <mat-form-field appearance="standard" style="width: 100%;">
+              <mat-label>Arguments</mat-label>
+              <textarea matInput type="text" id="arguments" class="form-control"  name="arguments" formControlName="arguments"></textarea>
+            </mat-form-field>
+        </div>
+        <br>
+        <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close] [disabled]="!presetsForm.valid">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

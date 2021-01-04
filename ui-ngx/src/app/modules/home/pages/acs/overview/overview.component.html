@@ -1,0 +1,22 @@
+<div>
+<ng-container >
+  <div class="chart-wrapper" class="myDiv">
+    <h4 class="myDiv2">Online Status</h4>
+    <canvas baseChart 
+    [data]="doughnutChartData"
+    [labels]="doughnutChartLabels"
+    [chartType]="doughnutChartType"
+    [colors]="colors"
+    height="60"
+    [options]="barChartOptions"
+
+    >
+  </canvas>
+    <div class="donut-inner">
+      <p>{{totalDevices}}</p>
+      <span>Total</span>
+    </div>
+  </div>
+</ng-container>
+
+</div>

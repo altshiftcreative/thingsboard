@@ -20,17 +20,18 @@ import { RouterModule, Routes } from '@angular/router';
 import {AcsComponent} from './acs.component'
 import { TenantsTableConfigResolver } from '@modules/home/pages/tenant/tenants-table-config.resolver';
 
+
 const routes: Routes = [
+
   {
     path: 'acs',
     component: AcsComponent,
     data: {
       breadcrumb: {
-        label: 'acs.acs',
-        icon: 'supervisor_account'
+        label: 'TR-69',
+        icon: 'cloud_queue'
       }
-    },
-    
+    }
   }
 ];
 

@@ -71,7 +71,7 @@
         </button>
         <tb-user-menu [displayUserInfo]="!displaySearchMode()"></tb-user-menu>
       </mat-toolbar>
-      <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
+      <mat-progress-bar color="" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
                         *ngIf="isLoading$ | async">
       </mat-progress-bar>
       <div fxFlex fxLayout="column" tb-toast class="tb-main-content">

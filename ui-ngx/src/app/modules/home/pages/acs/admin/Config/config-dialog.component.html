@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+        <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <mat-form-field appearance="standard">
+                <mat-label>Config</mat-label>
+                <input matInput type="text" id="configName" class="form-control"  name="configName" formControlName="configName" [readonly]='flag' >
+              </mat-form-field>
+            </div>
+  
+            <div class="form-group">
+              <mat-form-field appearance="standard">
+                <mat-label>value</mat-label>
+                <input matInput type="text" id="value" class="form-control"  name="value" formControlName="value" >
+              </mat-form-field>
+            </div>
+          <button mat-button cdkFocusInitial type="submit" [mat-dialog-close] [disabled]="!configForm.valid">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
