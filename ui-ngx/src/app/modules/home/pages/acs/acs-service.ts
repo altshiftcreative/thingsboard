@@ -3,6 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DialogAlert } from './popup/popup-show';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { AppState } from '@app/core/core.state';
+import { ActionNotificationShow } from '@app/core/notification/notification.actions';
+import { NotificationType } from '@app/core/notification/notification.models';
 
 @Injectable({
     providedIn: 'root'
@@ -14,11 +18,11 @@ export class AcsService {
     public others_devices = 0;
     public online_counter = 1;
     public deviceArrayData = [];
-    
 
-    constructor(private http: HttpClient,public dialog: MatDialog,private _snackBar: MatSnackBar) { }
 
-    
+    constructor(private http: HttpClient, public dialog: MatDialog, private _snackBar: MatSnackBar, protected store: Store<AppState>) { }
+
+
     public removeItem(array, item) {
         for (var i in array) {
             if (array[i] == item) {
@@ -28,28 +32,28 @@ export class AcsService {
         }
     }
 
-    public async change(id, parameterName, newValue,element): Promise<any> {        
-        if(element['onlineStatus'] == 'Online' || element == 'Online'){        
-        await this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
-            [
-                {
-                    "device": id,
-                    "name": "setParameterValues",
-                    "parameterValues": [
-                        [
-                            parameterName,
-                            newValue,
-                            "xsd:string"
-                        ]
-                    ],
-                    "status": "pending"
-                }
-            ],
-        ).toPromise().then((dta) => { })
-        this.progress('Committed',true);
+    public async change(id, parameterName, newValue, element): Promise<any> {
+        if (element['onlineStatus'] == 'Online' || element == 'Online') {
+            await this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
+                [
+                    {
+                        "device": id,
+                        "name": "setParameterValues",
+                        "parameterValues": [
+                            [
+                                parameterName,
+                                newValue,
+                                "xsd:string"
+                            ]
+                        ],
+                        "status": "pending"
+                    }
+                ],
+            ).toPromise().then((dta) => { })
+            this.progress('Committed', true);
         }
-        else{
-            this.progress('device is offline',false);
+        else {
+            this.progress('device is offline', false);
         }
     }
 
@@ -71,26 +75,26 @@ export class AcsService {
 
     public async deleteDevice(id): Promise<any> {
         await this.http.delete('http://localhost:8080/api/v1/tr69/devices/?deviceID=' + id).toPromise().then((dta) => { })
-        
+
     }
 
 
     public async deleteFault(id): Promise<any> {
-        await this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId=' + id).toPromise().then((dta) => {})
+        await this.http.delete('http://localhost:8080/api/v1/tr69/faults/?faultsId=' + id).toPromise().then((dta) => { })
     }
 
 
     public async deletePresets(id): Promise<any> {
-        await this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + id).toPromise().then((dta) => {})
+        await this.http.delete('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + id).toPromise().then((dta) => { })
     }
 
 
     public async deleteProvisions(id): Promise<any> {
-        await this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => {})
+        await this.http.delete('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => { })
     }
 
     public async deleteConfig(id): Promise<any> {
-        await this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).toPromise().then((dta) => {})
+        await this.http.delete('http://localhost:8080/api/v1/tr69/config/?configId=' + id).toPromise().then((dta) => { })
     }
 
 
@@ -124,7 +128,7 @@ export class AcsService {
 
     public async untagDevice(id, untagValue: Record<string, boolean>): Promise<any> {
         console.log('untaaaaag');
-        
+
         await this.http.post('http://localhost:8080/api/v1/tr69/tag/?deviceID=' + id,
             untagValue).toPromise().then((dta) => { })
     }
@@ -181,13 +185,17 @@ export class AcsService {
         this.online_counter = 2;
     }
 
-    progress(res,stat){
-        this.dialog.open(DialogAlert, {
-          data: {
-            response: res,
-            status: stat,
-          }
-        });
-}
+    progress(res, stat) {
+        let type: NotificationType  = stat ? 'success' : 'error'
+            this.store.dispatch(new ActionNotificationShow(
+                {
+                    message: res,
+                    type: type,
+                    duration: 2000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'center'
+                }));
+        
+    }
 
 }
