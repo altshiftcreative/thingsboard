@@ -151,7 +151,7 @@ public class ClientService {
 		// create objects
 		ObjectsInitializer initializer = new ObjectsInitializer();
 //		initializer.setInstancesForObject(LwM2mId.SECURITY, Security.noSec(SERVER_URI, 12345));
-		initializer.setInstancesForObject(LwM2mId.SECURITY, Security.noSec(getServerAddress(true), 12345));
+		initializer.setInstancesForObject(LwM2mId.SECURITY, Security.noSec(getServerAddress(false), 12345));
 
 		if (clientDto.getServers() != null) {
 			clientDto.getServers().forEach(server -> {
