@@ -9,7 +9,7 @@ import { AfterViewInit, Component, OnInit } from "@angular/core";
 
 
 export class LwClientsComponent implements OnInit, AfterViewInit {
-
+    clientsCounter: number ;
     constructor(private http: HttpClient) { }
 
     ngAfterViewInit(): void {
@@ -23,9 +23,22 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
     getClients(){
         
         this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clients', { withCredentials: true }).subscribe((clientsData) => {
-            console.log('clients Data : '+JSON.stringify(clientsData));
-            console.log('clients Data : '+clientsData.length);
+            this.clientsCounter = clientsData.length;
             
         })
+    }
+
+    clientsSearch(event){
+        if (event.target.value == "") {}
+        // this.myDataSouce.data = this.acsService.deviceArrayData;
+        else {
+            // let arrayContainer = [];
+            // this.acsService.deviceArrayData.forEach((element) => {
+            //     if (element.parameter.toLowerCase().includes(event.target.value.toLowerCase())) {
+            //         arrayContainer.push(element);
+            //     }
+            // })
+            // this.myDataSouce.data = arrayContainer;
+        }
     }
 }
