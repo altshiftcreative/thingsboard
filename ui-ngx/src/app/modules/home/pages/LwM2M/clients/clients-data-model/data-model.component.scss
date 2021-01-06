@@ -155,8 +155,7 @@
 
 .leftArrowBack{
     position: absolute;
-    top: 90px;
-    left: 74px;
+    top: 50px; 
     cursor: pointer;
 }
 
@@ -193,3 +192,6 @@
     color: #000000;
 }
 
+.mat-field{
+    width: 145px;
+}

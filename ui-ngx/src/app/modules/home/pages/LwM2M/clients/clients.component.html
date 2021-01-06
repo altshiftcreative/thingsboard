@@ -1,65 +1,82 @@
-<div class="mat-table-padding">
-  <mat-progress-bar class="mat-progress" color="warn" mode="indeterminate" *ngIf="isLoading">
-  </mat-progress-bar>
-  <div class="shadow-div">
-    <div class="header-of-table" mat-header>
+<div class="leftArrowBack" *ngIf="dataModelComponent" (click)="dataModelComponent = false">
+    <img src="../../../../../../../assets/img/leftArrow.svg" style="cursor: pointer;" > &nbsp;
+    <span> &nbsp; {{clientEndpoint}}</span>
+</div>
 
-      <div class="search-div">
-        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-        <input class="search-input" type="text" placeholder="Search" />
-      </div>
+<div class="mat-table-padding" *ngIf="!dataModelComponent">
+    <mat-progress-bar class="mat-progress" color="warn" mode="indeterminate" *ngIf="isLoading">
+    </mat-progress-bar>
+    <div class="shadow-div">
+        <div class="header-of-table" mat-header>
 
-      <div><span>10</span></div>
+            
+
+            
+            <div class="search-div" >
+                <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+                <input class="search-input" type="text" placeholder="Search" (keyup)="clientsSearch($event)" />
+            </div>
+
+            <div ><span>Connected clients: {{clientsCounter}}</span></div>
+        </div>
+
+
+        <!-- table here  -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
+
+            <ng-container matColumnDef="Client Endpoint">
+                <th mat-header-cell *matHeaderCellDef>
+                    Client Endpoint </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element['endpoint']}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Registration ID">
+                <th mat-header-cell *matHeaderCellDef> Registration ID </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element['registrationId']}}
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Registration Date">
+                <th mat-header-cell *matHeaderCellDef> Registration Date </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element['registrationDate']}}
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Last Update">
+                <th mat-header-cell *matHeaderCellDef> Last Update </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element['lastUpdate']}}
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <img src="../../../../../assets/img/explniation-icon.svg" style="cursor: pointer;"
+                        matTooltip="lifetime: {{element['lifetime']}}s
+                        Binding mode: {{element['bindingMode']}}
+                        Protocol version: {{element['lwM2mVersion']}}
+                        Address: {{element['address']}}" 
+                        matTooltipPosition="above" 
+                        (click)="openDataModel(element['endpoint'])"/>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator >
+        
     </div>
-    <!-- table here  -->
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <ng-container matColumnDef="Client Endpoint">
-        <th mat-header-cell *matHeaderCellDef>
-          Client Endpoint </th>
-        <td mat-cell *matCellDef="let element"> 
-          {{element['endpoint']}} </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="Registration ID">
-        <th mat-header-cell *matHeaderCellDef> Registration ID </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['registrationId']}}
-        </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="Registration Date">
-        <th mat-header-cell *matHeaderCellDef> Registration Date </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['registrationDate']}}
-        </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="Last Update">
-        <th mat-header-cell *matHeaderCellDef> Last Update </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['lastUpdate']}}
-        </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="Action">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
-          <img src="../../../../../assets/img/explniation-icon.svg" style="cursor: pointer;" />
-
-        </td>
-      </ng-container>
-
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-  </div>
 
 </div>
+<Lw-clients-data-model *ngIf="dataModelComponent"></Lw-clients-data-model>

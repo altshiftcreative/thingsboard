@@ -26,13 +26,15 @@ import { LwRoutingModule } from './Lw-routing.module';
 import { LwComponent } from './Lw.component';
 import { LwClientsComponent } from './clients/clients.component';
 import { LwSecurityComponent } from './security/security.component';
+import { LwClientsDataComponent } from './clients/clients-data-model/data-model.component';
 
 
 @NgModule({
   declarations: [
     LwComponent,
     LwClientsComponent,
-    LwSecurityComponent
+    LwSecurityComponent,
+    LwClientsDataComponent
    
 
   ],

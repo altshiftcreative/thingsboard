@@ -27,12 +27,40 @@ public class LwM2MApiController {
         }
         return acsResponse;
     }
+
+    private String getClientsDataLw(String endpoint){
+        String acsResponse = null;
+        try{
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/api/objectspecs/"+endpoint)
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
+
+//    getClientsDataLw
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/Lw/clients", method = RequestMethod.GET,produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getClients() {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = getClientsLw();
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/Lw/clientsData", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> getClientsData(@RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = getClientsDataLw(endpoint);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));

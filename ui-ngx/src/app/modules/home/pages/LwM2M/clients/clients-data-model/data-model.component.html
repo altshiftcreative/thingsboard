@@ -1,0 +1,57 @@
+<div class="mat-table-padding">
+
+  <div class="shadow-div">
+    <div class="header-of-table" mat-header>
+      <div class="select-container">
+        
+        <span>Response Timeout </span>
+        <mat-form-field appearance="legacy" class="mat-field">
+          <mat-label>Select timeout</mat-label>
+          <mat-select [(value)]="selectedTime" >
+            
+            <mat-option value="5s">5s</mat-option>
+            <mat-option value="5min">5min</mat-option>
+            <mat-option value="15min">15min</mat-option>
+            <mat-option value="30min">30min</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field> &nbsp; &nbsp; &nbsp; &nbsp;
+
+
+        <span>Multi-value</span> 
+        <mat-form-field appearance="legacy" class="mat-field">
+          <mat-label>Select value</mat-label>
+          <mat-select [(value)]="selectedMulti">
+            
+            <mat-option value="TLV">TLV</mat-option>
+            <mat-option value="SENML_JSON">SENML_JSON</mat-option>
+            <mat-option value="SENML_CBOR">SENML_CBOR</mat-option>
+            <mat-option value="JSON">JSON</mat-option>
+          </mat-select>
+        </mat-form-field> &nbsp; &nbsp; &nbsp; &nbsp;
+
+        <span>Single-value</span> 
+        <mat-form-field appearance="legacy" class="mat-field">
+          <mat-label>Select value</mat-label>
+          <mat-select [(value)]="selectedSingle">
+           
+            <mat-option value="TLV">TLV</mat-option>
+            <mat-option value="CBOR">CBOR</mat-option>
+            <mat-option value="SENML_JSON">SENML_JSON</mat-option>
+            <mat-option value="SENML_CBOR">SENML_CBOR</mat-option>
+            <mat-option value="JSON">JSON</mat-option>
+            <mat-option value="Text">Text</mat-option>
+            <mat-option value="Opaque">Opaque</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+
+    <!-- table here  -->
+
+
+  </div>
+
+</div>
