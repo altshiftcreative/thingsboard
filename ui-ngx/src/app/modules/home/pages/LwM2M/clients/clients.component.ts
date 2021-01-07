@@ -36,7 +36,8 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
             this.dataSource.paginator = this.paginator;
             this.clientsCounter = clientsData.length;
             this.clientsArray = clientsData;
-            
+            console.log(this.dataSource)
+
         })
     }
 

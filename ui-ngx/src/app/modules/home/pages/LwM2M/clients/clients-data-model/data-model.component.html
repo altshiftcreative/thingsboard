@@ -64,6 +64,24 @@
     </mat-accordion>
   </div>
 
+    <!-- table here  -->
+    <mat-accordion displayMode="flat" multi class="mat-table">
+      <mat-expansion-panel *ngFor="let item of displayedRows$ | async">
+        <mat-expansion-panel-header class="mat-row">
+          <span class="mat-cell">{{item.vesselName}}</span>
+          <span class="mat-cell" style="color:#BFBFBF; font-size:12px">/1</span>
+        </mat-expansion-panel-header>
+        <div style="display:inline-block">
+          <pre>{{item}}</pre>
+        </div>
+        <table style="display:inline-block" >
+          <td>gdfgd</td>
+          <td>gdfgd</td>
+        </table>
+      </mat-expansion-panel>
+    
+    </mat-accordion>
+
   </div>
 
 </div>
