@@ -40,8 +40,7 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
     LwClientsComponent,
     LwSecurityComponent,
     LwClientsDataComponent,
-    LwCertificateomponent
-   
+    LwCertificateomponent,
     LwClientsDataComponent,
     LwClientsDataTableComponent
 

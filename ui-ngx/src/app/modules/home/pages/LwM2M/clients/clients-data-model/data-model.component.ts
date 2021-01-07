@@ -1,7 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../../Lw-service";
 
 
@@ -27,8 +25,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
         this.getDataModel();
     }
     ngOnInit(): void {
-    const rows$ = of(exampleShips);
-    this.displayedRows$ = rows$;
+    
     }
 
     getDataModel(){
@@ -40,78 +37,3 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
 
     
 }
-export interface ShipData {
-    vesselId: string;
-    vesselName: string;
-    ircs?: string;
-    countryCode: string;
-    vesselStatus: string;
-    grossTonnage?: number;
-    hullNumber?: string;
-    vesselType: string;
-    jonesActEligible: boolean;
-    disabledDate?: string;
-  }
-  
-  export const exampleShips: ShipData[]=[
-    {
-      'ircs': 'V7QV6',
-      'vesselName': 'KYOWA ORCHID',
-      'countryCode': 'US',
-      'vesselId': 'IMO8675368',
-      'vesselStatus': 'S',
-      'grossTonnage': 1,
-      'hullNumber': undefined,
-      'vesselType': 'A21',
-      'jonesActEligible': false,
-      'disabledDate': undefined
-    },
-    {
-      'ircs': 'V7QV6',
-      'vesselName': 'hasan',
-      'countryCode': 'US',
-      'vesselId': 'IMO8675368',
-      'vesselStatus': 'S',
-      'grossTonnage': 1,
-      'hullNumber': undefined,
-      'vesselType': 'A21',
-      'jonesActEligible': false,
-      'disabledDate': undefined
-    },
-    {
-        'ircs': 'V7QV6',
-        'vesselName': 'hasan',
-        'countryCode': 'US',
-        'vesselId': 'IMO8675368',
-        'vesselStatus': 'S',
-        'grossTonnage': 1,
-        'hullNumber': undefined,
-        'vesselType': 'A21',
-        'jonesActEligible': false,
-        'disabledDate': undefined
-      },
-      {
-        'ircs': 'V7QV6',
-        'vesselName': 'hasan',
-        'countryCode': 'US',
-        'vesselId': 'IMO8675368',
-        'vesselStatus': 'S',
-        'grossTonnage': 1,
-        'hullNumber': undefined,
-        'vesselType': 'A21',
-        'jonesActEligible': false,
-        'disabledDate': undefined
-      },
-      {
-        'ircs': 'V7QV6',
-        'vesselName': 'hasan',
-        'countryCode': 'US',
-        'vesselId': 'IMO8675368',
-        'vesselStatus': 'S',
-        'grossTonnage': 1,
-        'hullNumber': undefined,
-        'vesselType': 'A21',
-        'jonesActEligible': false,
-        'disabledDate': undefined
-      },
-  ]
