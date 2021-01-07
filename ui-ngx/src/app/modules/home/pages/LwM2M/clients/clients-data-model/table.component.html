@@ -1,0 +1,65 @@
+<table style="background-color: white;">
+    <tr>
+        <th>Instance</th>
+    </tr>
+    <tr>
+        <td style="width: 1%;text-align: center;">{{instanceNumber}}</td>
+        <td style="width: 8%;text-align: center;">
+            <table style="width: 100%;">
+                <tr style="height: 53px;">
+
+                    <th>Data</th>
+                    <th>Value</th>
+                    <th *ngIf="dataModel['instancetype'] == 'multiple'"><button mat-button class="Instance"
+                            mat-raised-button>
+                            Create Instance</button> &nbsp;&nbsp;
+                        <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-stroked-button> Actions
+                            &nbsp; |
+                            &nbsp; <img src="../../../../../assets/img/action-arrow.svg"></button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item style="width: 121px;"> <img
+                                    src="../../../../../assets/img/reboot-icon.svg"> &nbsp; Write</button>
+                            <button mat-menu-item style="width: 121px;"><img
+                                    src="../../../../../assets/img/reset-icon.svg"> &nbsp; Read</button>
+                            <button mat-menu-item style="width: 121px;"><img
+                                    src="../../../../../assets/img/pushFile-icon.svg"> &nbsp; Start Observe</button>
+                            <button mat-menu-item style="width: 121px;"><img
+                                    src="../../../../../assets/img/tag-icon.svg"> &nbsp; Stop Observe</button>
+                            <button mat-menu-item style="width: 121px;"><img
+                                    src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
+                        </mat-menu>
+                    </th>
+                </tr>
+                <tr *ngFor="let x of dataModel['resourcedefs']">
+                    <td>{{x['name']}}</td>
+                    <td>/{{dataModel['id']}}/{{instanceNumber}}/{{x['id']}}</td>
+                    <td style="text-align-last: end;height: 76px;">
+                        <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-stroked-button> Actions
+                            &nbsp; |
+                            &nbsp; <img src="../../../../../assets/img/action-arrow.svg"></button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item *ngIf="x['operations'] == 'W' || x['operations'] == 'RW'"
+                                style="width: 121px;"> <img src="../../../../../assets/img/reboot-icon.svg"> &nbsp;
+                                Write</button>
+                            <button mat-menu-item *ngIf="x['operations'] == 'R' || x['operations'] == 'RW'"
+                                style="width: 121px;"><img src="../../../../../assets/img/reset-icon.svg"> &nbsp;
+                                Read</button>
+                            <button mat-menu-item *ngIf="x['operations'] == 'R' || x['operations'] == 'RW'"
+                                style="width: 121px;"><img src="../../../../../assets/img/pushFile-icon.svg"> &nbsp;
+                                Start Observe</button>
+                            <button mat-menu-item *ngIf="x['operations'] == 'R' || x['operations'] == 'RW'"
+                                style="width: 121px;"><img src="../../../../../assets/img/tag-icon.svg"> &nbsp; Stop
+                                Observe</button>
+                            <button mat-menu-item *ngIf="x['operations'] == 'E' || x['operations'] == 'NONE'"
+                                style="width: 121px;"><img src="../../../../../assets/img/untag-icon.svg"> &nbsp;
+                                Execute</button>
+                        </mat-menu>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+
+    </tr>
+
+</table>

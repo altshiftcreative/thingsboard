@@ -1,5 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../../Lw-service";
 
 @Component({
@@ -14,7 +16,10 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
     selectedMulti = 'TLV';
     selectedSingle = 'TLV';
     dataModelComponent: Boolean ;
-   
+    instanceNumber = 0;
+    dataSource: any[];
+    col:number = 0;
+    panelOpenState = false;
     constructor(private lwService: LwService,private http: HttpClient) { }
     clientEndpoint = this.lwService.clientEndpoint;
     ngAfterViewInit(): void {
@@ -26,8 +31,8 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
 
     getDataModel(){
         this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint='+this.clientEndpoint, { withCredentials: true }).subscribe((clientData) => {
-           console.log('clients Dataaaaaa : '+JSON.stringify(clientData));
-            
+           console.log('clients Dataaaaaa : ',clientData);
+           this.dataSource = clientData
         })
     }
 

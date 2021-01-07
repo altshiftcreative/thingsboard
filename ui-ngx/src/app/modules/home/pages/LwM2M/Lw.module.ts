@@ -27,6 +27,7 @@ import { LwComponent } from './Lw.component';
 import { LwClientsComponent } from './clients/clients.component';
 import { LwSecurityComponent } from './security/security.component';
 import { LwClientsDataComponent } from './clients/clients-data-model/data-model.component';
+import { LwClientsDataTableComponent } from './clients/clients-data-model/table.components';
 
 
 @NgModule({
@@ -34,8 +35,8 @@ import { LwClientsDataComponent } from './clients/clients-data-model/data-model.
     LwComponent,
     LwClientsComponent,
     LwSecurityComponent,
-    LwClientsDataComponent
-   
+    LwClientsDataComponent,
+    LwClientsDataTableComponent
 
   ],
   imports: [
