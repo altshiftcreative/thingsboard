@@ -27,6 +27,10 @@ import { LwComponent } from './Lw.component';
 import { LwClientsComponent } from './clients/clients.component';
 import { LwSecurityComponent } from './security/security.component';
 import { LwClientsDataComponent } from './clients/clients-data-model/data-model.component';
+import { LwCertificateomponent } from './security/Certificate/certificate.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LwClientsDataTableComponent } from './clients/clients-data-model/table.components';
 
 
@@ -35,6 +39,8 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
     LwComponent,
     LwClientsComponent,
     LwSecurityComponent,
+    LwClientsDataComponent,
+    LwCertificateomponent,
     LwClientsDataComponent,
     LwClientsDataTableComponent
 
@@ -48,6 +54,8 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
     MatButtonToggleModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatTableModule,
+    MatSortModule,
    
 
     

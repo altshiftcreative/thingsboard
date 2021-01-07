@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../../Lw-service";
+
 
 @Component({
     selector: 'Lw-clients-data-model',
@@ -26,7 +25,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
         this.getDataModel();
     }
     ngOnInit(): void {
-        
+    
     }
 
     getDataModel(){

@@ -42,6 +42,20 @@ public class LwM2MApiController {
         return acsResponse;
     }
 
+    private String getCertificateLw(){
+        String acsResponse = null;
+        try{
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/api/security/server")
+                    .build();
+            Response  response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        }catch (Exception e){
+        }
+        return acsResponse;
+    }
+
 //    getClientsDataLw
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/Lw/clients", method = RequestMethod.GET,produces = "application/json")
@@ -61,6 +75,17 @@ public class LwM2MApiController {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = getClientsDataLw(endpoint);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+    @RequestMapping(value = "/Lw/certificate", method = RequestMethod.GET,produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> getCertificate() {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = getCertificateLw();
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));
