@@ -2,6 +2,7 @@ package com.asc.bluewaves.lwm2m.service;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -179,7 +181,7 @@ public class ClientService {
 		Bson filter = and(eq("endpoint", clientDto.getEndpoint()));
 		Iterable<Document> clientDB = mongoTemplate.getCollection("client").find(filter);
 		if (clientDB.iterator().hasNext()) {
-			throw new ResourceAlreadyExistException(clientDto.getEndpoint());
+			throw new ResourceAlreadyExistException("The client you are trying to create is already exist: " + clientDto.getEndpoint());
 		}
 
 		// Add the client to our running Leshan server
@@ -189,8 +191,12 @@ public class ClientService {
 		mongoTemplate.getCollection("client").insertOne(Document.parse(mapper.writeValueAsString(clientDto)));
 	}
 
-	public void deleteClient(String endpoint2) {
-
+	public void deleteClient(List<String> endpoints) {
+		if (endpoints == null || endpoints.isEmpty()) {
+			return;
+		}
+		Bson filter = and(in("endpoint", endpoints));
+		mongoTemplate.getCollection("client").deleteMany(filter);
 	}
 
 	public void doReadRequest(HttpServletRequest req, HttpServletResponse resp, String format, Integer timeout)
@@ -446,14 +452,14 @@ public class ClientService {
 
 	private void processDeviceResponse(HttpServletResponse resp, LwM2mResponse cResponse) throws IOException {
 		if (cResponse == null) {
-            resp.setStatus(HttpServletResponse.SC_GATEWAY_TIMEOUT);
-            resp.getWriter().append("Request timeout").flush();
-        } else {
-            String response = this.gson.toJson(cResponse);
-            resp.setContentType("application/json");
-            resp.getOutputStream().write(response.getBytes());
-            resp.setStatus(HttpServletResponse.SC_OK);
-        }
+			resp.setStatus(HttpServletResponse.SC_GATEWAY_TIMEOUT);
+			resp.getWriter().append("Request timeout").flush();
+		} else {
+			String response = this.gson.toJson(cResponse);
+			resp.setContentType("application/json");
+			resp.getOutputStream().write(response.getBytes());
+			resp.setStatus(HttpServletResponse.SC_OK);
+		}
 	}
 
 	private LwM2mNode extractLwM2mNode(String target, HttpServletRequest req, LwM2mPath path) throws IOException {
