@@ -40,7 +40,7 @@ public class SecurityController extends BaseController {
 		}
 	}
 
-	@PutMapping("")
+	@PutMapping("/**" )
 	public void updateRequest(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			securityService.doUpdateRequest(request, response);
@@ -55,8 +55,7 @@ public class SecurityController extends BaseController {
 	}
 
 	@DeleteMapping("/clients/{" + ENDPOINT + "}")
-	public void deleteRequest(@PathVariable(ENDPOINT) String endpoint, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void deleteRequest(@PathVariable(ENDPOINT) String endpoint, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
 			securityService.doDeleteRequest(request, response, endpoint);
