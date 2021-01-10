@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 @Component({
     selector: 'Lw-security',
     templateUrl: './security.component.html',
-    styleUrls: ['./security.component.scss']
+    styleUrls: ['./security.component.scss'],
+    encapsulation: ViewEncapsulation.None
+
 })
 
 

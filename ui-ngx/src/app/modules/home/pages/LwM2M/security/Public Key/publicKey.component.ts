@@ -1,21 +1,22 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
-    selector: 'Lw-certificate',
-    templateUrl: './certificate.component.html',
-    styleUrls: ['./certificate.component.scss'],
+    selector: 'Lw-publicKey',
+    templateUrl: './publicKey.component.html',
+    styleUrls: ['./publicKey.component.scss'],
 
 })
 
 
-export class LwCertificateomponent implements OnInit, AfterViewInit {
+export class LwPublicKeycateomponent implements OnInit, AfterViewInit {
 
     constructor(private http: HttpClient, public dialog: MatDialog) { }
-    displayedColumns: string[] = ['Hex', 'Base64'];
+    displayedColumns: string[] = ['params', 'x','y'];
     datacertificate;
+    dataSource: MatTableDataSource<any>;
     hexCode;
     ngOnInit(): void {
         
@@ -26,8 +27,10 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
 
     getDevices() {
         this.http.get<any[]>('http://localhost:8080/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+            this.dataSource = new MatTableDataSource(certificateData);
+            console.log(this.dataSource)
             this.datacertificate = certificateData;
-            this.hexCode=this.base64ToHex(this.datacertificate.certificate.b64Der);
+            this.hexCode=this.base64ToHex(this.datacertificate.certificate.pubkey.b64Der);
         })
     }
 
@@ -41,6 +44,6 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         }
         return result.toUpperCase();
       }
-
+      
 
 }

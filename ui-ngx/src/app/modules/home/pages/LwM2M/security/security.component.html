@@ -1,16 +1,13 @@
-<div style="margin-top: 49px;">
-    <mat-tab-group selectedIndex="0" (selectedTabChange)="changeTab($event)" class="myDiv3 sada">
-      <mat-tab label="Certificate" style="background-color: gray;" >
+<div style="margin-top: 49px;" >
+    <mat-tab-group selectedIndex="0" (selectedTabChange)="changeTab($event)"  >
+      <mat-tab label="Certificate" class="myTab">
         <Lw-certificate *ngIf="tabIndex === 0" style="background-color: green;"></Lw-certificate>      
       </mat-tab>
-      <mat-tab label="Device">
-        <acs-device *ngIf="tabIndex === 1"></acs-device>
+      <mat-tab label="Public Key">
+        <Lw-publicKey *ngIf="tabIndex === 1"></Lw-publicKey>
       </mat-tab>
-      <mat-tab label="Faults">
-        <acs-faults *ngIf="tabIndex === 2"></acs-faults>
-      </mat-tab>
-      <mat-tab label="Admin">
-        <acs-admin *ngIf="tabIndex === 3"></acs-admin>
+      <mat-tab label="Client Security Configuration">
+        <Lw-clientSecurityConfig *ngIf="tabIndex === 2"></Lw-clientSecurityConfig>
       </mat-tab>
     </mat-tab-group>
-  </div>
+  </div> 
