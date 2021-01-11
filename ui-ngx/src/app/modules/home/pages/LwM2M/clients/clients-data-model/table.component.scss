@@ -212,11 +212,6 @@
     width: 100%;
   }
   
-//   #customers td, #customers th {
-//     border: 1px solid #ddd;
-//     padding: 8px;
-//   }
-  
   #customers tr:nth-child(even){background-color: #f2f2f2;}
   
   #customers tr:hover {background-color: #ddd;}
@@ -229,10 +224,12 @@
     color: #595959;
   }
 
-  table {
-    border-collapse: collapse       
-}
+.table-2 th {
+    border-bottom: 1px solid #E5E5E5;
+    border-collapse: collapse;
+  }
+  .table-2 td {
+    border-bottom: 1px solid #E5E5E5;
+    border-collapse: collapse;
+  }
 
-td {
-   border: 1px solid #000000
-}
