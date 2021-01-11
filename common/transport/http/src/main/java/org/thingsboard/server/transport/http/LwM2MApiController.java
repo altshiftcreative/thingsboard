@@ -170,4 +170,5 @@ public class LwM2MApiController {
         });
         return output;
     }
+
 }

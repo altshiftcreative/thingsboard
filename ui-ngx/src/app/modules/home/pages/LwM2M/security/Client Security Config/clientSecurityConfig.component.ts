@@ -34,6 +34,8 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
         this.dialog.open(newConfigDialog,{
             height: '450px',
             width: '240px',
+        }).afterClosed().subscribe((clientsData) => {
+            this.getClients();
         })
     }
 
@@ -48,8 +50,10 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
 
         })
     }
-    deletClients(id){
-        this.http.delete('http://localhost:8080/api/v1/Lw/deleteClientsSecurity/?endpoint=' + id).toPromise().then((dta) => { })
+   async deletClients(id){
+      await  this.http.delete('http://localhost:8080/api/v1/Lw/deleteClientsSecurity/?endpoint=' + id).toPromise().then((dta) => { })
+        this.getClients();
+        
     }
 
     clientsSearch(event){

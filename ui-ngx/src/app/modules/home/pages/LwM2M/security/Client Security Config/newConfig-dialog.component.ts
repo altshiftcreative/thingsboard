@@ -26,8 +26,7 @@ export class newConfigDialog implements OnInit {
     }
 
     
-    onSubmit() {
-        console.log(this.newConfigForm);
+     onSubmit() {
         this.http.put('http://localhost:8080/api/v1/Lw/addClientsSecurity',
 
         { 
@@ -38,5 +37,7 @@ export class newConfigDialog implements OnInit {
             }
         }
     ).subscribe((dta) => { })
+       
+
     }
 }
