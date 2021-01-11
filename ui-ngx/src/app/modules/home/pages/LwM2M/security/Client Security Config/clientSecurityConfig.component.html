@@ -1,0 +1,66 @@
+
+<div  class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;">
+    <mat-progress-bar class="mat-progress" color="warn" mode="indeterminate" *ngIf="isLoading">
+    </mat-progress-bar>
+    <div class="shadow-div">
+        <div class="header-of-table" mat-header>
+            <div class="left">
+                <p class="headerStyle">Client Security Configuration</p>
+            </div>
+            <div class="search-div left" style="width: 18%;position: absolute;left: 66em;">
+                <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+                <input class="search-input" type="text" placeholder="Search" (keyup)="clientsSearch($event)" />
+            </div>
+            <div class="left">
+                <button (click)="openDialog()" class="downloadCSV" mat-stroked-button style="border-color: #1890FF;">Add New</button>
+            </div>
+          
+        </div>
+
+
+        <!-- table here  -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
+
+            <ng-container matColumnDef="Client Endpoint">
+                <th mat-header-cell *matHeaderCellDef>
+                    Client Endpoint </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element['endpoint']}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Security Mode">
+                <th mat-header-cell *matHeaderCellDef> Security Mode </th>
+                <td mat-cell *matCellDef="let element">
+                    Pre-Shared Key	
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Security Information">
+                <th mat-header-cell *matHeaderCellDef> Security Information </th>
+                <td mat-cell *matCellDef="let element" style="color: red; padding-bottom: 1em;" >
+                    <p style="font-size: 14px;margin-bottom: 8px; color: black;">Identity :</p>{{element['psk']['identity']}}
+                    <br>
+                    <p style="font-size: 14px; margin-bottom: 8px; color: black;">Key :</p>{{element['psk']['key']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <img src="../../../../../assets/img/close-delete.svg" style="cursor: pointer;"
+                        (click)="deletClients(element['endpoint'])"/>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator >
+        
+    </div>
+
+</div>

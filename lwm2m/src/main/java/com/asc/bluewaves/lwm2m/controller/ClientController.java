@@ -1,6 +1,7 @@
 package com.asc.bluewaves.lwm2m.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,11 +59,27 @@ public class ClientController extends BaseController {
 //		}
 //	}
 
-	@DeleteMapping("/{" + ENDPOINT + "}")
-	public ResponseEntity<Void> deleteDevice(@PathVariable(ENDPOINT) String endpoint) {
-		checkParameter(ENDPOINT, endpoint);
+//	@DeleteMapping("/{" + ENDPOINT + "}")
+//	public ResponseEntity<Void> deleteDevice(@PathVariable(ENDPOINT) List<String> endpoints) {
+//		// checkParameter(ENDPOINT, endpoint);
+//		try {
+//			clientService.deleteClient(endpoints);
+//			return ResponseEntity.noContent().build();
+//
+//		} catch (NullPointerException e) {
+//			e.printStackTrace();
+//			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
+//		}
+//	}
+	
+	@DeleteMapping("")
+	public ResponseEntity<Void> deleteDevices(@RequestBody List<String> endpoints) {
 		try {
-			clientService.deleteClient(endpoint);
+			clientService.deleteClient(endpoints);
 			return ResponseEntity.noContent().build();
 
 		} catch (NullPointerException e) {

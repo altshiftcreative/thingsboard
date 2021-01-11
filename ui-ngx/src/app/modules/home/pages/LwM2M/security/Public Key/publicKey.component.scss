@@ -26,7 +26,7 @@
 
  .textArea{
     width: 45%;
-    height: 310px;
+    height: 200px;
     margin-left: 2em;
     margin-right: 2em;
     display:inline-block;
@@ -53,9 +53,9 @@
     padding-bottom: 2em;
     margin-left: 50em;
     position: absolute;
-    top: 18%;  
+    top: 53%;  
     color: #262626;
-    left: 49px;
+    left: 11px;
     line-height: 22px;
 
 }
@@ -76,3 +76,11 @@
 }
 // ::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
 //    }
+table, th, td {
+    border-bottom: 1px solid #E5E5E5;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 1.5em;
+  }
+  
