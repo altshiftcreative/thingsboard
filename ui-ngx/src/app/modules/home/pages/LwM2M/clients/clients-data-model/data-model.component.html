@@ -51,7 +51,7 @@
   <div class="accord" style="padding-top: 170px;background-color: white;">
     <mat-accordion>
       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let item of dataSource;index as i;">
-        <mat-expansion-panel-header>
+        <mat-expansion-panel-header style="background-color: #F5F5F5;">
           <mat-panel-title>
             {{item['name']}}
           </mat-panel-title>
