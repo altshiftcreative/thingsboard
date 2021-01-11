@@ -9,10 +9,10 @@
           <mat-label>Select timeout</mat-label>
           <mat-select [(value)]="selectedTime">
 
-            <mat-option value="5s">5s</mat-option>
-            <mat-option value="5min">5min</mat-option>
-            <mat-option value="15min">15min</mat-option>
-            <mat-option value="30min">30min</mat-option>
+            <mat-option value="5">5s</mat-option>
+            <mat-option value="300">5min</mat-option>
+            <mat-option value="900">15min</mat-option>
+            <mat-option value="1800">30min</mat-option>
             <mat-option value="no">No</mat-option>
           </mat-select>
         </mat-form-field> &nbsp; &nbsp; &nbsp; &nbsp;
@@ -59,7 +59,7 @@
             /{{item['id']}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [dataModel]='dataSource[i]' [instanceNumber]='instanceNumber'></Lw-clients-data-model-table>
+        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [dataModel]='dataSource[i]' [instanceNumber]='instanceNumber' [timeOut]="selectedTime" [format]="selectedSingle"></Lw-clients-data-model-table>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

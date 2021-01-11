@@ -11,7 +11,7 @@ import { LwService } from "../../Lw-service";
 
 
 export class LwClientsDataComponent implements OnInit, AfterViewInit {
-    selectedTime = '5s';
+    selectedTime = '5';
     selectedMulti = 'TLV';
     selectedSingle = 'TLV';
     dataModelComponent: Boolean ;
