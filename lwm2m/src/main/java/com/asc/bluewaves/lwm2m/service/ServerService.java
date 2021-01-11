@@ -37,7 +37,7 @@ public class ServerService {
 	private LeshanServer server;
 	private X509Certificate serverCertificate;
 
-	private final int PORT = 5685;
+	// private final int PORT = 5685;
 	private final int SEC_PORT = 5686;
 
 	// get the Redis hostname:port
@@ -50,8 +50,9 @@ public class ServerService {
 		log.info("Starting LWM2M transport server....");
 
 		LeshanServerBuilder builder = new LeshanServerBuilder();
-		builder.setLocalAddress("localhost", PORT); // Thingsboard CoAP will reserve the default port
+		// builder.setLocalAddress("localhost", PORT); // Thingsboard CoAP will reserve the default port
 		builder.setLocalSecureAddress("localhost", SEC_PORT); // Thingsboard CoAP will reserve the default port
+		builder.disableUnsecuredEndpoint();
 
 		// Once we add a connection pool, this configuration must be changed
 		EditableSecurityStore securityStore = new FileSecurityStore();
@@ -90,6 +91,7 @@ public class ServerService {
 		this.server = builder.build();
 
 		server.start();
+		
 		// Add event listeners
 		new EventListeners(server);
 

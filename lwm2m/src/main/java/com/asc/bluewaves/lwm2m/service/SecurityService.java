@@ -75,6 +75,8 @@ public class SecurityService {
 
 			securityStore.add(info);
 
+			// TODO: I have to add the endpoint and accessToken to the client collection in MongoDB
+			
 			resp.setStatus(HttpServletResponse.SC_OK);
 
 		} catch (NonUniqueSecurityInfoException e) {

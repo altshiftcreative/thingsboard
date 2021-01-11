@@ -3,14 +3,21 @@ package com.asc.bluewaves.lwm2m.service;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.in;
+import static org.eclipse.leshan.client.object.Security.psk;
+import static org.eclipse.leshan.core.LwM2mId.DEVICE;
+import static org.eclipse.leshan.core.LwM2mId.LOCATION;
+import static org.eclipse.leshan.core.LwM2mId.SECURITY;
+import static org.eclipse.leshan.core.LwM2mId.SERVER;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +29,8 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.eclipse.leshan.client.californium.LeshanClient;
 import org.eclipse.leshan.client.californium.LeshanClientBuilder;
-import org.eclipse.leshan.client.object.Device;
-import org.eclipse.leshan.client.object.Security;
 import org.eclipse.leshan.client.object.Server;
 import org.eclipse.leshan.client.resource.ObjectsInitializer;
-import org.eclipse.leshan.core.LwM2mId;
 import org.eclipse.leshan.core.attributes.AttributeSet;
 import org.eclipse.leshan.core.model.LwM2mModel;
 import org.eclipse.leshan.core.model.ObjectLoader;
@@ -38,6 +42,7 @@ import org.eclipse.leshan.core.node.LwM2mObjectInstance;
 import org.eclipse.leshan.core.node.LwM2mPath;
 import org.eclipse.leshan.core.node.LwM2mSingleResource;
 import org.eclipse.leshan.core.node.codec.CodecException;
+import org.eclipse.leshan.core.request.BindingMode;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.request.CreateRequest;
 import org.eclipse.leshan.core.request.DeleteRequest;
@@ -64,8 +69,15 @@ import org.eclipse.leshan.core.response.WriteAttributesResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.registration.Registration;
+import org.eclipse.leshan.server.security.EditableSecurityStore;
+import org.eclipse.leshan.server.security.SecurityInfo;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.asc.bluewaves.lwm2m.converter.MagicLwM2mValueConverter;
 import com.asc.bluewaves.lwm2m.errors.ResourceAlreadyExistException;
@@ -75,7 +87,10 @@ import com.asc.bluewaves.lwm2m.model.json.LwM2mNodeDeserializer;
 import com.asc.bluewaves.lwm2m.model.json.LwM2mNodeSerializer;
 import com.asc.bluewaves.lwm2m.model.json.RegistrationSerializer;
 import com.asc.bluewaves.lwm2m.model.json.ResponseSerializer;
+import com.asc.bluewaves.lwm2m.service.demo.MyDevice;
+import com.asc.bluewaves.lwm2m.service.demo.MyLocation;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -93,6 +108,7 @@ public class ClientService {
 
 	// Server fields
 	private final LeshanServer server;
+	private final EditableSecurityStore securityStore;
 	private final LwM2mModel model;
 	private final MagicLwM2mValueConverter converter;
 
@@ -100,12 +116,12 @@ public class ClientService {
 	private final ObjectMapper mapper;
 	private final Gson gson;
 
-	ClientService(MongoTemplate mongoTemplate, LeshanServer server) {
+	ClientService(MongoTemplate mongoTemplate, LeshanServer server, EditableSecurityStore securityStore)
+			throws JsonProcessingException, InterruptedException {
 		this.mongoTemplate = mongoTemplate;
 
 		this.server = server;
-		// startLwm2mServer();
-
+		this.securityStore = securityStore;
 		this.model = new StaticModel(ObjectLoader.loadDefault());
 		this.converter = new MagicLwM2mValueConverter();
 
@@ -119,13 +135,8 @@ public class ClientService {
 		gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 		this.gson = gsonBuilder.create();
 
-		try {
-			loadClientFromDB();
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Just use for demo, but no need in prod since the device will connect in its own
+		loadClientFromDB();
 	}
 
 	private String getServerAddress(boolean isSecure) {
@@ -135,6 +146,7 @@ public class ClientService {
 		return address;
 	}
 
+	// Just use for demo, but no need in prod since the device will connect in its own
 	private void loadClientFromDB() throws InterruptedException, JsonProcessingException {
 		log.info("Trying to register clients saved in DB....");
 		MongoCursor<Document> clients = mongoTemplate.getCollection("client").find().iterator();
@@ -144,6 +156,7 @@ public class ClientService {
 		}
 	}
 
+	// Just use for demo, but no need in prod since the device will connect in its own
 	public void addClientToServer(ClientDTO clientDto) throws JsonProcessingException {
 		log.info("Start creating new LWM2M client...");
 		log.info("Initilize LWM2M client builder...");
@@ -152,22 +165,27 @@ public class ClientService {
 
 		// create objects
 		ObjectsInitializer initializer = new ObjectsInitializer();
-//		initializer.setInstancesForObject(LwM2mId.SECURITY, Security.noSec(SERVER_URI, 12345));
-		initializer.setInstancesForObject(LwM2mId.SECURITY, Security.noSec(getServerAddress(false), 12345));
 
-		if (clientDto.getServers() != null) {
-			clientDto.getServers().forEach(server -> {
-				initializer.setInstancesForObject(LwM2mId.SERVER,
-						new Server(server.getShortServerId(), server.getLifetime(), server.getBinding(), server.isNotifyWhenDisable()));
-			});
+		// Any endpoint that have security method saved in store, it must use it or the Registration failed: FORBIDDEN.
+		// Any new endpoint without security method try to register in the secure address will be rejected
+		// Identity must not duplicated
+
+		SecurityInfo info = securityStore.getByEndpoint(clientDto.getEndpoint());
+		if (info != null && info.usePSK()) {
+			initializer.setInstancesForObject(SECURITY,
+					psk(getServerAddress(true), 123, info.getIdentity().getBytes(), info.getPreSharedKey()));
+
+			// We have to add the code for security using x502 certificate and RPK
+		} else {
+			return;
+			// No insceure device can connect
+			// initializer.setInstancesForObject(SECURITY, Security.noSec(getServerAddress(false), 12345));
 		}
 
-		if (clientDto.getDevices() != null) {
-			clientDto.getDevices().forEach(device -> {
-				initializer.setInstancesForObject(LwM2mId.DEVICE, new Device(device.getManufacturer(), device.getModelNumber(),
-						device.getSerialNumber(), device.getSupportedBinding()));
-			});
-		}
+		initializer.setInstancesForObject(SERVER, new Server(123, 300l, BindingMode.U, false));
+		initializer.setInstancesForObject(DEVICE, new MyDevice());
+		initializer.setInstancesForObject(LOCATION, new MyLocation());
+		// initializer.setInstancesForObject(3303, new RandomTemperatureSensor());
 
 		// add it to the client
 		clientBuilder.setObjects(initializer.createAll());
@@ -176,7 +194,7 @@ public class ClientService {
 		client.start();
 	}
 
-	public void saveClient(ClientDTO clientDto) throws JsonProcessingException, ResourceAlreadyExistException {
+	public void saveClient(ClientDTO clientDto) throws ResourceAlreadyExistException, IOException {
 		// check if the endpoint client is exist
 		Bson filter = and(eq("endpoint", clientDto.getEndpoint()));
 		Iterable<Document> clientDB = mongoTemplate.getCollection("client").find(filter);
@@ -186,9 +204,51 @@ public class ClientService {
 
 		// Add the client to our running Leshan server
 		addClientToServer(clientDto);
+		clientDto.setAccessToken(getNewAccessToken(clientDto.getEndpoint()));
 
 		// Save client to MongoDB
 		mongoTemplate.getCollection("client").insertOne(Document.parse(mapper.writeValueAsString(clientDto)));
+	}
+
+	private String getNewAccessToken(String endpoint) throws IOException {
+		String loginUrl = "http://localhost:8080/api/auth/login";
+		String accessTokenUrl = "http://localhost:8080/api/v1/provision";
+		String username = "tenant@thingsboard.org";
+		String password = "tenant";
+		String lwm2mKey = "r3rd5n77w1bpht21kp91";
+		String lwm2mSecret = "i9x798wdnbzirnax7b43";
+		
+
+		RestTemplate restTemplate = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		// First request, get token
+		Map<String, String> body = new HashMap<>();
+		body.put("username", username);
+		body.put("password", password);
+
+		HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
+		ResponseEntity<String> response = restTemplate.postForEntity(loginUrl, request, String.class);
+
+		JsonNode root = mapper.readTree(response.getBody());
+		String token = root.findValue("token").asText("");
+		
+		// Second request, get access token
+		headers.set("Authorization", "Bearer " + token);
+		
+		body.clear();
+		body.put("deviceName", endpoint);
+		body.put("provisionDeviceKey", lwm2mKey);
+		body.put("provisionDeviceSecret", lwm2mSecret);
+		
+		request = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
+		response = restTemplate.postForEntity(accessTokenUrl, request, String.class);
+
+		root = mapper.readTree(response.getBody());
+		String accessToken = root.findValue("credentialsValue").asText("");
+		return accessToken;
 	}
 
 	public void deleteClient(List<String> endpoints) {
@@ -197,13 +257,17 @@ public class ClientService {
 		}
 		Bson filter = and(in("endpoint", endpoints));
 		mongoTemplate.getCollection("client").deleteMany(filter);
+
+		for (String endpoint : endpoints) {
+			securityStore.remove(endpoint, true);
+		}
 	}
 
 	public void doReadRequest(HttpServletRequest req, HttpServletResponse resp, String format, Integer timeout)
 			throws ResourceDoesNotExistException, Exception {
 
 		// all registered clients
-		// GET http://localhost:8080/api/clients or http://localhost:8080/api/clients/
+		// GET /api/clients or /api/clients/
 		if (req.getRequestURI().endsWith("clients") || req.getRequestURI().endsWith("clients/")) {
 			Collection<Registration> registrations = new ArrayList<>();
 			for (Iterator<Registration> iterator = server.getRegistrationService().getAllRegistrations(); iterator.hasNext();) {
@@ -226,7 +290,7 @@ public class ClientService {
 		String clientEndpoint = path[0];
 
 		// /endPoint : get client
-		// GET //localhost:8080/api/clients/ebraheem-fedora
+		// GET /api/clients/ebraheem-fedora
 		if (path.length == 1) {
 			Registration registration = server.getRegistrationService().getByEndpoint(clientEndpoint);
 			if (registration != null) {
@@ -261,7 +325,7 @@ public class ClientService {
 		}
 
 		// /clients/endPoint/LWRequest : do LightWeight M2M read request on a given client.
-		// GET //localhost:8080/api/clients/ebraheem-fedora/1/0?format=TLV&timeout=5
+		// GET /api/clients/ebraheem-fedora/1/0?format=TLV&timeout=5
 		try {
 			String target = StringUtils.removeStart(targetPath, "/" + clientEndpoint);
 			Registration registration = server.getRegistrationService().getByEndpoint(clientEndpoint);
@@ -290,7 +354,7 @@ public class ClientService {
 
 		try {
 			// at least /endpoint/objectId/instanceId
-			// PUT //localhost:8080/api/clients/ebraheem-fedora/1/0/7?format=TLV&timeout=5
+			// PUT /api/clients/ebraheem-fedora/1/0/7?format=TLV&timeout=5
 			if (path.length < 3) {
 				res.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
 				return;
@@ -335,7 +399,7 @@ public class ClientService {
 		ContentFormat contentFormat = format != null ? ContentFormat.fromName(format) : null;
 
 		// /clients/endPoint/LWRequest/observe : do LightWeight M2M observe request on a given client.
-		// POST //localhost:8080/api/clients/ebraheem-fedora/1/0/0/observe?format=TLV&timeout=5
+		// POST /api/clients/ebraheem-fedora/1/0/0/observe?format=TLV&timeout=5
 		if (path.length >= 3 && "observe".equals(path[path.length - 1])) {
 			try {
 				String target = StringUtils.substringBetween(targetPath, clientEndpoint, "/observe");
