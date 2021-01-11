@@ -255,6 +255,13 @@ export class MenuService {
       },
       {
         id: guid(),
+        name: 'LwM2M',
+        type: 'link',
+        path: '/LwM2M',
+        icon: 'memory'
+      },
+      {
+        id: guid(),
         name: 'device.devices',
         type: 'link',
         path: '/devices',

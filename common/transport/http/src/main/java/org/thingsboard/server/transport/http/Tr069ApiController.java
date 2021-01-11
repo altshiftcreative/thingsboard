@@ -58,6 +58,7 @@ public class Tr069ApiController {
         }
         return acsResponse;
     }
+
     private String getTR69Faults(){
         String acsResponse = null;
         try{
@@ -625,6 +626,8 @@ public class Tr069ApiController {
     }
 
 //searchProvisions
+
+
 
 
 
