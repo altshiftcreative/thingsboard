@@ -11,6 +11,9 @@ import { Store } from '@ngrx/store';
 
 export class LwService {
     clientEndpoint;
+    value;
+    format;
+    timeout;
     constructor(private http: HttpClient,protected store: Store<AppState>) { }
 
     progress(res, stat) {
