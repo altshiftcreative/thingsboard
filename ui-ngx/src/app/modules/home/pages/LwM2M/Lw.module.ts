@@ -19,6 +19,7 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
 import { LwPublicKeycateomponent } from './security/Public Key/publicKey.component';
 import { LwClientSecurityConfigComponent } from './security/Client Security Config/clientSecurityConfig.component';
 import { newConfigDialog } from './security/Client Security Config/newConfig-dialog.component';
+import { newInstanceDialog } from './clients/clients-data-model/createInstance /newInstance-dialog.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { newConfigDialog } from './security/Client Security Config/newConfig-dia
     LwClientsDataTableComponent,
     LwPublicKeycateomponent,
     LwClientSecurityConfigComponent,
-    newConfigDialog
+    newConfigDialog,
+    newInstanceDialog
     
     
 

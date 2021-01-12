@@ -1,8 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../Lw-service";
+import { newInstanceDialog } from "./clients-data-model/createInstance /newInstance-dialog.component";
 
 @Component({
     selector: 'Lw-clients',
@@ -60,4 +62,6 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
         this.lwService.clientEndpoint = endpoint;
        this.dataModelComponent = true;
     }
+
+
 }
