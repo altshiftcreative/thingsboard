@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.californium.core.network.Endpoint;
 import org.eclipse.jetty.servlets.EventSource;
@@ -20,6 +22,7 @@ import org.eclipse.leshan.server.queue.PresenceListener;
 import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
+import org.springframework.stereotype.Service;
 
 import com.asc.bluewaves.lwm2m.model.json.LwM2mNodeSerializer;
 import com.asc.bluewaves.lwm2m.model.json.RegistrationSerializer;
@@ -32,8 +35,9 @@ import com.google.gson.JsonElement;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Service("EventService")
 @Slf4j
-public class EventListeners extends EventSourceServlet {
+public class EventService extends EventSourceServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +67,7 @@ public class EventListeners extends EventSourceServlet {
 		@Override
 		public void registered(Registration registration, Registration previousReg, Collection<Observation> previousObsersations) {
 			// TODO: if client is not in our DB destroy it
-			
+
 			String jReg = gson.toJson(registration);
 			log.info("Client regestiration: " + registration.getEndpoint());
 			sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
@@ -138,7 +142,7 @@ public class EventListeners extends EventSourceServlet {
 		}
 	};
 
-	public EventListeners(LeshanServer server) {
+	public EventService(LeshanServer server) {
 		this.server = server;
 		server.getRegistrationService().addListener(this.registrationListener);
 		server.getObservationService().addListener(this.observationListener);
@@ -179,9 +183,9 @@ public class EventListeners extends EventSourceServlet {
 
 		@Override
 		public void trace(CoapMessage message) {
-			JsonElement coapLog = EventListeners.this.gson.toJsonTree(message);
+			JsonElement coapLog = EventService.this.gson.toJsonTree(message);
 			coapLog.getAsJsonObject().addProperty("ep", this.endpoint);
-			String coapLogWithEndPoint = EventListeners.this.gson.toJson(coapLog);
+			String coapLogWithEndPoint = EventService.this.gson.toJson(coapLog);
 			sendEvent(EVENT_COAP_LOG, coapLogWithEndPoint, endpoint);
 		}
 
@@ -245,5 +249,10 @@ public class EventListeners extends EventSourceServlet {
 	private class RegUpdate {
 		public Registration registration;
 		public RegistrationUpdate update;
+	}
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		super.doGet(request, response);
 	}
 }

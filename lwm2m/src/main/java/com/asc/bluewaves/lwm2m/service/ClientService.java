@@ -217,13 +217,12 @@ public class ClientService {
 		String password = "tenant";
 		String lwm2mKey = "r3rd5n77w1bpht21kp91";
 		String lwm2mSecret = "i9x798wdnbzirnax7b43";
-		
 
 		RestTemplate restTemplate = new RestTemplate();
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
+
 		// First request, get token
 		Map<String, String> body = new HashMap<>();
 		body.put("username", username);
@@ -234,21 +233,24 @@ public class ClientService {
 
 		JsonNode root = mapper.readTree(response.getBody());
 		String token = root.findValue("token").asText("");
-		
+
 		// Second request, get access token
 		headers.set("Authorization", "Bearer " + token);
-		
+
 		body.clear();
 		body.put("deviceName", endpoint);
 		body.put("provisionDeviceKey", lwm2mKey);
 		body.put("provisionDeviceSecret", lwm2mSecret);
-		
+
 		request = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
 		response = restTemplate.postForEntity(accessTokenUrl, request, String.class);
 
 		root = mapper.readTree(response.getBody());
-		String accessToken = root.findValue("credentialsValue").asText("");
-		return accessToken;
+
+		if (root.findValue("credentialsValue") == null) {
+			return "";
+		}
+		return root.findValue("credentialsValue").asText();
 	}
 
 	public void deleteClient(List<String> endpoints) {
