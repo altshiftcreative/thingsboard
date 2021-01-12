@@ -59,11 +59,11 @@ import java.util.stream.Collectors;
 public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
 
     private final AlarmService alarmService;
+    
     @Getter
-    @Setter
     private final LinkedHashMap<EntityId, EntityData> entitiesMap;
+    
     @Getter
-    @Setter
     private final HashMap<AlarmId, AlarmData> alarmsMap;
 
     private final int maxEntitiesPerAlarmSubscription;
@@ -71,6 +71,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     @Getter
     @Setter
     private PageData<AlarmData> alarms;
+    
     @Getter
     @Setter
     private boolean tooManyEntities;

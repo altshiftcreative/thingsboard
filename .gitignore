@@ -39,3 +39,5 @@ rebuild-docker.sh
 */.factorypath
 .factorypath
 
+
+lwm2m/data/security.data
