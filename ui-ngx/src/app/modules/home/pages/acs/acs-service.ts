@@ -57,8 +57,8 @@ export class AcsService {
         }
     }
 
-    public refresh(id, parameterName): void {
-        this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
+    public async refresh(id, parameterName): Promise<any> {
+        await this.http.post('http://localhost:8080/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "getParameterValues",
@@ -69,7 +69,8 @@ export class AcsService {
                     "status": "pending"
                 }
             ],
-        ).subscribe((dta) => { })
+        ).toPromise().then((dta) => { })
+        this.progress('Refresh', true);
     }
 
 

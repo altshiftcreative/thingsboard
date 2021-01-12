@@ -29,6 +29,9 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     }
 
     openDialog(){
+        this.lwService.value = this.dataModel['id'];
+        this.lwService.format = this.format;
+        this.lwService.timeout = this.timeOut;
         this.dialog.open(newInstanceDialog,{
             height: '483px',
             width: '768px',
