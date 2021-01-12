@@ -220,6 +220,26 @@ public class LwM2MApiController {
         }
         return acsResponse;
     }
+
+//    http://localhost:9090/api/clients/BW-Client-5/1?format=TLV&timeout=5
+//    createInstanceLw
+
+    private String createInstanceLw(String instance, String endpoint, String value,String format, String timeOut) {
+        String acsResponse = "";
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, instance);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/api/clients/" + endpoint + "/" + value + "?format=" + format + "&timeout=" + timeOut)
+                    .post(formBody)
+                    .build();
+            Response response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        } catch (Exception e) {
+        }
+        return acsResponse;
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/Lw/clients", method = RequestMethod.GET, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getClients() {
@@ -379,6 +399,22 @@ public class LwM2MApiController {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = deleteInstanceLw(endpoint, value, timeOut);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/Lw/instance", method = RequestMethod.POST, produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> instanceLw(@RequestBody String instance,
+                                                         @RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint,
+                                                         @RequestParam(value = "value", required = true, defaultValue = "") String value,
+                                                         @RequestParam(value = "format", required = true, defaultValue = "") String format,
+                                                         @RequestParam(value = "timeout", required = true, defaultValue = "") String timeOut) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = createInstanceLw(instance, endpoint, value,format, timeOut);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));

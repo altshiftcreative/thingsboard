@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LwClientSecurityConfigComponent } from './clientSecurityConfig.component';
+import { LwService } from '../../Lw-service';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { LwClientSecurityConfigComponent } from './clientSecurityConfig.componen
 
 
 export class newConfigDialog implements OnInit {
-    constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {endpoint: string, identity: string,key: string}) { }
+    constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: {endpoint: string, identity: string,key: string},private lwService: LwService) { }
     newConfigForm: FormGroup;
     ngOnInit() {
         this.newConfigForm = new FormGroup({
@@ -36,8 +37,7 @@ export class newConfigDialog implements OnInit {
                 "key": this.newConfigForm.value.key,
             }
         }
-    ).subscribe((dta) => { })
-       
-
+    ).subscribe((dta) => {this.lwService.progress('CREATED', true); })
+    
     }
 }

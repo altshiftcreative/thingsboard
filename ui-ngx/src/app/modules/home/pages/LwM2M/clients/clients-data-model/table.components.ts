@@ -139,17 +139,49 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         let v = [this.dataModel['id'], this.instanceNumber, value];
         await this.http.post('http://localhost:8080/api/v1/Lw/execute/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
         ).toPromise().then((executeData) => {
-            this.lwService.progress(executeData['status'], false);
+            if (executeData['failure'])
+                this.lwService.progress(executeData['status'], false);
+            else
+                this.lwService.progress(executeData['status'], true);
 
         })
     }
 
 
     async deleteInstance() {
-        let v = [this.dataModel['id'], this.instanceNumber];
-        await this.http.delete('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
-        ).toPromise().then((observeData) => {
-            this.lwService.progress('DELETED', true);
+        let confirmation = confirm('Deleting instance. Are you sure?');
+        if (confirmation == true) {
+            let v = [this.dataModel['id'], this.instanceNumber];
+            await this.http.delete('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
+            ).toPromise().then((observeData) => {
+                this.lwService.progress('DELETED', true);
+            })
+        }
+    }
+
+    async createInstance() {
+        let v = this.dataModel['id'];
+        await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut,
+
+            {
+                "resources":
+                    [
+                        {
+                            "id": 1,
+                            "value": 400
+                        },
+                        {
+                            "id": 6,
+                            "value": "true"
+                        },
+                        {
+                            "id": 7,
+                            "value": "T"
+                        }
+                    ]
+            }
+        ).subscribe((instanceRes) => {
+            console.log('write Response : ', instanceRes);
         })
     }
 

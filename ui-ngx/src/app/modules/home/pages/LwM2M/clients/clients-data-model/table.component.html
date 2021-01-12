@@ -11,7 +11,7 @@
                     <th>Data</th>
                     <th>Value</th>
                     <th style="text-align-last: end;"><button mat-button class="Instance" *ngIf="dataModel['instancetype'] == 'multiple'"
-                            mat-raised-button style="border: none;width: 142px;">
+                            mat-raised-button style="border: none;width: 142px;" (click)="createInstance()">
                             Create Instance</button> &nbsp;&nbsp;
                         <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions
                             &nbsp; |
