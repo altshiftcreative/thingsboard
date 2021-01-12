@@ -36,212 +36,214 @@ import lombok.extern.slf4j.Slf4j;
 public class EventListeners extends EventSourceServlet {
 
 	private static final long serialVersionUID = 1L;
-	
-    private static final String EVENT_DEREGISTRATION = "DEREGISTRATION";
-    private static final String EVENT_UPDATED = "UPDATED";
-    private static final String EVENT_REGISTRATION = "REGISTRATION";
 
-    private static final String EVENT_AWAKE = "AWAKE";
-    private static final String EVENT_SLEEPING = "SLEEPING";
+	private static final String EVENT_DEREGISTRATION = "DEREGISTRATION";
+	private static final String EVENT_UPDATED = "UPDATED";
+	private static final String EVENT_REGISTRATION = "REGISTRATION";
 
-    private static final String EVENT_NOTIFICATION = "NOTIFICATION";
-    private static final String EVENT_COAP_LOG = "COAPLOG";
-    private static final String QUERY_PARAM_ENDPOINT = "ep";
+	private static final String EVENT_AWAKE = "AWAKE";
+	private static final String EVENT_SLEEPING = "SLEEPING";
 
-    // private static final Logger LOG = LoggerFactory.getLogger(EventListeners.class);
+	private static final String EVENT_NOTIFICATION = "NOTIFICATION";
+	private static final String EVENT_COAP_LOG = "COAPLOG";
+	private static final String QUERY_PARAM_ENDPOINT = "ep";
 
-    private final Gson gson;
+	// private static final Logger LOG = LoggerFactory.getLogger(EventListeners.class);
 
-    private final CoapMessageTracer coapMessageTracer;
+	private final Gson gson;
 
-    private Set<LeshanEventSource> eventSources = Collections
-            .newSetFromMap(new ConcurrentHashMap<LeshanEventSource, Boolean>());
+	private final LeshanServer server;
 
-    private final RegistrationListener registrationListener = new RegistrationListener() {
+	private final CoapMessageTracer coapMessageTracer;
 
-        @Override
-        public void registered(Registration registration, Registration previousReg,
-                Collection<Observation> previousObsersations) {
-            String jReg = EventListeners.this.gson.toJson(registration);
-            sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
-        }
+	private Set<LeshanEventSource> eventSources = Collections.newSetFromMap(new ConcurrentHashMap<LeshanEventSource, Boolean>());
 
-        @Override
-        public void updated(RegistrationUpdate update, Registration updatedRegistration,
-                Registration previousRegistration) {
-            RegUpdate regUpdate = new RegUpdate();
-            regUpdate.registration = updatedRegistration;
-            regUpdate.update = update;
-            String jReg = EventListeners.this.gson.toJson(regUpdate);
-            sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
-        }
+	private final RegistrationListener registrationListener = new RegistrationListener() {
 
-        @Override
-        public void unregistered(Registration registration, Collection<Observation> observations, boolean expired,
-                Registration newReg) {
-            String jReg = EventListeners.this.gson.toJson(registration);
-            sendEvent(EVENT_DEREGISTRATION, jReg, registration.getEndpoint());
-        }
+		@Override
+		public void registered(Registration registration, Registration previousReg, Collection<Observation> previousObsersations) {
+			// TODO: if client is not in our DB destroy it
+			
+			String jReg = gson.toJson(registration);
+			log.info("Client regestiration: " + registration.getEndpoint());
+			sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
+		}
 
-    };
+		@Override
+		public void updated(RegistrationUpdate update, Registration updatedRegistration, Registration previousRegistration) {
+			RegUpdate regUpdate = new RegUpdate();
+			regUpdate.registration = updatedRegistration;
+			regUpdate.update = update;
+			String jReg = gson.toJson(regUpdate);
+			log.info("Client update regestiration: " + updatedRegistration.getEndpoint());
+			sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
+		}
 
-    public final PresenceListener presenceListener = new PresenceListener() {
+		@Override
+		public void unregistered(Registration registration, Collection<Observation> observations, boolean expired, Registration newReg) {
+			String jReg = gson.toJson(registration);
+			log.info("Client deregestiration: " + registration.getEndpoint());
+			sendEvent(EVENT_DEREGISTRATION, jReg, registration.getEndpoint());
+		}
 
-        @Override
-        public void onSleeping(Registration registration) {
-            String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\"}").toString();
+	};
 
-            sendEvent(EVENT_SLEEPING, data, registration.getEndpoint());
-        }
+	public final PresenceListener presenceListener = new PresenceListener() {
 
-        @Override
-        public void onAwake(Registration registration) {
-            String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\"}").toString();
-            sendEvent(EVENT_AWAKE, data, registration.getEndpoint());
-        }
-    };
+		@Override
+		public void onSleeping(Registration registration) {
+			String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\"}").toString();
 
-    private final ObservationListener observationListener = new ObservationListener() {
+			sendEvent(EVENT_SLEEPING, data, registration.getEndpoint());
+		}
 
-        @Override
-        public void cancelled(Observation observation) {
-        }
+		@Override
+		public void onAwake(Registration registration) {
+			String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\"}").toString();
+			sendEvent(EVENT_AWAKE, data, registration.getEndpoint());
+		}
+	};
 
-        @Override
-        public void onResponse(Observation observation, Registration registration, ObserveResponse response) {
-            if (log.isDebugEnabled()) {
-                log.debug("Received notification from [{}] containing value [{}]", observation.getPath(),
-                        response.getContent().toString());
-            }
+	private final ObservationListener observationListener = new ObservationListener() {
 
-            if (registration != null) {
-                String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\",\"res\":\"")
-                        .append(observation.getPath().toString()).append("\",\"val\":")
-                        .append(gson.toJson(response.getContent())).append("}").toString();
+		@Override
+		public void cancelled(Observation observation) {
+		}
 
-                sendEvent(EVENT_NOTIFICATION, data, registration.getEndpoint());
-            }
-        }
+		@Override
+		public void onResponse(Observation observation, Registration registration, ObserveResponse response) {
+			if (log.isDebugEnabled()) {
+				log.debug("Received notification from [{}] containing value [{}]", observation.getPath(), response.getContent().toString());
+			}
 
-        @Override
-        public void onError(Observation observation, Registration registration, Exception error) {
-            if (log.isWarnEnabled()) {
-                log.warn(String.format("Unable to handle notification of [%s:%s]", observation.getRegistrationId(),
-                        observation.getPath()), error);
-            }
-        }
+			if (registration != null) {
+				String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\",\"res\":\"")
+						.append(observation.getPath().toString()).append("\",\"val\":").append(gson.toJson(response.getContent()))
+						.append("}").toString();
 
-        @Override
-        public void newObservation(Observation observation, Registration registration) {
-        }
-    };
+				sendEvent(EVENT_NOTIFICATION, data, registration.getEndpoint());
+			}
+		}
 
-    public EventListeners(LeshanServer server) {
-        server.getRegistrationService().addListener(this.registrationListener);
-        server.getObservationService().addListener(this.observationListener);
-        server.getPresenceService().addListener(this.presenceListener);
+		@Override
+		public void onError(Observation observation, Registration registration, Exception error) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Unable to handle notification of [%s:%s]", observation.getRegistrationId(), observation.getPath()),
+						error);
+			}
+		}
 
-        // add an interceptor to each endpoint to trace all CoAP messages
-        coapMessageTracer = new CoapMessageTracer(server.getRegistrationService());
-        for (Endpoint endpoint : server.coap().getServer().getEndpoints()) {
-            endpoint.addInterceptor(coapMessageTracer);
-        }
+		@Override
+		public void newObservation(Observation observation, Registration registration) {
+		}
+	};
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeHierarchyAdapter(Registration.class,
-                new RegistrationSerializer(server.getPresenceService()));
-        gsonBuilder.registerTypeHierarchyAdapter(LwM2mNode.class, new LwM2mNodeSerializer());
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        this.gson = gsonBuilder.create();
-    }
+	public EventListeners(LeshanServer server) {
+		this.server = server;
+		server.getRegistrationService().addListener(this.registrationListener);
+		server.getObservationService().addListener(this.observationListener);
+		server.getPresenceService().addListener(this.presenceListener);
 
-    private synchronized void sendEvent(String event, String data, String endpoint) {
-        if (log.isDebugEnabled()) {
-            log.debug("Dispatching {} event from endpoint {}", event, endpoint);
-        }
+		// add an intercepter to each endpoint to trace all CoAP messages
+		coapMessageTracer = new CoapMessageTracer(server.getRegistrationService());
+		for (Endpoint endpoint : server.coap().getServer().getEndpoints()) {
+			endpoint.addInterceptor(coapMessageTracer);
+		}
 
-        for (LeshanEventSource eventSource : eventSources) {
-            if (eventSource.getEndpoint() == null || eventSource.getEndpoint().equals(endpoint)) {
-                eventSource.sentEvent(event, data);
-            }
-        }
-    }
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeHierarchyAdapter(Registration.class, new RegistrationSerializer(server.getPresenceService()));
+		gsonBuilder.registerTypeHierarchyAdapter(LwM2mNode.class, new LwM2mNodeSerializer());
+		gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+		this.gson = gsonBuilder.create();
+	}
 
-    class ClientCoapListener implements CoapMessageListener {
+	private synchronized void sendEvent(String event, String data, String endpoint) {
+		if (log.isDebugEnabled()) {
+			log.debug("Dispatching {} event from endpoint {}", event, endpoint);
+		}
 
-        private final String endpoint;
+		for (LeshanEventSource eventSource : eventSources) {
+			if (eventSource.getEndpoint() == null || eventSource.getEndpoint().equals(endpoint)) {
+				eventSource.sentEvent(event, data);
+			}
+		}
+	}
 
-        ClientCoapListener(String endpoint) {
-            this.endpoint = endpoint;
-        }
+	class ClientCoapListener implements CoapMessageListener {
 
-        @Override
-        public void trace(CoapMessage message) {
-            JsonElement coapLog = EventListeners.this.gson.toJsonTree(message);
-            coapLog.getAsJsonObject().addProperty("ep", this.endpoint);
-            String coapLogWithEndPoint = EventListeners.this.gson.toJson(coapLog);
-            sendEvent(EVENT_COAP_LOG, coapLogWithEndPoint, endpoint);
-        }
+		private final String endpoint;
 
-    }
+		ClientCoapListener(String endpoint) {
+			this.endpoint = endpoint;
+		}
 
-    private void cleanCoapListener(String endpoint) {
-        // remove the listener if there is no more eventSources for this endpoint
-        for (LeshanEventSource eventSource : eventSources) {
-            if (eventSource.getEndpoint() == null || eventSource.getEndpoint().equals(endpoint)) {
-                return;
-            }
-        }
-        coapMessageTracer.removeListener(endpoint);
-    }
+		@Override
+		public void trace(CoapMessage message) {
+			JsonElement coapLog = EventListeners.this.gson.toJsonTree(message);
+			coapLog.getAsJsonObject().addProperty("ep", this.endpoint);
+			String coapLogWithEndPoint = EventListeners.this.gson.toJson(coapLog);
+			sendEvent(EVENT_COAP_LOG, coapLogWithEndPoint, endpoint);
+		}
 
-    @Override
-    protected EventSource newEventSource(HttpServletRequest req) {
-        String endpoint = req.getParameter(QUERY_PARAM_ENDPOINT);
-        return new LeshanEventSource(endpoint);
-    }
+	}
 
-    private class LeshanEventSource implements EventSource {
+	private void cleanCoapListener(String endpoint) {
+		// remove the listener if there is no more eventSources for this endpoint
+		for (LeshanEventSource eventSource : eventSources) {
+			if (eventSource.getEndpoint() == null || eventSource.getEndpoint().equals(endpoint)) {
+				return;
+			}
+		}
+		coapMessageTracer.removeListener(endpoint);
+	}
 
-        private String endpoint;
-        private Emitter emitter;
+	@Override
+	protected EventSource newEventSource(HttpServletRequest req) {
+		String endpoint = req.getParameter(QUERY_PARAM_ENDPOINT);
+		return new LeshanEventSource(endpoint);
+	}
 
-        public LeshanEventSource(String endpoint) {
-            this.endpoint = endpoint;
-        }
+	private class LeshanEventSource implements EventSource {
 
-        @Override
-        public void onOpen(Emitter emitter) throws IOException {
-            this.emitter = emitter;
-            eventSources.add(this);
-            if (endpoint != null) {
-                coapMessageTracer.addListener(endpoint, new ClientCoapListener(endpoint));
-            }
-        }
+		private String endpoint;
+		private Emitter emitter;
 
-        @Override
-        public void onClose() {
-            cleanCoapListener(endpoint);
-            eventSources.remove(this);
-        }
+		public LeshanEventSource(String endpoint) {
+			this.endpoint = endpoint;
+		}
 
-        public void sentEvent(String event, String data) {
-            try {
-                emitter.event(event, data);
-            } catch (IOException e) {
-                e.printStackTrace();
-                onClose();
-            }
-        }
+		@Override
+		public void onOpen(Emitter emitter) throws IOException {
+			this.emitter = emitter;
+			eventSources.add(this);
+			if (endpoint != null) {
+				coapMessageTracer.addListener(endpoint, new ClientCoapListener(endpoint));
+			}
+		}
 
-        public String getEndpoint() {
-            return endpoint;
-        }
-    }
+		@Override
+		public void onClose() {
+			cleanCoapListener(endpoint);
+			eventSources.remove(this);
+		}
 
-    @SuppressWarnings("unused")
-    private class RegUpdate {
-        public Registration registration;
-        public RegistrationUpdate update;
-    }
+		public void sentEvent(String event, String data) {
+			try {
+				emitter.event(event, data);
+			} catch (IOException e) {
+				e.printStackTrace();
+				onClose();
+			}
+		}
+
+		public String getEndpoint() {
+			return endpoint;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class RegUpdate {
+		public Registration registration;
+		public RegistrationUpdate update;
+	}
 }

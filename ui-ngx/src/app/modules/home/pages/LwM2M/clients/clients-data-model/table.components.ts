@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { LwService } from "../../Lw-service";
+import { newInstanceDialog } from "./createInstance /newInstance-dialog.component";
 
 @Component({
     selector: 'Lw-clients-data-model-table',
@@ -17,7 +19,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     readDataObject: any;
     observeDataObject: any;
     data: any = {};
-    constructor(private lwService: LwService, private http: HttpClient) { }
+    constructor(private lwService: LwService, private http: HttpClient,public dialog: MatDialog) { }
 
     ngAfterViewInit(): void {
 
@@ -26,6 +28,13 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
 
     }
 
+    openDialog(){
+        this.dialog.open(newInstanceDialog,{
+            height: '483px',
+            width: '768px',
+        }).afterClosed().subscribe((clientsData) => {
+        })
+    }
 
     async readData(value, index) {
         let v = [this.dataModel['id'], this.instanceNumber, value]
@@ -159,30 +168,30 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         }
     }
 
-    async createInstance() {
-        let v = this.dataModel['id'];
-        await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut,
+    // async createInstance() {
+    //     let v = this.dataModel['id'];
+    //     await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut,
 
-            {
-                "resources":
-                    [
-                        {
-                            "id": 1,
-                            "value": 400
-                        },
-                        {
-                            "id": 6,
-                            "value": "true"
-                        },
-                        {
-                            "id": 7,
-                            "value": "T"
-                        }
-                    ]
-            }
-        ).subscribe((instanceRes) => {
-            console.log('write Response : ', instanceRes);
-        })
-    }
+    //         {
+    //             "resources":
+    //                 [
+    //                     {
+    //                         "id": 1,
+    //                         "value": 400
+    //                     },
+    //                     {
+    //                         "id": 6,
+    //                         "value": "true"
+    //                     },
+    //                     {
+    //                         "id": 7,
+    //                         "value": "T"
+    //                     }
+    //                 ]
+    //         }
+    //     ).subscribe((instanceRes) => {
+    //         console.log('write Response : ', instanceRes);
+    //     })
+    // }
 
 }
