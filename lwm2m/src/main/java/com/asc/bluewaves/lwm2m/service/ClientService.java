@@ -213,8 +213,8 @@ public class ClientService {
 	private String getNewAccessToken(String endpoint) throws IOException {
 		String loginUrl = "http://localhost:8080/api/auth/login";
 		String accessTokenUrl = "http://localhost:8080/api/v1/provision";
-		String username = "obada@altshiftcreative.com";
-		String password = "123456";
+		String username = "hassan@altshiftcreative.com";
+		String password = "Hasan1998!";
 		String lwm2mKey = "r3rd5n77w1bpht21kp91";
 		String lwm2mSecret = "i9x798wdnbzirnax7b43";
 		

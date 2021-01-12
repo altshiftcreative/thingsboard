@@ -1,8 +1,12 @@
 <div class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;" >
     <div class="shadow-div" style="background-color: white; border-radius: 8px; padding: 0; margin: 0;">
         <div class="header-of-table" mat-header style="border-radius: 8px;">
-            <p class="headerStyle">Public Key <span style="color: #8C8C8C; font-size: 14px; font-weight: lighter;">(SubjectPublicKeyInfo der encoded)</span></p>
-            <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button style="border-color: #1890FF;">Download</button>
+            <div> 
+                <p class="headerStyle">Public Key <span style="color: #8C8C8C; font-size: 14px; font-weight: lighter;">(SubjectPublicKeyInfo der encoded)</span></p>
+            </div>
+            <div>
+                <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button style="border-color: #1890FF;">Download</button>
+            </div>
         </div>
         <div style="padding-bottom: 1em;">
             <table style="display: table-cell;">
@@ -29,16 +33,20 @@
           </table>
 
         </div>
-        <ng-container *ngIf="hexCode" >
-            <label class="label1" mat-header>Hex</label>
-            <textarea matInput class="textArea" readonly id="text1"> {{hexCode}}</textarea> 
-        </ng-container>
-
-        <ng-container *ngIf="datacertificate" >
-            <label class="label2" mat-header>Base64</label>
-            <textarea matInput class="textArea" readonly > {{datacertificate.certificate.pubkey.b64Der}}</textarea>
-        </ng-container>
-
+        <div class="tests">
+            <div class="test">
+                <ng-container *ngIf="hexCode" >
+                    <label class="label" mat-header>Hex</label>
+                    <textarea matInput class="textArea" readonly id="text1"> {{hexCode}}</textarea> 
+                </ng-container>
+            </div>
+            <div class="test"> 
+                <ng-container *ngIf="datacertificate" >
+                    <label class="label" mat-header>Base64</label>
+                    <textarea matInput class="textArea" readonly > {{datacertificate.certificate.pubkey.b64Der}}</textarea>
+                </ng-container>
+            </div>
+        </div>
         <p style="font-size:14px; color: #595959; padding-left: 1em;padding-bottom: 1em;">Clients generally need it for X509 authentication.</p>
 
     </div>
