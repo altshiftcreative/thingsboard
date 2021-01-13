@@ -13,6 +13,7 @@ import { newInstanceDialog } from "./createInstance /newInstance-dialog.componen
 
 export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     @Input() dataModel: object;
+    @Input() instanceObject: object;
     @Input() instanceNumber: number;
     @Input() timeOut: string;
     @Input() format: string;
@@ -39,11 +40,10 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         })
     }
 
-    async readData(value, index) {
-        let v = [this.dataModel['id'], this.instanceNumber, value]
+    async readData(value, index,instance) {
+        let v = [this.dataModel['id'], instance, value]
 
         await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
-            console.log('read Response : ', readData);
             this.readDataObject = readData;
         })
 
@@ -51,26 +51,25 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.lwService.progress(this.readDataObject['status'], false);
         }
         else {
-            this.data['field' + index] = this.readDataObject['content']['value'];
-            this.lwService.progress(this.readDataObject['status'], true);
+            this.data['field' +instance+ index] = this.readDataObject['content']['value'];
+            this.lwService.progress("SUCCESS", true);
 
         }
     }
 
-    async readAllData() {
-        let v = [this.dataModel['id'], this.instanceNumber];
+    async readAllData(instance) {
+        let v = [this.dataModel['id'], instance];
         await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
-            console.log('read all data Response : ', readData['content']['resources']);
             this.readDataObject = readData;
         })
         this.readDataObject['content']['resources'].forEach(element => {
-            this.data['field' + element['id']] = element['value'];
+            this.data['field' +instance+ element['id']] = element['value'];
         });
-        this.lwService.progress(this.readDataObject['status'], true);
+        this.lwService.progress("SUCCESS", true);
     }
 
-    async writeData(value) {
-        let v = [this.dataModel['id'], this.instanceNumber, value];
+    async writeData(value,instance) {
+        let v = [this.dataModel['id'], instance, value];
 
 
         let writeValue = prompt("Update resource" + this.dataModel['name']);
@@ -82,21 +81,20 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
                     "value": parseInt(writeValue)
                 }
             ).subscribe((writeData) => {
-                console.log('write Response : ', writeData);
             })
 
             if (this.readDataObject['failure']) {
                 this.lwService.progress(this.readDataObject['status'], false);
             }
             else {
-                this.lwService.progress(this.readDataObject['status'], true);
+                this.lwService.progress("SUCCESS", true);
 
             }
         }
     }
 
-    async startObserve(value, index) {
-        let v = [this.dataModel['id'], this.instanceNumber, value];
+    async startObserve(value, index,instance) {
+        let v = [this.dataModel['id'], instance, value];
 
         await this.http.post('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
@@ -109,14 +107,14 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         }
         else {
             this.data['field' + index] = this.observeDataObject['content']['value'];
-            this.lwService.progress(this.observeDataObject['status'], true);
+            this.lwService.progress("STARTED", true);
         }
     }
 
 
 
-    async startObserveAll() {
-        let v = [this.dataModel['id'], this.instanceNumber];
+    async startObserveAll(instance) {
+        let v = [this.dataModel['id'], instance];
         await this.http.post('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
             this.observeDataObject = observeData;
@@ -125,13 +123,13 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.observeDataObject['content']['resources'].forEach(element => {
             this.data['field' + element['id']] = element['value'];
         });
-        this.lwService.progress(this.observeDataObject['status'], true);
+        this.lwService.progress("STARTED", true);
     }
 
 
 
-    async stopObserve(value) {
-        let v = [this.dataModel['id'], this.instanceNumber, value];
+    async stopObserve(value,instance) {
+        let v = [this.dataModel['id'], instance, value];
 
         await this.http.delete('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v, {}
         ).toPromise().then((observeData) => {
@@ -139,62 +137,36 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         })
     }
 
-    async stopObserveAll() {
-        let v = [this.dataModel['id'], this.instanceNumber];
+    async stopObserveAll(instance) {
+        let v = [this.dataModel['id'], instance];
         await this.http.delete('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v, {}
         ).toPromise().then((observeData) => {
             this.lwService.progress('STOPED', true);
         })
     }
 
-    async execute(value) {
-        let v = [this.dataModel['id'], this.instanceNumber, value];
+    async execute(value,instance) {
+        let v = [this.dataModel['id'], instance, value];
         await this.http.post('http://localhost:8080/api/v1/Lw/execute/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
         ).toPromise().then((executeData) => {
             if (executeData['failure'])
                 this.lwService.progress(executeData['status'], false);
             else
-                this.lwService.progress(executeData['status'], true);
+                this.lwService.progress("EXECUTE", true);
 
         })
     }
 
 
-    async deleteInstance() {
+    async deleteInstance(instance) {
         let confirmation = confirm('Deleting instance. Are you sure?');
         if (confirmation == true) {
-            let v = [this.dataModel['id'], this.instanceNumber];
+            let v = [this.dataModel['id'], instance];
             await this.http.delete('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
             ).toPromise().then((observeData) => {
                 this.lwService.progress('DELETED', true);
             })
         }
     }
-
-    // async createInstance() {
-    //     let v = this.dataModel['id'];
-    //     await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut,
-
-    //         {
-    //             "resources":
-    //                 [
-    //                     {
-    //                         "id": 1,
-    //                         "value": 400
-    //                     },
-    //                     {
-    //                         "id": 6,
-    //                         "value": "true"
-    //                     },
-    //                     {
-    //                         "id": 7,
-    //                         "value": "T"
-    //                     }
-    //                 ]
-    //         }
-    //     ).subscribe((instanceRes) => {
-    //         console.log('write Response : ', instanceRes);
-    //     })
-    // }
 
 }

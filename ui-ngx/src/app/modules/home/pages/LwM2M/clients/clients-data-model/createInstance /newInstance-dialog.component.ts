@@ -14,7 +14,7 @@ import { LwService } from '../../../Lw-service';
 
 
 export class newInstanceDialog implements OnInit {
-    constructor(private lwService: LwService,private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: { ID: string, Lifetime: string, DefaultMinimum: string, DefaultMaximum: string, DisableTimeout: string, Binding: string, Notification: string }) { }
+    constructor(private lwService: LwService,private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: { ID: number, Lifetime: number, DefaultMinimum: number, DefaultMaximum: number, DisableTimeout: number, Binding: string, Notification: string }) { }
     newInstanceForm: FormGroup;
     resourcesArray: object[]=[];
     ngOnInit() {
@@ -32,22 +32,24 @@ export class newInstanceDialog implements OnInit {
     }
 
 
-    onSubmit() {
-        let dataNames = [{ "id": 1, "value": parseInt(this.newInstanceForm.value.Lifetime)  }, { "id": 2, "value": this.newInstanceForm.value.DefaultMinimum }, { "id": 3, "value": this.newInstanceForm.value.DefaultMaximum }, { "id": 5, "value": this.newInstanceForm.value.DisableTimeout }, { "id": 7, "value": this.newInstanceForm.value.Binding }, { "id": 6, "value": this.newInstanceForm.value.Notification }]
+    async onSubmit() {
+        let dataNames = [{ "id": 1, "value": this.newInstanceForm.value.Lifetime}, { "id": 2, "value": this.newInstanceForm.value.DefaultMinimum}, { "id": 3, "value": this.newInstanceForm.value.DefaultMaximum}, { "id": 5, "value": this.newInstanceForm.value.DisableTimeout }, { "id": 7, "value": this.newInstanceForm.value.Binding }, { "id": 6, "value": this.newInstanceForm.value.Notification }]
 
-        dataNames.forEach(e => {
-            if (e['value'] != null) {
-                this.resourcesArray.push(e);
+         dataNames.forEach(async e => {
+            if (e['value'] != null && e['value'] != NaN ) {
+                await this.resourcesArray.push(e);
             }
         })
+        console.log('daata names : ',this.resourcesArray);
+        
 
-        this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint='+this.lwService.clientEndpoint+'&value='+this.lwService.value+'&format='+this.lwService.format+'&timeout='+this.lwService.timeout,
+        await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint='+this.lwService.clientEndpoint+'&value='+this.lwService.value+'&format='+this.lwService.format+'&timeout='+this.lwService.timeout,
 
             {
                 "resources": this.resourcesArray
             }
-        ).subscribe((dta) => { })
-
-
+        ).toPromise().then((dta) => { })
+        this.lwService.progress("CREATED", true);
+        
     }
 }
