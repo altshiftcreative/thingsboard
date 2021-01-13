@@ -60,6 +60,22 @@ public class LwM2MApiController {
         return acsResponse;
     }
 
+//    getClientsByEndpointLw
+
+    private String getClientsByEndpointLw(String endpoint){
+        String acsResponse = null;
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/api/clients/" + endpoint)
+                    .build();
+            Response response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        } catch (Exception e) {
+        }
+        return acsResponse;
+    }
+
     private String getCertificateLw() {
         String acsResponse = null;
         try {
@@ -221,8 +237,6 @@ public class LwM2MApiController {
         return acsResponse;
     }
 
-//    http://localhost:9090/api/clients/BW-Client-5/1?format=TLV&timeout=5
-//    createInstanceLw
 
     private String createInstanceLw(String instance, String endpoint, String value,String format, String timeOut) {
         String acsResponse = "";
@@ -246,6 +260,18 @@ public class LwM2MApiController {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = getClientsLw();
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/Lw/clientsByEndpoint", method = RequestMethod.GET, produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> getClientsDataObjects(@RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = getClientsByEndpointLw(endpoint);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));

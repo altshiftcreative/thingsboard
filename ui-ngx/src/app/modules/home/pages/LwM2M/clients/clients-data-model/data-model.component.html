@@ -52,14 +52,14 @@
     <mat-accordion>
       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let item of dataSource;index as i;">
         <mat-expansion-panel-header style="background-color: #F5F5F5;">
-          <mat-panel-title>
+          <mat-panel-title style="width: 40px;">
             {{item['name']}}
           </mat-panel-title>
           <mat-panel-description>
             /{{item['id']}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [dataModel]='dataSource[i]' [instanceNumber]='instanceNumber' [timeOut]="selectedTime" [format]="selectedSingle"></Lw-clients-data-model-table>
+        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [dataModel]='dataSource[i]' [instanceObject]='clientByEndpoint' [instanceNumber]='instanceNumber' [timeOut]="selectedTime" [format]="selectedSingle"></Lw-clients-data-model-table>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
