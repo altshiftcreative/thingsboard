@@ -8,31 +8,32 @@
                 <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button style="border-color: #1890FF;">Download</button>
             </div>
         </div>
-        <div style="padding-bottom: 1em;">
-            <table style="display: table-cell;">
-                <thead style="background-color: #FAFAFA; flex-direction: row; width: 100%;">
-                    <tr style="text-align: left;">
-                        <th>Key:</th>
-                        <th>Value:</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border: black;">
-                        <th style=" text-align: left; font-weight: normal;"> Elliptic Curve parameters </th>
-                        <td *ngIf="datacertificate" style="color: red;"> {{datacertificate.certificate.pubkey.params}} </td>
-                    </tr>
-                    <tr>
-                        <th style=" text-align: left; font-weight: normal;"> Public x coord </th>
-                        <td *ngIf="datacertificate" style="color: red;"> {{datacertificate.certificate.pubkey.x}} </td>
-                    </tr>
-                    <tr>
-                        <th style=" text-align: left; font-weight: normal;"> Public y coord </th>
-                        <td *ngIf="datacertificate" style="color: red;">  {{datacertificate.certificate.pubkey.y}} </td>
-                    </tr>
-                </tbody>
-          </table>
+            <div class="table">
+                <table style="display: table-cell;padding-bottom: 1em;">
+                    <thead style="background-color: #FAFAFA; flex-direction: row; width: 100%;">
+                        <tr style="text-align: left;">
+                            <th>Key:</th>
+                            <th>Value:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border: black;">
+                            <th style=" text-align: left; font-weight: normal;"> Elliptic Curve parameters </th>
+                            <td *ngIf="datacertificate" style="color: red;"> 
+                                {{datacertificate.certificate.pubkey.params}} </td>
+                        </tr>
+                        <tr>
+                            <th style=" text-align: left; font-weight: normal;"> Public x coord </th>
+                            <td *ngIf="datacertificate" style="color: red;"> {{datacertificate.certificate.pubkey.x}} </td>
+                        </tr>
+                        <tr>
+                            <th style=" text-align: left; font-weight: normal;"> Public y coord </th>
+                            <td *ngIf="datacertificate" style="color: red;">  {{datacertificate.certificate.pubkey.y}} </td>
+                        </tr>
+                    </tbody>
+              </table>
+            </div>
 
-        </div>
         <div class="tests">
             <div class="test">
                 <ng-container *ngIf="hexCode" >

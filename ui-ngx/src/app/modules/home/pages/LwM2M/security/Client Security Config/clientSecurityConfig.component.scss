@@ -14,14 +14,28 @@
 }
 
 .header-of-table{
-  margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;
-}
-
+    margin: 0px;
+    padding: 33px;
+    text-align-last: end;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    div{
+        @media (max-width:767px){
+            margin: auto;
+            text-align: center;
+        }
+        button{
+          @media (max-width:767px){
+              padding: 5px;
+              min-width: auto;
+          }
+        }
+    }
+  }
+  
 .search-div{
     float: left;
     text-align-last: auto;
@@ -110,16 +124,6 @@
     box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
-.header-of-table{
-  margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;
-  display: flex;
-
-}
 
 .search-div{
     float: left;
@@ -129,7 +133,13 @@
     height: 40px;
     padding: 8px 12px 8px 7px;
     border-radius: 4px;
+  
     box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;
+    @media (max-width:512px) {
+        width: 70%;
+        margin-bottom: 1em !important;
+    
+    }    
 }
 
 .search-input{
@@ -153,6 +163,10 @@
   display: inline;
   outline: none;
   border-bottom-style: inset;
+  @media (max-width:512px) {
+    width: 70%;
+
+}    
 }
 
 .leftArrowBack{
@@ -189,6 +203,11 @@
     background: #FFFFFF; 
     text-align-last: auto; 
     color: #1890FF;
+    @media (max-width:512px) {
+    width: 93px;
+    height: 35px;
+    padding-top: 0px !important;
+    }  
 }
 
 .tag-span{
@@ -196,13 +215,20 @@
 }
 
 .headerStyle{
-    display: inline-block;
     font-size: 16px;
-    position: absolute;
     line-height: 24px;
     font-weight: 600;
-    left: 53px;
     color: #595959;
     top: 40px;
+   
+    
 }
+
 .left{float:left; width:50%;}
+.table{
+    @media (max-width: 400px){
+        overflow-x: scroll;
+        width: auto;
+        height: auto;
+    }
+}
