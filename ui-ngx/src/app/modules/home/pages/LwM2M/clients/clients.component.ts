@@ -16,22 +16,30 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<any>;
     displayedColumns: string[] = ['Client Endpoint', 'Registration ID', 'Registration Date', 'Last Update', 'Action'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    clientsArray : any[];
+    clientsArray: any[];
     dataModelComponent: Boolean = false;
-    clientsCounter: number ;
+    clientsCounter: number;
     clientEndpoint: string;
-    constructor(private http: HttpClient,private lwService: LwService) { }
+    myData: any;
+    constructor(private http: HttpClient, private lwService: LwService) { }
 
     ngAfterViewInit(): void {
         this.getClients();
-        
+
     }
     ngOnInit(): void {
-        
+
+        // let source = new EventSource('http://localhost:8080/api/v1/Lw/event');
+        // source.addEventListener('REGISTRATION', message => {
+            
+        //     this.myData = message.target;
+        //     console.log('eeeeeeeeeeeeeeee :',this.myData);
+            
+        // });
     }
 
-    getClients(){
-        
+    getClients() {
+
         this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clients', { withCredentials: true }).subscribe((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;
@@ -41,9 +49,9 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
         })
     }
 
-    clientsSearch(event){
-        if (event.target.value == "") {this.dataSource.data = this.clientsArray;}
-        
+    clientsSearch(event) {
+        if (event.target.value == "") { this.dataSource.data = this.clientsArray; }
+
         else {
             let arrayContainer = [];
             this.clientsArray.forEach((element) => {
@@ -55,10 +63,10 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    openDataModel(endpoint){
+    openDataModel(endpoint) {
         this.clientEndpoint = endpoint;
         this.lwService.clientEndpoint = endpoint;
-       this.dataModelComponent = true;
+        this.dataModelComponent = true;
     }
 
 

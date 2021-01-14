@@ -32,21 +32,21 @@ public class LwM2MApiController {
         return acsResponse;
     }
 
-    private String getClientsSecurityLw(){
+    private String getClientsSecurityLw() {
         String acsResponse = null;
-        try{
+        try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url("http://localhost:9090/api/security/clients")
                     .build();
-            Response  response = client.newCall(request).execute();
+            Response response = client.newCall(request).execute();
             acsResponse = response.body().string();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         return acsResponse;
     }
 
-    private String getClientsDataLw(String endpoint){
+    private String getClientsDataLw(String endpoint) {
         String acsResponse = null;
         try {
             OkHttpClient client = new OkHttpClient();
@@ -62,7 +62,7 @@ public class LwM2MApiController {
 
 //    getClientsByEndpointLw
 
-    private String getClientsByEndpointLw(String endpoint){
+    private String getClientsByEndpointLw(String endpoint) {
         String acsResponse = null;
         try {
             OkHttpClient client = new OkHttpClient();
@@ -89,24 +89,26 @@ public class LwM2MApiController {
         }
         return acsResponse;
     }
-    private String newSecurityConfig(String presetsRequest){
+
+    private String newSecurityConfig(String presetsRequest) {
         String tagResponse = "";
-        try{
+        try {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,presetsRequest);
+            okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, presetsRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://localhost:9090/api/security/clients/" )
+                    .url("http://localhost:9090/api/security/clients/")
                     .put(formBody)
                     .build();
-            Response  response = client.newCall(request).execute();
+            Response response = client.newCall(request).execute();
             tagResponse = response.body().string();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         return tagResponse;
     }
-    private void deleteLwClibtsSecuConfig(String endpoint){
-        try{
+
+    private void deleteLwClibtsSecuConfig(String endpoint) {
+        try {
             OkHttpClient client = new OkHttpClient();
             URIBuilder ub = new URIBuilder("http://localhost:9090/api/security/clients/" + endpoint);
             String url = ub.toString();
@@ -115,19 +117,19 @@ public class LwM2MApiController {
                     .delete()
                     .build();
             client.newCall(request).execute();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
 
     private String readDataLw(String endpoint, String[] value, String format, String timeOut) {
         String acsResponse = null;
-        String urlLink="http://localhost:9090/api/clients/" + endpoint;
-        for(int i=0;i< value.length;i++){
-            urlLink += "/"+value[i];
+        String urlLink = "http://localhost:9090/api/clients/" + endpoint;
+        for (int i = 0; i < value.length; i++) {
+            urlLink += "/" + value[i];
         }
-        urlLink+= "?format=" + format + "&timeout=" + timeOut;
-        System.out.println("the Linkkk:     "+urlLink);
+        urlLink += "?format=" + format + "&timeout=" + timeOut;
+        System.out.println("the Linkkk:     " + urlLink);
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -161,12 +163,12 @@ public class LwM2MApiController {
 
     private String observeDataLw(String observe, String endpoint, String[] value, String format, String timeOut) {
         String acsResponse = "";
-        String urlLink="http://localhost:9090/api/clients/" + endpoint;
-        for(int i=0;i< value.length;i++){
-            urlLink += "/"+value[i];
+        String urlLink = "http://localhost:9090/api/clients/" + endpoint;
+        for (int i = 0; i < value.length; i++) {
+            urlLink += "/" + value[i];
         }
-        urlLink+= "/observe?format=" + format + "&timeout=" + timeOut;
-        System.out.println("the Linkkk:     "+urlLink);
+        urlLink += "/observe?format=" + format + "&timeout=" + timeOut;
+        System.out.println("the Linkkk:     " + urlLink);
         try {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, observe);
@@ -185,11 +187,11 @@ public class LwM2MApiController {
 
     private String stopObserveDataLw(String endpoint, String[] value) {
         String acsResponse = "";
-        String urlLink="http://localhost:9090/api/clients/" + endpoint;
-        for(int i=0;i< value.length;i++){
-            urlLink += "/"+value[i];
+        String urlLink = "http://localhost:9090/api/clients/" + endpoint;
+        for (int i = 0; i < value.length; i++) {
+            urlLink += "/" + value[i];
         }
-        urlLink+= "/observe";
+        urlLink += "/observe";
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -222,12 +224,12 @@ public class LwM2MApiController {
     }
 
 
-    private String deleteInstanceLw(String endpoint, String[] value,String timeout) {
+    private String deleteInstanceLw(String endpoint, String[] value, String timeout) {
         String acsResponse = "";
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://localhost:9090/api/clients/"+endpoint+"/"+value[0]+"/"+value[1]+"?timeout="+timeout)
+                    .url("http://localhost:9090/api/clients/" + endpoint + "/" + value[0] + "/" + value[1] + "?timeout=" + timeout)
                     .delete()
                     .build();
             Response response = client.newCall(request).execute();
@@ -238,7 +240,7 @@ public class LwM2MApiController {
     }
 
 
-    private String createInstanceLw(String instance, String endpoint, String value,String format, String timeOut) {
+    private String createInstanceLw(String instance, String endpoint, String value, String format, String timeOut) {
         String acsResponse = "";
         try {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -254,12 +256,61 @@ public class LwM2MApiController {
         }
         return acsResponse;
     }
+
+
+
+    private String updateInstance(String instance, String endpoint, String[] value, String format, String timeOut,String replace) {
+        String acsResponse = "";
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, instance);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/api/clients/" + endpoint + "/" + value[0]+"/"+value[1] + "?format=" + format + "&timeout=" + timeOut+ "&replace=" + replace)
+                    .put(formBody)
+                    .build();
+            Response response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        } catch (Exception e) {
+        }
+        return acsResponse;
+    }
+
+
+//    http://localhost:9090/event
+//    eventLw
+
+    private String eventLw() {
+        String acsResponse = null;
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:9090/event")
+                    .build();
+            Response response = client.newCall(request).execute();
+            acsResponse = response.body().string();
+        } catch (Exception e) {
+        }
+        return acsResponse;
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/Lw/clients", method = RequestMethod.GET, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getClients() {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = getClientsLw();
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+    @RequestMapping(value = "/Lw/event", method = RequestMethod.GET, produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> eventL() {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = eventLw();
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));
@@ -302,7 +353,8 @@ public class LwM2MApiController {
         });
         return output;
     }
-    @RequestMapping(value = "/Lw/clientsSecurity", method = RequestMethod.GET,produces = "application/json")
+
+    @RequestMapping(value = "/Lw/clientsSecurity", method = RequestMethod.GET, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> getClientsSecurity() {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
@@ -313,7 +365,8 @@ public class LwM2MApiController {
         });
         return output;
     }
-    @RequestMapping(value = "/Lw/addClientsSecurity", method = RequestMethod.PUT,produces = "application/json")
+
+    @RequestMapping(value = "/Lw/addClientsSecurity", method = RequestMethod.PUT, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> newClintsSec(@RequestBody String clintSecConfig) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
@@ -324,7 +377,8 @@ public class LwM2MApiController {
         });
         return output;
     }
-    @RequestMapping(value = "/Lw/deleteClientsSecurity", method = RequestMethod.DELETE,produces = "application/json")
+
+    @RequestMapping(value = "/Lw/deleteClientsSecurity", method = RequestMethod.DELETE, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> deleteLwClintsSucConfig(@RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
@@ -343,7 +397,7 @@ public class LwM2MApiController {
             @RequestParam(value = "value", required = true, defaultValue = "") String[] value,
             @RequestParam(value = "format", required = true, defaultValue = "") String format,
             @RequestParam(value = "timeout", required = true, defaultValue = "") String timeout) {
-        System.out.println("time out : "+timeout);
+        System.out.println("time out : " + timeout);
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             String ResString = readDataLw(endpoint, value, format, timeout);
@@ -378,7 +432,7 @@ public class LwM2MApiController {
                                                          @RequestParam(value = "timeout", required = true, defaultValue = "") String timeOut) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
-            String ResString = observeDataLw(observe, endpoint, value,format, timeOut);
+            String ResString = observeDataLw(observe, endpoint, value, format, timeOut);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));
@@ -434,13 +488,31 @@ public class LwM2MApiController {
 
     @RequestMapping(value = "/Lw/instance", method = RequestMethod.POST, produces = "application/json")
     public DeferredResult<ResponseEntity<?>> instanceLw(@RequestBody String instance,
-                                                         @RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint,
-                                                         @RequestParam(value = "value", required = true, defaultValue = "") String value,
-                                                         @RequestParam(value = "format", required = true, defaultValue = "") String format,
-                                                         @RequestParam(value = "timeout", required = true, defaultValue = "") String timeOut) {
+                                                        @RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint,
+                                                        @RequestParam(value = "value", required = true, defaultValue = "") String value,
+                                                        @RequestParam(value = "format", required = true, defaultValue = "") String format,
+                                                        @RequestParam(value = "timeout", required = true, defaultValue = "") String timeOut) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
-            String ResString = createInstanceLw(instance, endpoint, value,format, timeOut);
+            String ResString = createInstanceLw(instance, endpoint, value, format, timeOut);
+            output.setResult(new ResponseEntity<>(
+                    ResString,
+                    HttpStatus.OK));
+        });
+        return output;
+    }
+
+
+    @RequestMapping(value = "/Lw/update", method = RequestMethod.PUT, produces = "application/json")
+    public DeferredResult<ResponseEntity<?>> updateInstanceData(@RequestBody String updateChanged,
+                                                                @RequestParam(value = "endpoint", required = true, defaultValue = "") String endpoint,
+                                                                @RequestParam(value = "value", required = true, defaultValue = "") String[] value,
+                                                                @RequestParam(value = "format", required = true, defaultValue = "") String format,
+                                                                @RequestParam(value = "replace", required = true, defaultValue = "") String replace,
+                                                                @RequestParam(value = "timeout", required = true, defaultValue = "") String timeOut) {
+        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            String ResString = updateInstance(updateChanged, endpoint, value, format, timeOut,replace);
             output.setResult(new ResponseEntity<>(
                     ResString,
                     HttpStatus.OK));
