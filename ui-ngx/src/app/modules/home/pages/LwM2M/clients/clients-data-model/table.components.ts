@@ -20,27 +20,52 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     readDataObject: any;
     observeDataObject: any;
     data: any = {};
-    constructor(private lwService: LwService, private http: HttpClient,public dialog: MatDialog) { }
+    dataSource: any[];
+    clientByEndpoint: any = {};
+    constructor(private lwService: LwService, private http: HttpClient, public dialog: MatDialog) { }
 
     ngAfterViewInit(): void {
-
     }
     ngOnInit(): void {
 
     }
 
-    openDialog(){
+    openDialog() {
         this.lwService.value = this.dataModel['id'];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-        this.dialog.open(newInstanceDialog,{
+        this.dialog.open(newInstanceDialog, {
             height: '483px',
             width: '768px',
-        }).afterClosed().subscribe((clientsData) => {
+        }).afterClosed().toPromise().then(async (clientsData) => {
+           await this.dynamicRender();
         })
+
+
+
     }
 
-    async readData(value, index,instance) {
+    async dynamicRender(){
+        await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint=' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+            this.dataSource = clientData
+        })
+        await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+            this.dataSource.forEach(element => {
+                let urlArray = []
+                clientDataEndpoint['objectLinks'].forEach(item => {
+                    if (item['url'].includes("/" + element['id'] + "/")) {
+                        let indexOfDash = item['url'].lastIndexOf("/");
+                        let final = item['url'].substring(indexOfDash + 1);
+                        urlArray.push(parseInt(final));
+                        this.clientByEndpoint[element['id']] = urlArray;
+                    }
+                })
+            })
+        })
+        this.instanceObject = this.clientByEndpoint;
+    }
+
+    async readData(value, index, instance) {
         let v = [this.dataModel['id'], instance, value]
 
         await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
@@ -51,7 +76,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.lwService.progress(this.readDataObject['status'], false);
         }
         else {
-            this.data['field' +instance+ index] = this.readDataObject['content']['value'];
+            this.data['field' + instance + index] = this.readDataObject['content']['value'];
             this.lwService.progress("SUCCESS", true);
 
         }
@@ -63,12 +88,12 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.readDataObject = readData;
         })
         this.readDataObject['content']['resources'].forEach(element => {
-            this.data['field' +instance+ element['id']] = element['value'];
+            this.data['field' + instance + element['id']] = element['value'];
         });
         this.lwService.progress("SUCCESS", true);
     }
 
-    async writeData(value,instance) {
+    async writeData(value, instance) {
         let v = [this.dataModel['id'], instance, value];
 
 
@@ -93,7 +118,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         }
     }
 
-    async startObserve(value, index,instance) {
+    async startObserve(value, index, instance) {
         let v = [this.dataModel['id'], instance, value];
 
         await this.http.post('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
@@ -106,7 +131,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.lwService.progress(this.observeDataObject['status'], false);
         }
         else {
-            this.data['field' + index] = this.observeDataObject['content']['value'];
+            this.data['field' + instance + index] = this.observeDataObject['content']['value'];
             this.lwService.progress("STARTED", true);
         }
     }
@@ -121,14 +146,14 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         })
 
         this.observeDataObject['content']['resources'].forEach(element => {
-            this.data['field' + element['id']] = element['value'];
+            this.data['field' + instance + element['id']] = element['value'];
         });
         this.lwService.progress("STARTED", true);
     }
 
 
 
-    async stopObserve(value,instance) {
+    async stopObserve(value, instance) {
         let v = [this.dataModel['id'], instance, value];
 
         await this.http.delete('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v, {}
@@ -145,7 +170,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         })
     }
 
-    async execute(value,instance) {
+    async execute(value, instance) {
         let v = [this.dataModel['id'], instance, value];
         await this.http.post('http://localhost:8080/api/v1/Lw/execute/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
         ).toPromise().then((executeData) => {
@@ -166,6 +191,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             ).toPromise().then((observeData) => {
                 this.lwService.progress('DELETED', true);
             })
+            this.dynamicRender();
         }
     }
 

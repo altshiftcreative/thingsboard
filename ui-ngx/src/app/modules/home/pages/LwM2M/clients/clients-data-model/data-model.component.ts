@@ -32,8 +32,8 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
 
     }
 
-    getDataModel() {
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).subscribe((clientData) => {
+    async getDataModel() {
+        await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).subscribe((clientData) => {
             this.dataSource = clientData
         })
     }

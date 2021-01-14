@@ -39,9 +39,7 @@ export class newInstanceDialog implements OnInit {
             if (e['value'] != null && e['value'] != NaN ) {
                 await this.resourcesArray.push(e);
             }
-        })
-        console.log('daata names : ',this.resourcesArray);
-        
+        })        
 
         await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint='+this.lwService.clientEndpoint+'&value='+this.lwService.value+'&format='+this.lwService.format+'&timeout='+this.lwService.timeout,
 
