@@ -20,6 +20,7 @@ import { LwPublicKeycateomponent } from './security/Public Key/publicKey.compone
 import { LwClientSecurityConfigComponent } from './security/Client Security Config/clientSecurityConfig.component';
 import { newConfigDialog } from './security/Client Security Config/newConfig-dialog.component';
 import { newInstanceDialog } from './clients/clients-data-model/createInstance /newInstance-dialog.component';
+import { updateInstanceDialog } from './clients/clients-data-model/updateInstance/updateInstance-dialog.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { newInstanceDialog } from './clients/clients-data-model/createInstance /
     LwPublicKeycateomponent,
     LwClientSecurityConfigComponent,
     newConfigDialog,
-    newInstanceDialog
+    newInstanceDialog,
+    updateInstanceDialog
     
     
 

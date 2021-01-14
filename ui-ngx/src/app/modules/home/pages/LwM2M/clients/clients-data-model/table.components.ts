@@ -3,6 +3,7 @@ import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { LwService } from "../../Lw-service";
 import { newInstanceDialog } from "./createInstance /newInstance-dialog.component";
+import { updateInstanceDialog } from "./updateInstance/updateInstance-dialog.component";
 
 @Component({
     selector: 'Lw-clients-data-model-table',
@@ -93,7 +94,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.progress("SUCCESS", true);
     }
 
-    async writeData(value, instance) {
+    async writeData(value, index,instance) {
         let v = [this.dataModel['id'], instance, value];
 
 
@@ -105,13 +106,15 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
                     "id": value,
                     "value": parseInt(writeValue)
                 }
-            ).subscribe((writeData) => {
+            ).toPromise().then((writeData) => {
+                this.readDataObject = writeData;
             })
 
             if (this.readDataObject['failure']) {
                 this.lwService.progress(this.readDataObject['status'], false);
             }
             else {
+                this.data['field' + instance + index] = this.readDataObject['content']['value'];
                 this.lwService.progress("SUCCESS", true);
 
             }
@@ -193,6 +196,19 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             })
             this.dynamicRender();
         }
+    }
+
+
+    updateInstance(instance){
+        this.lwService.value = [this.dataModel['id'],instance];
+        this.lwService.format = this.format;
+        this.lwService.timeout = this.timeOut;
+        this.dialog.open(updateInstanceDialog, {
+            height: '483px',
+            width: '768px',
+        }).afterClosed().toPromise().then(async (clientsData) => {
+            await this.dynamicRender();
+        })
     }
 
 }
