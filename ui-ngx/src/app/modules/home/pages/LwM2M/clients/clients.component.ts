@@ -5,7 +5,6 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../Lw-service";
 import { newInstanceDialog } from "./clients-data-model/createInstance /newInstance-dialog.component";
-
 @Component({
     selector: 'Lw-clients',
     templateUrl: './clients.component.html',
