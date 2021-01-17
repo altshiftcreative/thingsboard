@@ -29,7 +29,7 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
     }
     ngOnInit(): void {
 
-        // let source = new EventSource('http://localhost:8080/api/v1/Lw/event');
+        // let source = new EventSource('http://localhost:9090/api/clients');
         // source.addEventListener('REGISTRATION', message => {
             
         //     this.myData = message.target;

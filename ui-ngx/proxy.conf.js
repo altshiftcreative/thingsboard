@@ -17,8 +17,25 @@
 const forwardUrl = "http://localhost:8080";
 const wsForwardUrl = "ws://localhost:8080";
 const ruleNodeUiforwardUrl = forwardUrl;
+const leshanUrl = "http://localhost:9090";
 
 const PROXY_CONFIG = {
+  "/api/clients": {
+    "target": leshanUrl,
+    "secure": false,
+  },
+  "/event": {
+    "target": leshanUrl,
+    "secure": false,
+  },
+  "/api/objectspecs": {
+    "target": leshanUrl,
+    "secure": false,
+  },
+  "/api/security": {
+    "target": leshanUrl,
+    "secure": false,
+  },
   "/api": {
     "target": forwardUrl,
     "secure": false,
