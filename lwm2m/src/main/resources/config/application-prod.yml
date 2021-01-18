@@ -1,0 +1,15 @@
+logging:
+  level:
+    ROOT: error
+    
+spring:
+  devtools:
+    restart:
+      enabled: false
+      additional-exclude: static/**
+    livereload:
+      enabled: false
+      
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/lwm2m-db

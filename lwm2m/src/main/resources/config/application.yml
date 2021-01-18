@@ -1,0 +1,39 @@
+#logging:
+#  level:
+#    ROOT: DEBUG
+
+spring:
+#  profiles:
+#    active: dev
+#    include:
+#      - swagger
+
+#  devtools:
+#    restart:
+#      enabled: true
+#      additional-exclude: static/**
+#    livereload:
+#      enabled: true
+  jackson:
+    serialization:
+      indent-output: true
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/lwm2m-db
+#      uri: mongodb://AscUser:AltShift$135@localhost:27017/lwm2m-db
+#      port: 27017
+#      database: lwm2m-db
+#      username: MongoUser
+#      password:
+#      - A
+
+server:
+  port: 9090
+  
+tb:
+  base-url: http://localhost:8080/api
+  username: tenant@thingsboard.org
+  password: tenant
+  provision:
+    key: r3rd5n77w1bpht21kp91
+    secret: i9x798wdnbzirnax7b43
