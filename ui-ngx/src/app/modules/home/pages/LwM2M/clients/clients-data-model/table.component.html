@@ -27,7 +27,7 @@
                                 &nbsp; <img src="../../../../../../../assets/img/action-arrow.svg"></button>
 
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item style="width: 121px;"> <img
+                                <button mat-menu-item style="width: 121px;" (click)="updateInstance(instance)"> <img
                                         src="../../../../../../../assets/img/write-pen.svg"> &nbsp; Write</button>
                                 <button mat-menu-item style="width: 121px;" (click)="readAllData(instance)"><img
                                         src="../../../../../../../assets/img/read-icon.svg"> &nbsp; Read</button>
@@ -56,7 +56,7 @@
                                 &nbsp; <img src="../../../../../assets/img/action-arrow-blue.svg"></button>
                             <mat-menu #menu="matMenu">
                                 <button mat-menu-item *ngIf="x['operations'] == 'W' || x['operations'] == 'RW'"
-                                    style="width: 121px;" (click)="writeData(x['id'],instance)"> <img
+                                    style="width: 121px;" (click)="writeData(x['id'],i,instance)"> <img
                                         src="../../../../../../../assets/img/write-pen.svg"> &nbsp;
                                     Write</button>
                                 <button mat-menu-item *ngIf="x['operations'] == 'R' || x['operations'] == 'RW'"

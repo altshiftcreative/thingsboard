@@ -1,4 +1,4 @@
-      <form [formGroup]="newInstanceForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="newInstanceForm">
         Update Instance
         <br>
           <div class="form-group" style="width: 40%; display: inline-grid;">
@@ -38,5 +38,8 @@
             </mat-form-field>
           </div>
         <br>
-        <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close] style="left: 43em;top: 2em">Update</button>
+        <button mat-button cdkFocusInitial class="cancel-button" [mat-dialog-close] style="left: 23em;top: 2em">Cancel</button>
+        <button mat-button cdkFocusInitial class="submit-button" type="click" (click)="onSubmit('Update')" [mat-dialog-close] style="left: 24em;top: 2em">Update</button>
+        <button mat-button cdkFocusInitial class="submit-button" type="click" (click)="onSubmit('Replace')" [mat-dialog-close] style="left: 25em;top: 2em">Replace</button>
+
       </form>

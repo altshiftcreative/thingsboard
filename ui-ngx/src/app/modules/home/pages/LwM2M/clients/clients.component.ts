@@ -28,24 +28,23 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-
-        // let source = new EventSource('http://localhost:9090/api/clients');
-        // source.addEventListener('REGISTRATION', message => {
+        // const eventSource = new window['EventSource']("http://localhost:8080/api/v1/Lw/clients", {withCredentials: true})
+        // eventSource.addEventListener('REGISTRATION', message => {
             
         //     this.myData = message.target;
         //     console.log('eeeeeeeeeeeeeeee :',this.myData);
             
         // });
+        // setInterval(this.getClients.bind(this),2000);
+       
     }
 
     getClients() {
-
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clients', { withCredentials: true }).subscribe((clientsData) => {
+        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clients', { withCredentials: true }).toPromise().then((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;
             this.clientsCounter = clientsData.length;
             this.clientsArray = clientsData;
-
         })
     }
 

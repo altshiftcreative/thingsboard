@@ -31,16 +31,17 @@ export class updateInstanceDialog implements OnInit {
     }
 
 
-    async onSubmit() {
+    async onSubmit(action) {
         let dataNames = [{ "id": 1, "value": this.newInstanceForm.value.Lifetime }, { "id": 2, "value": this.newInstanceForm.value.DefaultMinimum }, { "id": 3, "value": this.newInstanceForm.value.DefaultMaximum }, { "id": 5, "value": this.newInstanceForm.value.DisableTimeout }, { "id": 7, "value": this.newInstanceForm.value.Binding }, { "id": 6, "value": this.newInstanceForm.value.Notification }]
-
+        let replaceStatus='false';
+        if(action == 'Replace') replaceStatus = 'true';
         dataNames.forEach(async e => {
             if (e['value'] != null && e['value'] != NaN) {
                 await this.resourcesArray.push(e);
             }
         })
 
-        await this.http.put('http://localhost:8080/api/v1/Lw/update/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout + '&replace=' + 'false',
+        await this.http.put('http://localhost:8080/api/v1/Lw/update/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout + '&replace=' + replaceStatus,
             
             {
                 "id": this.lwService.value[1],

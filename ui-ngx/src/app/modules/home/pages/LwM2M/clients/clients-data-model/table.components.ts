@@ -39,14 +39,14 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             height: '483px',
             width: '768px',
         }).afterClosed().toPromise().then(async (clientsData) => {
-           await this.dynamicRender();
+            await this.dynamicRender();
         })
 
 
 
     }
 
-    async dynamicRender(){
+    async dynamicRender() {
         await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint=' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             this.dataSource = clientData
         })
@@ -94,36 +94,37 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.progress("SUCCESS", true);
     }
 
-    async writeData(value, index,instance) {
+    async writeData(value, index, instance) {
         let v = [this.dataModel['id'], instance, value];
-
-
+        let finalValue;
         let writeValue = prompt("Update resource" + this.dataModel['name']);
         if (writeValue != null && writeValue != "") {
+            if(!isNaN(writeValue as any)) finalValue = parseInt(writeValue);
+            else finalValue = writeValue;
+            console.log('see :',finalValue);
+            
             await this.http.put('http://localhost:8080/api/v1/Lw/write/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut,
 
                 {
                     "id": value,
-                    "value": parseInt(writeValue)
+                    "value": finalValue
                 }
             ).toPromise().then((writeData) => {
-                this.readDataObject = writeData;
+                if (writeData['failure']) {
+                    this.lwService.progress(writeData['status'], false);
+                }
+                else {
+                    this.data['field' + instance + index] = finalValue;
+                    this.lwService.progress("SUCCESS", true);
+                }
             })
 
-            if (this.readDataObject['failure']) {
-                this.lwService.progress(this.readDataObject['status'], false);
-            }
-            else {
-                this.data['field' + instance + index] = this.readDataObject['content']['value'];
-                this.lwService.progress("SUCCESS", true);
 
-            }
         }
     }
 
     async startObserve(value, index, instance) {
         let v = [this.dataModel['id'], instance, value];
-
         await this.http.post('http://localhost:8080/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
             this.observeDataObject = observeData;
@@ -199,8 +200,8 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     }
 
 
-    updateInstance(instance){
-        this.lwService.value = [this.dataModel['id'],instance];
+    updateInstance(instance) {
+        this.lwService.value = [this.dataModel['id'], instance];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
         this.dialog.open(updateInstanceDialog, {
