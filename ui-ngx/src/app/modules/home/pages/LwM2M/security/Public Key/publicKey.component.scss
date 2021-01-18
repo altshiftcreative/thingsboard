@@ -1,0 +1,110 @@
+.mat-table-padding{
+    margin: 10px;
+    padding: 10px;
+}
+
+
+.shadow-div{
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.header-of-table{
+  margin: 0px;
+  padding: 33px;
+  text-align-last: end;
+  background: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  div{
+      @media (max-width:767px){
+          margin: auto;
+          text-align: center;
+      }
+      button{
+        @media (max-width:767px){
+            padding: 5px;
+            min-width: auto;
+        }
+      }
+  }
+}
+
+
+.between-btn-download{
+    width:15px; 
+    height:auto; 
+    display:inline-block;
+}
+
+.textArea{
+    width: 100%;
+    height: 200px;
+    background-color: #F5F5F5;
+    margin-bottom: 2em;
+    border-radius: 6px;
+    color: #BFBFBF;
+    font-style: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    align-items: flex-end;
+    border: 1px solid #D9D9D9;
+    padding: 5px;
+}
+.headerStyle{
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    color: #595959;
+    top: 40px;
+    @media (max-width: 767px){
+        margin-bottom: 5px;
+    }
+}
+.downloadCSV{
+    color: #1890FF;
+    margin: 10px 20px;
+    size: 5em;
+    
+}
+// ::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
+//    }
+table, th, td {
+    border-bottom: 1px solid #E5E5E5;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 1.5em;
+    @media (max-width: 767px){
+        padding: 15px;
+    }
+  }
+  .tests{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .test{
+        width: 44%;
+        margin: 2%;
+        @media (max-width: 767px){
+            width: 100%;
+            margin-bottom: 2%;
+        }
+        .label{
+            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 1%;
+        }
+      }
+      
+  }
+.table{
+    @media (max-width: 767px){
+        overflow-x: scroll;
+        width: auto;
+        height: auto;
+    }
+}

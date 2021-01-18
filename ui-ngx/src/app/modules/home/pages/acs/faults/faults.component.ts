@@ -39,7 +39,7 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     }
 
     getFaults(){
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/faults', { withCredentials: true }).subscribe((deviceData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/faults', { withCredentials: true }).subscribe((deviceData) => {
             this.dataSource = new MatTableDataSource(deviceData)
             this.dataSource.paginator = this.paginator;
             this.checkedItems=[]
@@ -112,7 +112,7 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
         // let deviceId = str1.split(':', 1);
 
         // 202BC1-BM632w-000004:task_5fe5aac3ae942d20943c50fa => target.value
-        this.http.get('http://localhost:8080/api/v1/tr69/searchfaults/?device=' + str1.toLowerCase()).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/searchfaults/?device=' + str1.toLowerCase()).subscribe((result: any[]) => {
             this.dataSource.data = result;
 
         })

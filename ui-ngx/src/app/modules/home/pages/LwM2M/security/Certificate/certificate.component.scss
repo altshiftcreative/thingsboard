@@ -9,27 +9,47 @@
 }
 
 .header-of-table{
-  margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;
-}
-
-
+    margin: 0px;
+    padding: 33px;
+    text-align-last: end;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    div{
+        @media (max-width:767px){
+            margin: auto;
+            text-align: center;
+        }
+    
+        
+        button{
+          @media (max-width:767px){
+              padding: 5px;
+              min-width: auto;
+          }
+      
+        }
+    }
+    .downloadB{
+        @media (max-width:412px){
+            padding: 5px;
+            min-width: auto;
+            padding-top: 1em;
+            padding-left: 5em;  
+      } 
+    }
+  }
 .between-btn-download{
     width:15px; 
     height:auto; 
     display:inline-block;
 }
 
- .textArea{
-    width: 45%;
-    height: 310px;
-    margin-left: 2em;
-    margin-right: 2em;
-    display:inline-block;
+.textArea{
+    width: 100%;
+    height: 200px;
     background-color: #F5F5F5;
     margin-bottom: 2em;
     border-radius: 6px;
@@ -40,34 +60,30 @@
     line-height: 24px;
     align-items: flex-end;
     border: 1px solid #D9D9D9;
-
-
- }
- .label1 {
-    display: block;
-    margin-left: 2em;
-    padding-bottom: 10px;
-
-}
-.label2{
-    padding-bottom: 2em;
-    margin-left: 50em;
-    position: absolute;
-    top: 104px;
-    color: #262626;
-    left: 49px;
-    line-height: 22px;
-
+    padding: 5px;
 }
 .headerStyle{
-    display: inline-block;
     font-size: 16px;
-    position: absolute;
     line-height: 24px;
     font-weight: 600;
-    left: 53px;
     color: #595959;
     top: 40px;
+    @media (max-width: 767px){
+        font-size: xx-large;
+        margin-bottom: 5px;
+    }
+    .spanHead{
+        color: #8C8C8C; 
+        font-size: 14px; 
+        font-weight: lighter;
+        @media (max-width:412px){
+            margin: auto;
+            text-align: center;
+            display: inline-block;
+            padding-right: 4em;
+        }
+
+    }
 }
 .downloadCSV{
     color: #1890FF;
@@ -76,8 +92,22 @@
 }
 // ::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
 //    }
-::ng-deep.mat-tab-label-container .sada{
-    background-color: beige !important;
-    margin-left: 20px !important;
-    margin-right: 20px !important;
+.tests{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .test{
+      width: 44%;
+      margin: 2%;
+      @media (max-width: 767px){
+          width: 100%;
+          margin-bottom: 2%;
+      }
+      .label{
+          display: block;
+          font-weight: bold;
+          font-size: 18px;
+          margin-bottom: 1%;
+      }
+    }
 }

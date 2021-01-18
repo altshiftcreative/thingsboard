@@ -11,6 +11,11 @@ import { Store } from '@ngrx/store';
 
 export class LwService {
     clientEndpoint;
+    value;
+    format;
+    timeout;
+    formData:any[]=[];
+    lwm2mBaseUri=""
     constructor(private http: HttpClient,protected store: Store<AppState>) { }
 
     progress(res, stat) {
@@ -25,5 +30,6 @@ export class LwService {
                 }));
         
     }
+    
 
 }

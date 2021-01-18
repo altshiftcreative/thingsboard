@@ -1,18 +1,3 @@
-///
-/// Copyright © 2016-2020 The Thingsboard Authors
-///
-/// Licensed under the Apache License, Version 2.0 (the "License");
-/// you may not use this file except in compliance with the License.
-/// You may obtain a copy of the License at
-///
-///     http://www.apache.org/licenses/LICENSE-2.0
-///
-/// Unless required by applicable law or agreed to in writing, software
-/// distributed under the License is distributed on an "AS IS" BASIS,
-/// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-/// See the License for the specific language governing permissions and
-/// limitations under the License.
-///
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -30,8 +15,14 @@ import { LwClientsDataComponent } from './clients/clients-data-model/data-model.
 import { LwCertificateomponent } from './security/Certificate/certificate.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LwClientsDataTableComponent } from './clients/clients-data-model/table.components';
+import { LwPublicKeycateomponent } from './security/Public Key/publicKey.component';
+import { LwClientSecurityConfigComponent } from './security/Client Security Config/clientSecurityConfig.component';
+import { newConfigDialog } from './security/Client Security Config/newConfig-dialog.component';
+import { newInstanceDialog } from './clients/clients-data-model/createInstance /newInstance-dialog.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { updateInstanceDialog } from './clients/clients-data-model/updateInstance/updateInstance-dialog.component';
+import { formDialog } from './clients/global-form/form.component';
 
 
 @NgModule({
@@ -42,7 +33,15 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
     LwClientsDataComponent,
     LwCertificateomponent,
     LwClientsDataComponent,
-    LwClientsDataTableComponent
+    LwClientsDataTableComponent,
+    LwPublicKeycateomponent,
+    LwClientSecurityConfigComponent,
+    newConfigDialog,
+    newInstanceDialog,
+    updateInstanceDialog,
+    formDialog
+    
+    
 
   ],
   imports: [
@@ -56,6 +55,7 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
     MatSnackBarModule,
     MatTableModule,
     MatSortModule,
+    MatIconModule
    
 
     

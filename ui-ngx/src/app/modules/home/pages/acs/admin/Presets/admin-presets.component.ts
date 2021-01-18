@@ -60,7 +60,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
 
     getAdminPresets() {
 
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/presets').subscribe((presetsData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/presets').subscribe((presetsData) => {
             this.dataSource = new MatTableDataSource(presetsData)
             this.dataSource.paginator = this.paginator;
         })
@@ -120,7 +120,7 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
 
     presetsSearch(event) {
 
-        this.http.get('http://localhost:8080/api/v1/tr69/searchpresets/?_id=' + event.target.value).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/searchpresets/?_id=' + event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
 
         })

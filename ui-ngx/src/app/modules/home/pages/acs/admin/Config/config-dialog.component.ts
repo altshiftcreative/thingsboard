@@ -42,7 +42,7 @@ export class configDialog implements OnInit {
     onSubmit() {
 
 
-        this.http.put('http://localhost:8080/api/v1/tr69/config/?configId=' + this.configForm.value.configName,
+        this.http.put(this.acsService.acsBaseUri+'/api/v1/tr69/config/?configId=' + this.configForm.value.configName,
 
         {
             "value": this.configForm.value.value,

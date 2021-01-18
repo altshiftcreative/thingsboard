@@ -1,23 +1,24 @@
 package org.thingsboard.server.transport.http;
-import com.google.api.client.json.Json;
-import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import okhttp3.*;
+import java.util.concurrent.ForkJoinPool;
+
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import sun.rmi.runtime.Log;
 
-import java.net.URLEncoder;
-import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 @RestController
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.http.enabled}'=='true')")
 @RequestMapping("/api/v1")
@@ -637,10 +638,5 @@ public class Tr069ApiController {
     }
 
 //searchProvisions
-
-
-
-
-
 
 }
