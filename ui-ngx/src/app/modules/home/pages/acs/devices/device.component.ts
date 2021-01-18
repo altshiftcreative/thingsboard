@@ -46,7 +46,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     getDevices() {
         this.checkedItems = []
         document.getElementById('select-all')['checked'] = false;
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
             this.dataSource = new MatTableDataSource(deviceData)
             this.dataSource.paginator = this.paginator;
             this.onlineStatus();
@@ -215,7 +215,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     }
 
     liveSearch(event) {
-        this.http.get('http://localhost:8080/api/v1/tr69/search/?serialNumber=' + event.target.value).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/search/?serialNumber=' + event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
             this.onlineStatus();
             this.tagsCheck();

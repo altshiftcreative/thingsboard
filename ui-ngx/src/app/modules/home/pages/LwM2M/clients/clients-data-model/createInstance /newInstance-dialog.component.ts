@@ -41,7 +41,7 @@ export class newInstanceDialog implements OnInit {
             }
         })
         if (this.newInstanceForm.value.ID == null) {
-            await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
+            await this.http.post(this.lwService.lwm2mBaseUri+'/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
 
                 {
                     "resources": this.resourcesArray
@@ -51,7 +51,7 @@ export class newInstanceDialog implements OnInit {
 
         }
         else{
-            await this.http.post('http://localhost:8080/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
+            await this.http.post(this.lwService.lwm2mBaseUri+'/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
 
                 {   "id": this.newInstanceForm.value.ID,
                     "resources": this.resourcesArray

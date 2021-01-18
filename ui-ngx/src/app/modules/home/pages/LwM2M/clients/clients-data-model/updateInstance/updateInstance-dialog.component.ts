@@ -14,7 +14,7 @@ import { LwService } from '../../../Lw-service';
 
 
 export class updateInstanceDialog implements OnInit {
-    constructor(private lwService: LwService, private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: { Lifetime: number, DefaultMinimum: number, DefaultMaximum: number, DisableTimeout: number, Binding: string, Notification: string }) { }
+    constructor(private lwService: LwService, private http: HttpClient) { }
     newInstanceForm: FormGroup;
     resourcesArray: object[] = [];
     ngOnInit() {
@@ -41,7 +41,7 @@ export class updateInstanceDialog implements OnInit {
             }
         })
 
-        await this.http.put('http://localhost:8080/api/v1/Lw/update/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout + '&replace=' + replaceStatus,
+        await this.http.put(this.lwService.lwm2mBaseUri+'/api/v1/Lw/update/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout + '&replace=' + replaceStatus,
             
             {
                 "id": this.lwService.value[1],

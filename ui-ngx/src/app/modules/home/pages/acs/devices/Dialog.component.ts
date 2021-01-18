@@ -33,7 +33,7 @@ export class DialogDataDialog implements OnInit, AfterViewInit {
         let newValue = prompt(parameterName, value);
         let deviceID = this.acsService.deviceArrayData[0].deviceData['value'][0];
         await this.acsService.change(deviceID, parameterName, newValue, onlineS);
-        await this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').toPromise().then((deviceData) => {
+        await this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices').toPromise().then((deviceData) => {
             for (let i of deviceData) {
                 if (i['DeviceID.ID']['value'][0] == deviceID) {
                     let deviceArray = [];
@@ -50,7 +50,7 @@ export class DialogDataDialog implements OnInit, AfterViewInit {
     async refreshValue(parameterName) {
         let deviceID = this.acsService.deviceArrayData[0].deviceData['value'][0];
         await this.acsService.refresh(deviceID, parameterName);
-        await this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices').toPromise().then((deviceData) => {
+        await this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices').toPromise().then((deviceData) => {
             for (let i of deviceData) {
                 if (i['DeviceID.ID']['value'][0] == deviceID) {
                     let deviceArray = [];

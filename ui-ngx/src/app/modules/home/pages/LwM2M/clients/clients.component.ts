@@ -40,7 +40,7 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
     }
 
     getClients() {
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clients', { withCredentials: true }).toPromise().then((clientsData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clients', { withCredentials: true }).toPromise().then((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;
             this.clientsCounter = clientsData.length;

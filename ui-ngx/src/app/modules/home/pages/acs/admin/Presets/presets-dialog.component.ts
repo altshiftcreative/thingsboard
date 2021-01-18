@@ -56,7 +56,7 @@ export class PresetsDialog implements OnInit {
 
     getAdminProvisions() {
 
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
             // console.log(JSON.stringify(ProvisionsData));
             for(let i of ProvisionsData){
                 this.provisionsArr.push(i['_id'])
@@ -66,7 +66,7 @@ export class PresetsDialog implements OnInit {
     }
 
     onSubmit() {
-        this.http.put('http://localhost:8080/api/v1/tr69/presets/?presetsId=' + this.presetsForm.value.presetsName,
+        this.http.put(this.acsService.acsBaseUri+'/api/v1/tr69/presets/?presetsId=' + this.presetsForm.value.presetsName,
 
         {
             "channel": this.presetsForm.value.channel,

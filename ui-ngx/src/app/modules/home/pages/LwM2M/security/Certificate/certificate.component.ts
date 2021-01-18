@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
+import { LwService } from "../../Lw-service";
 
 @Component({
     selector: 'Lw-certificate',
@@ -13,7 +14,7 @@ import { MatTableDataSource } from "@angular/material/table";
 
 export class LwCertificateomponent implements OnInit, AfterViewInit {
 
-    constructor(private http: HttpClient, public dialog: MatDialog) { }
+    constructor(private http: HttpClient, public dialog: MatDialog,private lwService: LwService) { }
     displayedColumns: string[] = ['Hex', 'Base64'];
     datacertificate;
     hexCode;
@@ -25,7 +26,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
     }
 
     getDevices() {
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
             this.datacertificate = certificateData;
             this.hexCode=this.base64ToHex(this.datacertificate.certificate.b64Der);
         })

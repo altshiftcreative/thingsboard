@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
+import { LwService } from "../../Lw-service";
 
 @Component({
     selector: 'Lw-publicKey',
@@ -13,7 +14,7 @@ import { MatTableDataSource } from "@angular/material/table";
 
 export class LwPublicKeycateomponent implements OnInit, AfterViewInit {
 
-    constructor(private http: HttpClient, public dialog: MatDialog) { }
+    constructor(private http: HttpClient, public dialog: MatDialog,private lwService: LwService) { }
     displayedColumns: string[] = ['params', 'x','y'];
     datacertificate;
     dataSource: MatTableDataSource<any>;
@@ -26,7 +27,7 @@ export class LwPublicKeycateomponent implements OnInit, AfterViewInit {
     }
 
     getDevices() {
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
             this.dataSource = new MatTableDataSource(certificateData);
             console.log(this.dataSource)
             this.datacertificate = certificateData;

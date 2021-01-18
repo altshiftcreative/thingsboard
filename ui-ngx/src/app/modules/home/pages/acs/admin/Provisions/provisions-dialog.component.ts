@@ -43,7 +43,7 @@ export class provisionsDialog implements OnInit {
     onSubmit() {
 
 
-        this.http.put('http://localhost:8080/api/v1/tr69/provisions/?provisionsId=' + this.provisionsForm.value.provisionsName,
+        this.http.put(this.acsService.acsBaseUri+'/api/v1/tr69/provisions/?provisionsId=' + this.provisionsForm.value.provisionsName,
 
         {
             "script": this.provisionsForm.value.script,
