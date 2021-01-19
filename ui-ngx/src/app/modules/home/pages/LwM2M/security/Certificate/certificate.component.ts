@@ -18,6 +18,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['Hex', 'Base64'];
     datacertificate;
     hexCode;
+    fileUrl;
     ngOnInit(): void {
         
     }
@@ -32,7 +33,6 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         })
     }
 
-
      base64ToHex(str) {
         const raw = atob(str);
         let result = '';
@@ -43,5 +43,9 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         return result.toUpperCase();
       }
 
-
+      saveAsBlob(bytes){
+        var blob = new Blob([bytes], { type: 'application/octet-stream' });
+        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+        console.log("LOL")
+    }
 }

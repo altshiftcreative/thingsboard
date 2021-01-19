@@ -51,7 +51,7 @@ import { formDialog } from './clients/global-form/form.component';
     MatSnackBarModule,
     MatTableModule,
     MatSortModule,
-    MatIconModule
+    MatIconModule,
    
 
     
