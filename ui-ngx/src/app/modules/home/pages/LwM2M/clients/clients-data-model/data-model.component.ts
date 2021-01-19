@@ -24,23 +24,25 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
     panelOpenState = false;
     constructor(private lwService: LwService, private http: HttpClient) { }
     clientEndpoint = this.lwService.clientEndpoint;
-    ngAfterViewInit(): void {
-        this.getDataModel();
-        this.getDataModelByEndpoint();
+     ngAfterViewInit(): void {
+         this.getDataModel();
+        //  this.getDataModelByEndpoint();
     }
     ngOnInit(): void {
 
     }
 
-    async getDataModel() {
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+     getDataModel() {
+         this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             this.dataSource = clientData
             console.log('data testing :',clientData);
+            this.getDataModelByEndpoint();
             
         })
     }
-    async getDataModelByEndpoint() {
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+     getDataModelByEndpoint() {
+         this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+            
             this.dataSource.forEach(element=>{
                 let urlArray = []
                 clientDataEndpoint['objectLinks'].forEach(item=>{
