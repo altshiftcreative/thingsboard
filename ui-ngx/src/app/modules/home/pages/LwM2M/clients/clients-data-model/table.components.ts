@@ -3,8 +3,6 @@ import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { LwService } from "../../Lw-service";
 import { formDialog } from "../global-form/form.component";
-import { newInstanceDialog } from "./createInstance /newInstance-dialog.component";
-import { updateInstanceDialog } from "./updateInstance/updateInstance-dialog.component";
 
 @Component({
     selector: 'Lw-clients-data-model-table',
@@ -37,17 +35,15 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.value = this.dataModel['id'];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-
+        this.lwService.formType = {type:'create',name:'Create Instance'};
 
         for (const element of this.dataModel['resourcedefs']) {
             if (element['operations'] == 'W' || element['operations'] == 'RW') {
                 this.lwService.formData.push(element);
             }
         }
-        console.log('form Array :', this.lwService.formData);
 
-
-        this.dialog.open(newInstanceDialog, {
+        this.dialog.open(formDialog, {
             height: '483px',
             width: '768px',
         }).afterClosed().toPromise().then(async (clientsData) => {
@@ -217,15 +213,15 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.value = [this.dataModel['id'], instance];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-
+        this.lwService.formType = {type:'update',name:'Update Instance'};
 
         for (const element of this.dataModel['resourcedefs']) {
             if (element['operations'] == 'W' || element['operations'] == 'RW') {
                 this.lwService.formData.push(element);
             }
         }
-        console.log('form Array :', this.lwService.formData);
-
+        console.log('deep : ',this.lwService.formData);
+        
 
         this.dialog.open(formDialog, {
             height: '483px',
