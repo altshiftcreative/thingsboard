@@ -20,7 +20,7 @@ export class AcsOverview implements OnInit,AfterViewInit{
   }
 
   ngAfterViewInit() {
-    this.http.get<any[]>('http://localhost:8080/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
+    this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
        this.acsService.statusCounter(deviceData); 
        this.doughnutChartData = [
         [this.acsService.online_devices, this.acsService.past_devices, this.acsService.others_devices]

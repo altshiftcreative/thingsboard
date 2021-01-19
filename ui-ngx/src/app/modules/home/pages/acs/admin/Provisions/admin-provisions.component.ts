@@ -51,7 +51,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
     getAdminProvisions() {
 
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
             this.dataSource = new MatTableDataSource(ProvisionsData)
             this.dataSource.paginator = this.paginator;
         })
@@ -130,7 +130,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
     provisionsSearch(event) {
 
-        this.http.get('http://localhost:8080/api/v1/tr69/searchprovisions/?_id=' + event.target.value).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/searchprovisions/?_id=' + event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
 
         })

@@ -33,14 +33,14 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
     }
 
     async getDataModel() {
-        await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             this.dataSource = clientData
             console.log('data testing :',clientData);
             
         })
     }
     async getDataModelByEndpoint() {
-        await this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
             this.dataSource.forEach(element=>{
                 let urlArray = []
                 clientDataEndpoint['objectLinks'].forEach(item=>{

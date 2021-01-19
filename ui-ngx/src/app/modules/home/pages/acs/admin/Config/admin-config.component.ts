@@ -36,7 +36,7 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     }
 
     getConfig(){
-        this.http.get<any[]>('http://localhost:8080/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/config', { withCredentials: true }).subscribe((configData) => {
             this.dataSource = new MatTableDataSource(configData)
             this.dataSource.paginator = this.paginator;
             this.configArrayData = configData;

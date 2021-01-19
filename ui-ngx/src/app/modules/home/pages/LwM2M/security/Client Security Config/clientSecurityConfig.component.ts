@@ -42,7 +42,7 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
 
     getClients() {
 
-        this.http.get<any[]>('http://localhost:8080/api/v1/Lw/clientsSecurity', { withCredentials: true }).subscribe((clientsData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsSecurity', { withCredentials: true }).subscribe((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;
             this.clientsCounter = clientsData.length;
@@ -54,7 +54,7 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
     async deletClients(id) {
         let confirmation = confirm('Deleting client. Are you sure?');
         if (confirmation == true) {
-            await this.http.delete('http://localhost:8080/api/v1/Lw/deleteClientsSecurity/?endpoint=' + id).toPromise().then((dta) => { })
+            await this.http.delete(this.lwService.lwm2mBaseUri+'/api/v1/Lw/deleteClientsSecurity/?endpoint=' + id).toPromise().then((dta) => { })
             this.getClients();
             this.lwService.progress('DELETED', true);
         }

@@ -19,9 +19,8 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
 import { LwPublicKeycateomponent } from './security/Public Key/publicKey.component';
 import { LwClientSecurityConfigComponent } from './security/Client Security Config/clientSecurityConfig.component';
 import { newConfigDialog } from './security/Client Security Config/newConfig-dialog.component';
-import { newInstanceDialog } from './clients/clients-data-model/createInstance /newInstance-dialog.component';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { updateInstanceDialog } from './clients/clients-data-model/updateInstance/updateInstance-dialog.component';
+import { formDialog } from './clients/global-form/form.component';
 
 
 @NgModule({
@@ -36,8 +35,7 @@ import { updateInstanceDialog } from './clients/clients-data-model/updateInstanc
     LwPublicKeycateomponent,
     LwClientSecurityConfigComponent,
     newConfigDialog,
-    newInstanceDialog,
-    updateInstanceDialog
+    formDialog
     
     
 

@@ -14,6 +14,9 @@ export class LwService {
     value;
     format;
     timeout;
+    formData:any[]=[];
+    lwm2mBaseUri=""
+    formType;
     constructor(private http: HttpClient,protected store: Store<AppState>) { }
 
     progress(res, stat) {
