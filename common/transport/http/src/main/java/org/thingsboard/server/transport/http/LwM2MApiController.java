@@ -27,7 +27,7 @@ public class LwM2MApiController {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(leshanBaseUrl + "api/clients")
+                    .url(leshanBaseUrl + "/api/clients")
                     .build();
             Response response = client.newCall(request).execute();
             acsResponse = response.body().string();
@@ -55,7 +55,7 @@ public class LwM2MApiController {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(leshanBaseUrl + "api/objectspecs/" + endpoint)
+                    .url(leshanBaseUrl + "/api/objectspecs/" + endpoint)
                     .build();
             Response response = client.newCall(request).execute();
             acsResponse = response.body().string();
@@ -85,7 +85,7 @@ public class LwM2MApiController {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(leshanBaseUrl + "api/security/server")
+                    .url(leshanBaseUrl + "/api/security/server")
                     .build();
             Response response = client.newCall(request).execute();
             acsResponse = response.body().string();
@@ -128,7 +128,7 @@ public class LwM2MApiController {
 
     private String readDataLw(String endpoint, String[] value, String format, String timeOut) {
         String acsResponse = null;
-        String urlLink = leshanBaseUrl + "api/clients/" + endpoint;
+        String urlLink = leshanBaseUrl + "/api/clients/" + endpoint;
         for(int i=0;i< value.length;i++){
             urlLink += "/"+value[i];
         }
@@ -154,7 +154,7 @@ public class LwM2MApiController {
             okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, writeChanged);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(leshanBaseUrl + "api/clients/" + endpoint + "/" + value[0] + "/" + value[1] + "/" + value[2] + "?format=" + format + "&timeout=" + timeOut)
+                    .url(leshanBaseUrl + "/api/clients/" + endpoint + "/" + value[0] + "/" + value[1] + "/" + value[2] + "?format=" + format + "&timeout=" + timeOut)
                     .put(formBody)
                     .build();
             Response response = client.newCall(request).execute();
@@ -217,7 +217,7 @@ public class LwM2MApiController {
             okhttp3.RequestBody formBody = okhttp3.RequestBody.create(JSON, execute);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(leshanBaseUrl + "api/clients/" + endpoint + "/" + value[0] + "/" + value[1] + "/" + value[2] + "?timeout=" + timeOut)
+                    .url(leshanBaseUrl + "/api/clients/" + endpoint + "/" + value[0] + "/" + value[1] + "/" + value[2] + "?timeout=" + timeOut)
                     .post(formBody)
                     .build();
             Response response = client.newCall(request).execute();

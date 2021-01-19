@@ -10,6 +10,3 @@ spring:
     livereload:
       enabled: false
       
-  data:
-    mongodb:
-      uri: mongodb://mongodb:27017/lwm2m-db

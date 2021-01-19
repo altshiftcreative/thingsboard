@@ -17,7 +17,6 @@ import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.node.codec.DefaultLwM2mNodeDecoder;
 import org.eclipse.leshan.core.node.codec.DefaultLwM2mNodeEncoder;
-import org.eclipse.leshan.core.node.codec.LwM2mNodeDecoder;
 import org.eclipse.leshan.core.util.SecurityUtil;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
@@ -25,13 +24,13 @@ import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.security.EditableSecurityStore;
 import org.eclipse.leshan.server.security.FileSecurityStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import com.asc.bluewaves.lwm2m.converter.MagicLwM2mValueConverter;
 import com.asc.bluewaves.lwm2m.model.LwM2mDemoConstant;
-import com.asc.bluewaves.lwm2m.service.event.EventService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,16 +41,13 @@ public class ServerService {
 	private LeshanServer server;
 	private X509Certificate serverCertificate;
 
-	// private final int PORT = 5685;
-	private final int SEC_PORT = 5686;
-
 	// get the Redis hostname:port
 
-	ServerService() {
-		startLwm2mServer();
+	ServerService(@Value("${coap.secure-address}") String secureAddress, @Value("${coap.secure-port}") Integer securePort) {
+		startLwm2mServer(secureAddress, securePort);
 	}
 
-	public void startLwm2mServer() {
+	public void startLwm2mServer(String secureAddress, Integer securePort) {
 		log.info("Starting LWM2M transport server....");
 
 		LeshanServerBuilder builder = new LeshanServerBuilder();
@@ -73,7 +69,7 @@ public class ServerService {
 		builder.setCoapConfig(coapConfig);
 
 		// builder.setLocalAddress("localhost", PORT); // Thingsboard CoAP will reserve the default port
-		builder.setLocalSecureAddress("localhost", SEC_PORT); // Thingsboard CoAP will reserve the default port
+		builder.setLocalSecureAddress(secureAddress, securePort); // Thingsboard CoAP will reserve the default port
 		builder.disableUnsecuredEndpoint();
 
 		// TODO: we have to implement our security store that save data to mongoDB
@@ -132,10 +128,8 @@ public class ServerService {
 	}
 
 	@Bean(name = "server")
+	@DependsOn(value = "ServerService")
 	public LeshanServer getServer() {
-		if (server == null) {
-			startLwm2mServer();
-		}
 		return server;
 	}
 

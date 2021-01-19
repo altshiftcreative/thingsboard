@@ -14,12 +14,12 @@ spring:
 #      additional-exclude: static/**
 #    livereload:
 #      enabled: true
-  jackson:
-    serialization:
-      indent-output: true
-#  data:
-#    mongodb:
-#      uri: mongodb://localhost:27017/lwm2m-db
+#  jackson:
+#    serialization:
+#      indent-output: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/lwm2m-db
 #      uri: mongodb://AscUser:AltShift$135@localhost:27017/lwm2m-db
 #      port: 27017
 #      database: lwm2m-db
@@ -28,8 +28,13 @@ spring:
 #      - A
 
 server:
+  address: 0.0.0.0
   port: 9090
-  
+
+coap:
+  secure-address: 0.0.0.0
+  secure-port: 5686
+
 tb:
   base-url: http://localhost:8080/api
   username: tenant@thingsboard.org
