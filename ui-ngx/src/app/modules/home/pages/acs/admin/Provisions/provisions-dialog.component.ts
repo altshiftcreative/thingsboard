@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Dialog } from '@material-ui/core';
+import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AcsService } from '../../acs-service';
 
@@ -24,7 +23,6 @@ export class provisionsDialog implements OnInit {
 
 
     ngOnInit() {
-
         if (this.data) {
             this.flag=true;
             this.provisionsForm = new FormGroup({
@@ -38,13 +36,9 @@ export class provisionsDialog implements OnInit {
                 'script': new FormControl(null),
             });
         }
-        
     }
     onSubmit() {
-
-
         this.http.put(this.acsService.acsBaseUri+'/api/v1/tr69/provisions/?provisionsId=' + this.provisionsForm.value.provisionsName,
-
         {
             "script": this.provisionsForm.value.script,
   
@@ -52,5 +46,4 @@ export class provisionsDialog implements OnInit {
     ).subscribe((dta) => { })
     this.acsService.progress('Created', true);
     }
-   
 }

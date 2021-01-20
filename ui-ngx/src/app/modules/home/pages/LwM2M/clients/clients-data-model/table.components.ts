@@ -24,12 +24,8 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     clientByEndpoint: any = {};
     constructor(private lwService: LwService, private http: HttpClient, public dialog: MatDialog) { }
 
-    ngAfterViewInit(): void {
-    }
-    ngOnInit(): void {
-
-
-    }
+    ngAfterViewInit(): void { }
+    ngOnInit(): void { }
 
     openDialog() {
         this.lwService.value = this.dataModel['id'];
@@ -97,7 +93,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then(async (readData) => {
             this.readDataObject = readData;
 
-            for await (const element of this.readDataObject['content']['resources']){
+            for await (const element of this.readDataObject['content']['resources']) {
                 this.data['field' + instance + element['id']] = element['value'];
             }
             this.lwService.progress("SUCCESS", true);

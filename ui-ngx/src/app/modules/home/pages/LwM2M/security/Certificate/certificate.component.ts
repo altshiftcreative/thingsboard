@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../../Lw-service";
 
 @Component({

@@ -25,8 +25,8 @@
 .search-div{
     float: left;
     text-align-last: auto;
-    margin-left: 0px;
-    margin-top: 0px;
+    margin-left: 30px;
+    margin-top: 10px;
     height: 40px;
     padding: 8px 12px 8px 7px;
     border-radius: 4px;
@@ -34,37 +34,28 @@
 }
 
 .search-input{
-  position: static;
-  width: 225px;
-  height: 24px;
-  left: 35px;
-  top: 8px;
-  font-family: SF Pro Display;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #000000;
-  flex: none;
-  order: 1;
-  flex-grow: 1;
-  border: none;
-  display: inline;
-  outline: none;
-  border-bottom-style: inset;
+    position: static;
+    width: 225px;
+    height: 24px;
+    left: 35px;
+    top: 8px;
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;    
+    display: flex;
+    align-items: center;    
+    color: #000000;    
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+    border: none;
+    display: inline;
+    outline: none;
+    border-bottom-style: inset;
 }
 
-.leftArrowBack{
-    position: absolute;
-    top: 50px; 
-    cursor: pointer;
-}
-
-.leftArrowBack:hover{
-    border-bottom : 3px solid #000000;
-}
 
 .menu-buttons{
     text-align-last: auto;
@@ -76,23 +67,5 @@
     color: white;
 }
 
-.between-btn-download{
-    width:15px; 
-    height:auto; 
-    display:inline-block;
-}
 
-.downloadCSV{
-    width: 136px; 
-    height: 40px; 
-    border: 1px solid #1890FF; 
-    background: #FFFFFF; 
-    text-align-last: auto; 
-    color: #1890FF;
-}
-
-.tag-span{
-    background-color: #1890FF; 
-    color: #FFFFFF;
-}
         

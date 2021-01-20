@@ -19,7 +19,7 @@ import { LwClientsDataTableComponent } from './clients/clients-data-model/table.
 import { LwPublicKeycateomponent } from './security/Public Key/publicKey.component';
 import { LwClientSecurityConfigComponent } from './security/Client Security Config/clientSecurityConfig.component';
 import { newConfigDialog } from './security/Client Security Config/newConfig-dialog.component';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { formDialog } from './clients/global-form/form.component';
 
 
@@ -36,8 +36,8 @@ import { formDialog } from './clients/global-form/form.component';
     LwClientSecurityConfigComponent,
     newConfigDialog,
     formDialog
-    
-    
+
+
 
   ],
   imports: [
@@ -51,14 +51,14 @@ import { formDialog } from './clients/global-form/form.component';
     MatSnackBarModule,
     MatTableModule,
     MatSortModule,
-    MatIconModule,
-   
+    MatIconModule
 
-    
+
+
   ],
-  exports:[
+  exports: [
     ReactiveFormsModule
   ]
-  
+
 })
 export class LwModule { }

@@ -3,13 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../acs-service';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogAlert } from '../popup/popup-show';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ActionNotificationShow } from '@app/core/notification/notification.actions';
-
 
 @Component({
     selector: 'acs-device',
@@ -34,7 +29,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     csvDataArrayParameter: string[][] = [['Parameter', 'Object', 'Object timestamp', 'Writable', 'Writable timestamp', 'Value', 'Value type', 'Value timestamp', 'Notification', 'Notification timestamp', 'Access list', 'Access list timestamp']]
     @ViewChild(MatPaginator) paginator: MatPaginator;
     checkedItems: string[] = [];
-    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService,private _snackBar: MatSnackBar) { }
+    constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService, private _snackBar: MatSnackBar) { }
     displayedColumns: string[] = ['Device Name', 'SSID', 'Last Inform', 'IP', 'Online', 'Tag', 'Action'];
     dataSource: MatTableDataSource<any>;
     ngOnInit(): void {
@@ -46,7 +41,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     getDevices() {
         this.checkedItems = []
         document.getElementById('select-all')['checked'] = false;
-        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri + '/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
             this.dataSource = new MatTableDataSource(deviceData)
             this.dataSource.paginator = this.paginator;
             this.onlineStatus();
@@ -84,8 +79,10 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
 
     async updateValue(deviceID, SSIDvalue, parameterName, element) {
         let newValue = prompt(parameterName, SSIDvalue);
-        await this.acsService.change(deviceID, parameterName, newValue, element);
-        this.getDevices();
+        if (newValue != null) {
+            await this.acsService.change(deviceID, parameterName, newValue, element);
+            this.getDevices();
+        }
 
 
     };
@@ -110,7 +107,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     }
 
     async operations(type) {
-        if (this.checkedItems.length == 0) { this.acsService.progress('Choose a device', false);}
+        if (this.checkedItems.length == 0) { this.acsService.progress('Choose a device', false); }
         else {
             switch (type) {
                 case "delete":
@@ -126,10 +123,10 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
                     }
                     break;
                 case "reboot":
-                    this.checkedItems.forEach((i) => {
+                    this.checkedItems.forEach((i) => {                        
                         this.acsService.rebootDevice(i);
                     });
-                    
+
                     break;
                 case "reset":
                     this.checkedItems.forEach((i) => {
@@ -215,7 +212,7 @@ export class AcsDeciveComponent implements OnInit, AfterViewInit {
     }
 
     liveSearch(event) {
-        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/search/?serialNumber=' + event.target.value).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri + '/api/v1/tr69/search/?serialNumber=' + event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
             this.onlineStatus();
             this.tagsCheck();

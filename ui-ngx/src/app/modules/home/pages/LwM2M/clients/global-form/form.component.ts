@@ -30,10 +30,6 @@ export class formDialog implements OnInit {
 
     async onSubmit() {
         if (this.lwService.formType['type'] != 'write') {
-
-
-
-
             let dataNames = [];
             this.resourcesArray.forEach((item, index) => {
                 if (this.newInstanceForm.value[item['name']] != null) {

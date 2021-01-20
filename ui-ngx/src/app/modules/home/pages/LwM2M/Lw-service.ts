@@ -14,23 +14,23 @@ export class LwService {
     value;
     format;
     timeout;
-    formData:any[]=[];
-    lwm2mBaseUri=""
+    formData: any[] = [];
+    lwm2mBaseUri = ""
     formType;
     finalWriteValue;
-    constructor(private http: HttpClient,protected store: Store<AppState>) { }
+    constructor(private http: HttpClient, protected store: Store<AppState>) { }
 
     progress(res, stat) {
-        let type: NotificationType  = stat ? 'success' : 'error'
-            this.store.dispatch(new ActionNotificationShow(
-                {
-                    message: res,
-                    type: type,
-                    duration: 2000,
-                    verticalPosition: 'bottom',
-                    horizontalPosition: 'center'
-                }));
-        
+        let type: NotificationType = stat ? 'success' : 'error'
+        this.store.dispatch(new ActionNotificationShow(
+            {
+                message: res,
+                type: type,
+                duration: 2000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'center'
+            }));
     }
+
 
 }
