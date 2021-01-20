@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { element } from "protractor";
 import { LwService } from "../../Lw-service";
 
 
@@ -34,8 +33,8 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
 
      getDataModel() {
          this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+            clientData.sort((a, b) => (a.id > b.id) ? 1 : -1)
             this.dataSource = clientData
-            console.log('data testing :',clientData);
             this.getDataModelByEndpoint();
             
         })
