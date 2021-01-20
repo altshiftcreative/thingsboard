@@ -94,12 +94,12 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
 
     async readAllData(instance) {
         let v = [this.dataModel['id'], instance];
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then(async (readData) => {
             this.readDataObject = readData;
 
-            this.readDataObject['content']['resources'].forEach(element => {
+            for await (const element of this.readDataObject['content']['resources']){
                 this.data['field' + instance + element['id']] = element['value'];
-            });
+            }
             this.lwService.progress("SUCCESS", true);
         })
 
