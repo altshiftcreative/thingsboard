@@ -48,18 +48,11 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     // ========================Faults Methods============================ //
 
     toggleVisibility(event) {
-        console.log("eventtt", event.target.name);
         if (event.target.checked) {
             this.checkedItems.push(event.target.name);
-            console.log("Array Checked", this.checkedItems);
-
         }
         else {
-            // this.acsService.removeA(this.checkedItems,event.target.name)
-            // delete this.checkedItems[event.target.name];
             this.acsService.removeItem(this.checkedItems, event.target.name);
-            console.log("Array UnChecked", this.checkedItems);
-
         }
     }
 
@@ -107,11 +100,7 @@ export class AcsFaultsComponent implements OnInit, AfterViewInit {
     }
 
     faultsSearch(event) {
-        // event.toLowerCase;
         let str1: string = event.target.value;
-        // let deviceId = str1.split(':', 1);
-
-        // 202BC1-BM632w-000004:task_5fe5aac3ae942d20943c50fa => target.value
         this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/searchfaults/?device=' + str1.toLowerCase()).subscribe((result: any[]) => {
             this.dataSource.data = result;
 

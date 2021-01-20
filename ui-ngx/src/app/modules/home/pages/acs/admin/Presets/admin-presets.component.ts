@@ -1,12 +1,10 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ThemePalette } from '@angular/material/core';
-import _, { kebabCase } from 'lodash';
 import { AcsService } from '../../acs-service';
-import { DialogDataDialog } from '../../devices/Dialog.component';
 import { PresetsDialog } from './presets-dialog.component';
 export interface Task {
     name: string;
@@ -19,8 +17,8 @@ export interface Task {
 
 @Component({
     selector: 'admin-presets',
-    templateUrl: './admin-presets.component.html'
-    
+    templateUrl: './admin-presets.component.html',
+    styleUrls: ['./presets-dialog.component.scss']
 })
 
 
@@ -84,8 +82,6 @@ export class AcsAdminPresetsComponent implements OnInit, AfterViewInit {
     toggleVisibility(event) {
         if (event.target.checked) {
             this.checkedItems.push(event.target.name);
-            console.log("Array Checked", this.checkedItems);
-
         }
         else {
             this.acsService.removeItem(this.checkedItems, event.target.name);
