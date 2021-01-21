@@ -15,7 +15,7 @@ import com.asc.bluewaves.lwm2m.errors.BadRequestException;
 import com.asc.bluewaves.lwm2m.service.SecurityService;
 
 @RestController
-@RequestMapping("/api/security")
+@RequestMapping("/lwm2m/api/security")
 public class SecurityController extends BaseController {
 
 	private final SecurityService securityService;

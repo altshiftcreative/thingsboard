@@ -20,7 +20,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/lwm2m-db
-#      uri: mongodb://AscUser:AltShift$135@localhost:27017/lwm2m-db
+#      uri: mongodb://AscUser:AltShift$93058@localhost:27017/lwm2m-db
 #      port: 27017
 #      database: lwm2m-db
 #      username: MongoUser
@@ -28,11 +28,11 @@ spring:
 #      - A
 
 server:
-  address: 0.0.0.0
+  address: localhost
   port: 9090
 
 coap:
-  secure-address: 0.0.0.0
+  secure-address: localhost
   secure-port: 5686
 
 tb:

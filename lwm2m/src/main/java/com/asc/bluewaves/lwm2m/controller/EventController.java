@@ -12,7 +12,7 @@ import com.asc.bluewaves.lwm2m.errors.BadRequestException;
 import com.asc.bluewaves.lwm2m.service.EventService;
 
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/lwm2m/event")
 public class EventController extends BaseController {
 
 	private final EventService eventService;

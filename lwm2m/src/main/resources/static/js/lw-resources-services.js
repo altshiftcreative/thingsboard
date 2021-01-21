@@ -18,7 +18,7 @@ var myModule = angular.module('lwResourcesServices', []);
 
 var objectDefs; // cache for objectDefs
 
-myModule.factory('lwResources',["$http", function($http) {
+myModule.factory('lwResources',["$http", "uriBase",  function($http, uriBase) {
     var serviceInstance = {};
 
     /**
@@ -326,7 +326,7 @@ myModule.factory('lwResources',["$http", function($http) {
      * Load all the Object Definition known by the server.
      */
     var loadObjectDefinitions = function(endpoint, callback) {
-        $http.get("api/objectspecs/"+encodeURIComponent(endpoint))
+        $http.get(uriBase + "/objectspecs/"+encodeURIComponent(endpoint))
         .success(function(data, status, headers, config) {
             if (data) {
                 objectDefs = data;
