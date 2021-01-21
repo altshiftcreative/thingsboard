@@ -43,7 +43,7 @@ export class formDialog implements OnInit {
 
             if (this.lwService.formType['type'] == 'update') {
 
-                await this.http.put(this.lwService.lwm2mBaseUri + '/api/v1/Lw/update/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout + '&replace=' + 'false',
+                await this.http.put(this.lwService.lwm2mBaseUri + "/api/clients/" + this.lwService.clientEndpoint + "/" + this.lwService.value[0]+"/"+this.lwService.value[1] + "?format=" + this.lwService.format + "&timeout=" + this.lwService.timeout+ "&replace=false",
                     {
                         "id": this.lwService.value[1],
                         "resources": dataNames
@@ -53,7 +53,7 @@ export class formDialog implements OnInit {
             }
 
             else if (this.lwService.formType['type'] == 'create') {
-                await this.http.post(this.lwService.lwm2mBaseUri + '/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
+                await this.http.post(this.lwService.lwm2mBaseUri +"/api/clients/" + this.lwService.clientEndpoint + "/" + this.lwService.value + "?format=" + this.lwService.format + "&timeout=" + this.lwService.timeout,
 
                     {
                         "resources": dataNames
@@ -75,7 +75,7 @@ export class formDialog implements OnInit {
                 }
             }
             
-            await this.http.put(this.lwService.lwm2mBaseUri + '/api/v1/Lw/write/?endpoint=' + this.lwService.clientEndpoint + '&value=' + this.lwService.value + '&format=' + this.lwService.format + '&timeout=' + this.lwService.timeout,
+            await this.http.put(this.lwService.lwm2mBaseUri + "/api/clients/" + this.lwService.clientEndpoint + "/" + this.lwService.value[0] + "/" + this.lwService.value[1] + "/" + this.lwService.value[2] + "?format=" + this.lwService.format + "&timeout=" + this.lwService.timeout,
 
                 {
                     "id": this.lwService.formType['id'],

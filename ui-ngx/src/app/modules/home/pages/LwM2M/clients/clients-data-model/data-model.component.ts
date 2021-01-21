@@ -31,7 +31,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
     }
 
     getDataModel() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/clientsData/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/objectspecs/' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             clientData.sort((a, b) => (a.id > b.id) ? 1 : -1)
             this.dataSource = clientData
             this.getDataModelByEndpoint();
@@ -39,7 +39,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
         })
     }
     getDataModelByEndpoint() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
 
             this.dataSource.forEach(element => {
                 let urlArray = []

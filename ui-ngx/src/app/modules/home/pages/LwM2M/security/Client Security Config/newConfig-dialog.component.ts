@@ -27,7 +27,7 @@ export class newConfigDialog implements OnInit {
 
     
      onSubmit() {
-        this.http.put(this.lwService.lwm2mBaseUri+'/api/v1/Lw/addClientsSecurity',
+        this.http.put(this.lwService.lwm2mBaseUri+"/api/security/clients/",
 
         { 
             "endpoint": this.newConfigForm.value.endpoint,

@@ -27,7 +27,7 @@ export class LwPublicKeycateomponent implements OnInit, AfterViewInit {
     }
 
     getDevices() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + "/api/security/server", { withCredentials: true }).subscribe((certificateData) => {
             this.dataSource = new MatTableDataSource(certificateData);
             console.log(this.dataSource)
             this.datacertificate = certificateData;
