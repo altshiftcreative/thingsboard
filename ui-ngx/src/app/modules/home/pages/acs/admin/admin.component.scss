@@ -1,36 +1,7 @@
-.buttons-style{
-    padding-left: 3em;
-    padding-top: 3em;
-    border-color: #eeeeee;
-    width: 20em;
-    :active{
-        background-color: #E6F7FF;
-    }
+.dema mat-tab-group mat-tab-header{
+    margin-left: 1.2em;
+    margin-right: 1.2em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
 }
-.buttons-style2{
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    text-align: start;
-}
-.buttons-style3{
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 1em;
-}
-
-.buttons-style :hover{
-    background-color: #E6F7FF;
-    
-}
-.mat-button-toggle-checked {
-  background-color: #E6F7FF !important;
-}
-.hi{
-    padding-top: -10em;
-}
-.box{
-padding-top: -10em;
-}
-.back{
-    background-color: #eeeeee !important;
-    border-color: yellowgreen;
-}
+  

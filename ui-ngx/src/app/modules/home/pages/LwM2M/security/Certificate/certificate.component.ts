@@ -31,7 +31,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
             this.hexCode=this.base64ToHex(this.datacertificate.certificate.b64Der);
         })
     }
-
+   
      base64ToHex(str) {
         const raw = atob(str);
         let result = '';
@@ -42,9 +42,4 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         return result.toUpperCase();
       }
 
-      saveAsBlob(bytes){
-        var blob = new Blob([bytes], { type: 'application/octet-stream' });
-        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-        console.log("LOL")
-    }
 }

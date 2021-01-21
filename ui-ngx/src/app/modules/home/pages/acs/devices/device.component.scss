@@ -18,8 +18,14 @@
   padding: 33px;
   width: 100%;
   float: right;
-  text-align-last: end;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background: white;
+  flex-wrap: wrap;
+  @media (max-width:767px) {
+    justify-content: center !important;
+}
 }
 
 .search-div{
@@ -31,29 +37,39 @@
     padding: 8px 12px 8px 7px;
     border-radius: 4px;
     box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;
+    @media (max-width:512px) {
+        width: 70%;
+        margin-bottom: 1em !important;
+    
+    }    
 }
 
 .search-input{
-  position: static;
-  width: 225px;
-  height: 24px;
-  left: 35px;
-  top: 8px;
-  font-family: SF Pro Display;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #000000;
-  flex: none;
-  order: 1;
-  flex-grow: 1;
-  border: none;
-  display: inline;
-  outline: none;
-  border-bottom-style: inset;
+ 
+    position: static;
+    width: 225px;
+    height: 24px;
+    left: 35px;
+    top: 8px;
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+    border: none;
+    display: inline;
+    outline: none;
+    border-bottom-style: inset;
+    @media (max-width:512px) {
+      width: 70%;
+  
+  }    
 }
 
 .leftArrowBack{
@@ -68,12 +84,13 @@
 
 .menu-buttons{
     text-align-last: auto;
-    z-index: 10; margin-bottom: -4px;
+    z-index: 10; 
     width: 121px; 
     height: 40px; 
     border: 1px solid #1890FF; 
     background: #1890FF; 
     color: white;
+
 }
 
 .between-btn-download{
@@ -95,4 +112,31 @@
     color: #000000;
 }
 
- 
+ .header-child{
+     width: 50%;
+     text-align: end;
+
+     @media (max-width:767px) {
+         width: 100%;
+         margin-bottom: 1em;
+         text-align: center !important;
+
+
+     }
+     &.search{
+         @media (max-width:767px) {
+            margin-left: 16%;
+
+         }
+     }
+     button{
+        margin: 1%;
+
+     }
+ }
+ .table{
+    @media (max-width:767px) {
+        overflow-x: scroll; width: auto; height: auto;
+
+    }
+ }
