@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.asc.bluewaves.lwm2m.errors.BadRequestException;
-import com.asc.bluewaves.lwm2m.service.event.EventService;
+import com.asc.bluewaves.lwm2m.service.EventService;
 
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/lwm2m/event")
 public class EventController extends BaseController {
 
 	private final EventService eventService;
-
+	
 	EventController(EventService eventService) {
 		this.eventService = eventService;
 	}

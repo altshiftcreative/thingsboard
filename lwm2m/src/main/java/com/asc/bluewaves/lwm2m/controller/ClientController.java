@@ -24,7 +24,7 @@ import com.asc.bluewaves.lwm2m.model.ClientDTO;
 import com.asc.bluewaves.lwm2m.service.ClientService;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/lwm2m/api/clients")
 public class ClientController extends BaseController {
 
 	private final ClientService clientService;

@@ -2,10 +2,14 @@ package com.asc.bluewaves.lwm2m;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
+
+import com.asc.bluewaves.lwm2m.config.ApplicationProperties;
 
 @SpringBootApplication
 @ComponentScan("com.asc.bluewaves.lwm2m")
+@EnableConfigurationProperties({ApplicationProperties.class})
 public class Lwm2mApplication {
 
 	public static void main(String[] args) {

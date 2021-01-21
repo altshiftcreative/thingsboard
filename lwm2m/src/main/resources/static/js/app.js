@@ -35,6 +35,8 @@ var leshanApp = angular.module('leshanApp',[
         'fileModelDirectives',
 ]);
 
+leshanApp.value('uriBase', 'lwm2m/api');
+
 leshanApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
         when('/clients',           { templateUrl : 'partials/client-list.html',   controller : 'ClientListCtrl' }).

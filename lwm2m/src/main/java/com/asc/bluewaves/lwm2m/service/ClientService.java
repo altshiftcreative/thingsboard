@@ -71,6 +71,7 @@ import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.security.EditableSecurityStore;
 import org.eclipse.leshan.server.security.SecurityInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -102,6 +103,21 @@ import lombok.extern.slf4j.Slf4j;
 @Service("ClientService")
 @Slf4j
 public class ClientService {
+
+	@Value("${tb.base-url}")
+	private String tbBaseUrl;
+
+	@Value("${tb.username}")
+	private String tbUsername;
+
+	@Value("${tb.password}")
+	private String tbPassword;
+
+	@Value("${tb.provision.key}")
+	private String tbProvisionKey;
+
+	@Value("${tb.provision.secret}")
+	private String tbProvisionSecret;
 
 	// MongoDB template
 	private final MongoTemplate mongoTemplate;
@@ -202,21 +218,19 @@ public class ClientService {
 			throw new ResourceAlreadyExistException("The client you are trying to create is already exist: " + clientDto.getEndpoint());
 		}
 
+		// Get access token for new device
+		clientDto.setAccessToken(getNewAccessToken(clientDto.getEndpoint()));
+
 		// Add the client to our running Leshan server
 		addClientToServer(clientDto);
-		clientDto.setAccessToken(getNewAccessToken(clientDto.getEndpoint()));
 
 		// Save client to MongoDB
 		mongoTemplate.getCollection("client").insertOne(Document.parse(mapper.writeValueAsString(clientDto)));
 	}
 
 	private String getNewAccessToken(String endpoint) throws IOException {
-		String loginUrl = "http://localhost:8080/api/auth/login";
-		String accessTokenUrl = "http://localhost:8080/api/v1/provision";
-		String username = "hassan@altshiftcreative.com";
-		String password = "Hasan1998!";
-		String lwm2mKey = "r3rd5n77w1bpht21kp91";
-		String lwm2mSecret = "i9x798wdnbzirnax7b43";
+		String loginUrl = tbBaseUrl + "/auth/login";
+		String accessTokenUrl = tbBaseUrl + "/v1/provision";
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -225,8 +239,8 @@ public class ClientService {
 
 		// First request, get token
 		Map<String, String> body = new HashMap<>();
-		body.put("username", username);
-		body.put("password", password);
+		body.put("username", tbUsername);
+		body.put("password", tbPassword);
 
 		HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
 		ResponseEntity<String> response = restTemplate.postForEntity(loginUrl, request, String.class);
@@ -239,8 +253,8 @@ public class ClientService {
 
 		body.clear();
 		body.put("deviceName", endpoint);
-		body.put("provisionDeviceKey", lwm2mKey);
-		body.put("provisionDeviceSecret", lwm2mSecret);
+		body.put("provisionDeviceKey", tbProvisionKey);
+		body.put("provisionDeviceSecret", tbProvisionSecret);
 
 		request = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
 		response = restTemplate.postForEntity(accessTokenUrl, request, String.class);

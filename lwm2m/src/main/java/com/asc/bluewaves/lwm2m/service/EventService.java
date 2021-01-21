@@ -1,4 +1,4 @@
-package com.asc.bluewaves.lwm2m.service.event;
+package com.asc.bluewaves.lwm2m.service;
 
 import java.io.IOException;
 import java.util.Collection;

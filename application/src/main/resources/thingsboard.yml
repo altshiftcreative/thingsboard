@@ -777,3 +777,11 @@ management:
       exposure:
         # Expose metrics endpoint (use value 'prometheus' to enable prometheus metrics).
         include: '${METRICS_ENDPOINTS_EXPOSE:info}'
+
+leshan:
+  url: http://localhost:9090/lwm2m
+
+genie:
+  url: http://localhost:3000
+  username: admin
+  password: admin

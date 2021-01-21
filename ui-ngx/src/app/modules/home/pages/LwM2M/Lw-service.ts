@@ -14,8 +14,8 @@ export class LwService {
     value;
     format;
     timeout;
-    formData: any[] = [];
-    lwm2mBaseUri = ""
+    formData:any[]=[];
+    lwm2mBaseUri="/lwm2m"
     formType;
     finalWriteValue;
     constructor(private http: HttpClient, protected store: Store<AppState>) { }

@@ -13,7 +13,7 @@ import com.asc.bluewaves.lwm2m.errors.BadRequestException;
 import com.asc.bluewaves.lwm2m.service.ObjectSpecsService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/lwm2m/api/objectspecs")
 public class ObjectSpecsController extends BaseController {
 
 	private final ObjectSpecsService objSpecsService;
@@ -24,7 +24,7 @@ public class ObjectSpecsController extends BaseController {
 
 	// Get object specifications for a given client
 	// GET //localhost:8080/api/objectspecs/ebraheem-fedora
-	@GetMapping("/objectspecs/{" + ENDPOINT + "}")
+	@GetMapping("/{" + ENDPOINT + "}")
 	public void getClientObjectSpec(@PathVariable(ENDPOINT) String endpoint, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			checkParameter(ENDPOINT, endpoint);
