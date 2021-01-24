@@ -52,8 +52,7 @@ export class LwClientsComponent implements OnInit, AfterViewInit , OnDestroy{
         }, true)
 
 
-        this.sse.addEventListener("UPDATED", function (e) {
-        }, true)
+        
 
 
 

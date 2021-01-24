@@ -44,6 +44,10 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
                     mainThis.data['field' + 0 + e['id']] = e['value'];
                 })
         }, true)
+
+        this.sse.addEventListener("UPDATED", function (e) {
+            mainThis.getDataModel();
+        }, true)
     }
 
     getDataModel() {
