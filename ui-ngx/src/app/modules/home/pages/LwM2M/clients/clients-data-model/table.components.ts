@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { LwService } from "../../Lw-service";
 import { formDialog } from "../global-form/form.component";
@@ -11,21 +11,28 @@ import { formDialog } from "../global-form/form.component";
 })
 
 
-export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
+export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() dataModel: object;
     @Input() instanceObject: object;
     @Input() instanceNumber: number;
     @Input() timeOut: string;
     @Input() format: string;
+    @Input() data: any = {};
+
     readDataObject: any;
     observeDataObject: any;
-    data: any = {};
     dataSource: any[];
     clientByEndpoint: any = {};
     constructor(private lwService: LwService, private http: HttpClient, public dialog: MatDialog) { }
+    ngOnDestroy(): void {
+
+    }
 
     ngAfterViewInit(): void { }
-    ngOnInit(): void { }
+    ngOnInit(): void {
+
+           
+    }
 
     openDialog() {
         this.lwService.value = this.dataModel['id'];
@@ -113,14 +120,15 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             height: '483px',
             width: '768px',
         }).afterClosed().toPromise().then(async (clientsData) => {
-            await this.dynamicRender();
+            // await this.dynamicRender();
             this.lwService.formData = [];
-            this.data['field' + instance + index] = this.lwService.finalWriteValue;
+
+            // this.data['field' + instance + index] = this.lwService.finalWriteValue;
         })
     }
 
     async startObserve(value, index, instance) {
-        
+
         await this.http.post(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/' + value + '/observe?format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
             this.observeDataObject = observeData;
@@ -153,7 +161,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
 
 
     async stopObserve(value, instance) {
-        
+
 
         await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/' + value + '/observe', {}
         ).toPromise().then((observeData) => {
@@ -169,7 +177,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     }
 
     async execute(value, instance) {
-        
+
         await this.http.post(this.lwService.lwm2mBaseUri + "/api/clients/" + this.lwService.clientEndpoint + "/" + this.dataModel['id'] + "/" + instance + "/" + value + "?timeout=" + this.timeOut, {}
         ).toPromise().then((executeData) => {
             if (executeData['failure'])

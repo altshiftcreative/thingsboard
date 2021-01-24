@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { LwService } from "../../Lw-service";
 
 
@@ -10,7 +10,7 @@ import { LwService } from "../../Lw-service";
 })
 
 
-export class LwClientsDataComponent implements OnInit, AfterViewInit {
+export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy {
     selectedTime = '5';
     selectedMulti = 'TLV';
     selectedSingle = 'TLV';
@@ -19,15 +19,31 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit {
     dataSource: any[];
     col: number = 0;
     clientByEndpoint: any = {};
-
     panelOpenState = false;
-    constructor(private lwService: LwService, private http: HttpClient) { }
     clientEndpoint = this.lwService.clientEndpoint;
+    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?ep=' + this.lwService.clientEndpoint);
+    data: any = {};
+    constructor(private lwService: LwService, private http: HttpClient) { }
+
+    ngOnDestroy(): void {
+        console.log('destroooy');
+        this.sse.close();
+    }
+
     ngAfterViewInit(): void {
         this.getDataModel();
     }
     ngOnInit(): void {
+        let mainThis = this;
 
+        this.sse.addEventListener("NOTIFICATION", function (e) {
+            console.log('message data be like : 3', JSON.parse(e['data'])['val']['resources'])
+            let notificationData = JSON.parse(e['data'])['val']['resources'];
+            if (notificationData)
+                notificationData.forEach(e => {
+                    mainThis.data['field' + 0 + e['id']] = e['value'];
+                })
+        }, true)
     }
 
     getDataModel() {

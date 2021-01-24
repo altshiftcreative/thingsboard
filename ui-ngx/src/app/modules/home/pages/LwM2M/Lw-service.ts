@@ -18,6 +18,7 @@ export class LwService {
     lwm2mBaseUri="/lwm2m"
     formType;
     finalWriteValue;
+    notificationData:any[] = [];
     constructor(private http: HttpClient, protected store: Store<AppState>) { }
 
     progress(res, stat) {
