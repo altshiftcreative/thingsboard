@@ -23,6 +23,8 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
     clientEndpoint = this.lwService.clientEndpoint;
     sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?ep=' + this.lwService.clientEndpoint);
     data: any = {};
+    counterArray = [];
+    updateArray = [];
     constructor(private lwService: LwService, private http: HttpClient) { }
 
     ngOnDestroy(): void {
@@ -46,7 +48,20 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
         }, true)
 
         this.sse.addEventListener("UPDATED", function (e) {
-            mainThis.getDataModel();
+            // mainThis.getDataModel();
+            JSON.parse(e['data'])['registration']['objectLinks'].forEach(element => {
+                let sub = element['url'].match("/(.*)/");
+                if (sub != null && !mainThis.updateArray.includes(sub[1])) {
+                    mainThis.updateArray.push(sub[1]);
+                }
+            });
+
+            // console.log('the update data length NEW: ', mainThis.updateArray);
+            // console.log('the API data length: ',mainThis.counterArray);
+            if(mainThis.updateArray.length != mainThis.counterArray.length){
+                mainThis.getDataModel();
+            }
+
         }, true)
     }
 
@@ -60,7 +75,6 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     getDataModelByEndpoint() {
         this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
-
             this.dataSource.forEach(element => {
                 let urlArray = []
                 clientDataEndpoint['objectLinks'].forEach(item => {
@@ -69,6 +83,10 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
                         let final = item['url'].substring(indexOfDash + 1);
                         urlArray.push(parseInt(final));
                         this.clientByEndpoint[element['id']] = urlArray;
+                    }
+                    let sub = item['url'].match("/(.*)/");
+                    if (sub != null && !this.counterArray.includes(sub[1])) {
+                        this.counterArray.push(sub[1]);
                     }
                 })
             })

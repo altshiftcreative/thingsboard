@@ -40,7 +40,7 @@
                 <ng-container matColumnDef="Registration Date">
                     <th mat-header-cell *matHeaderCellDef> Registration Date </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element['registrationDate']}}
+                        {{element['registrationDate'].replace('T',', ').replace('+',' +')}}
                     </td>
                 </ng-container>
     
@@ -48,7 +48,7 @@
                 <ng-container matColumnDef="Last Update">
                     <th mat-header-cell *matHeaderCellDef> Last Update </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element['lastUpdate']}}
+                        {{element['lastUpdate'].replace('T',', ').replace('+',' +')}}
                     </td>
                 </ng-container>
     
