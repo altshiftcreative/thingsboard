@@ -34,7 +34,8 @@ lwClientControllers.controller('ClientListCtrl', [
     '$scope',
     '$http',
     '$location',
-    function ClientListCtrl($scope, $http,$location) {
+    'uriBase',
+    function ClientListCtrl($scope, $http, $location, uriBase) {
 
         // update navbar
         angular.element("#navbar").children().removeClass('active');
@@ -75,7 +76,7 @@ lwClientControllers.controller('ClientListCtrl', [
         };
 
         // get the list of connected clients
-        $http.get('api/clients'). error(function(data, status, headers, config){
+        $http.get(uriBase + '/clients'). error(function(data, status, headers, config){
             $scope.error = "Unable to get client list: " + status + " " + data;
             console.error($scope.error);
         }).success(function(data, status, headers, config) {
@@ -86,7 +87,7 @@ lwClientControllers.controller('ClientListCtrl', [
             $scope.clientslist = true;
 
             // listen for clients registration/deregistration
-            $scope.eventsource = new EventSource('event');
+            $scope.eventsource = new EventSource('lwm2m/event');
 
             var registerCallback = function(msg) {
                 $scope.$apply(function() {
@@ -159,7 +160,8 @@ lwClientControllers.controller('ClientDetailCtrl', [
     '$http',
     'lwResources',
     '$filter',
-    function($scope, $location, $routeParams, $http, lwResources,$filter) {
+    'uriBase',
+    function($scope, $location, $routeParams, $http, lwResources, $filter, uriBase) {
         // update navbar
         angular.element("#navbar").children().removeClass('active');
         angular.element("#client-navlink").addClass('active');
@@ -180,7 +182,7 @@ lwClientControllers.controller('ClientDetailCtrl', [
         $scope.clientId = $routeParams.clientId;
 
         // get client details
-        $http.get('api/clients/' + encodeURIComponent($routeParams.clientId))
+        $http.get(uriBase + '/clients/' + encodeURIComponent($routeParams.clientId))
         .error(function(data, status, headers, config) {
             $scope.error = "Unable to get client " + $routeParams.clientId+" : "+ status + " " + data;
             console.error($scope.error);
@@ -194,7 +196,7 @@ lwClientControllers.controller('ClientDetailCtrl', [
             });
 
             // listen for clients registration/deregistration/observe
-            $scope.eventsource = new EventSource('event?ep=' + $routeParams.clientId);
+            $scope.eventsource = new EventSource('lwm2m/event?ep=' + $routeParams.clientId);
 
             var registerCallback = function(msg) {
                 $scope.$apply(function() {
