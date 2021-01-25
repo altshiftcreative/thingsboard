@@ -39,26 +39,45 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
         let mainThis = this;
 
         this.sse.addEventListener("NOTIFICATION", function (e) {
-            console.log('message data be like : 3', JSON.parse(e['data'])['val']['resources'])
+            // console.log('message data be like : 3', JSON.parse(e['data']))
+
             let notificationData = JSON.parse(e['data'])['val']['resources'];
-            if (notificationData)
+
+            if (notificationData) {
+                let instance = JSON.parse(e['data'])['res']
+                let indexOfDash = instance.lastIndexOf("/");
+                let final = instance.substring(indexOfDash + 1)
+
+                let n = instance.split('/', 2).join('/').length;
+                let objectID = instance.substring(1, n);
+
                 notificationData.forEach(e => {
-                    mainThis.data['field' + 0 + e['id']] = e['value'];
+                    mainThis.data['field'+objectID + parseInt(final) + e['id']] = e['value'];
                 })
+            }
+            else {
+                let instance = JSON.parse(e['data'])['res']
+                let n = instance.split('/', 2).join('/').length;
+                let l = instance.split('/', 3).join('/').length;
+                let final = instance.substring(n + 1, l)
+
+                let objectID = instance.substring(1, n);
+
+                notificationData = JSON.parse(e['data'])['val'];
+                mainThis.data['field'+objectID + parseInt(final) + notificationData['id']] = notificationData['value'];
+
+            }
+
         }, true)
 
         this.sse.addEventListener("UPDATED", function (e) {
-            // mainThis.getDataModel();
             JSON.parse(e['data'])['registration']['objectLinks'].forEach(element => {
                 let sub = element['url'].match("/(.*)/");
                 if (sub != null && !mainThis.updateArray.includes(sub[1])) {
                     mainThis.updateArray.push(sub[1]);
                 }
             });
-
-            // console.log('the update data length NEW: ', mainThis.updateArray);
-            // console.log('the API data length: ',mainThis.counterArray);
-            if(mainThis.updateArray.length != mainThis.counterArray.length){
+            if (mainThis.updateArray.length != mainThis.counterArray.length) {
                 mainThis.getDataModel();
             }
 
