@@ -17,6 +17,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['Hex', 'Base64'];
     datacertificate;
     hexCode;
+    fileUrl;
     ngOnInit(): void {
         
     }
@@ -30,8 +31,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
             this.hexCode=this.base64ToHex(this.datacertificate.certificate.b64Der);
         })
     }
-
-
+   
      base64ToHex(str) {
         const raw = atob(str);
         let result = '';
@@ -41,6 +41,5 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         }
         return result.toUpperCase();
       }
-
 
 }

@@ -1,26 +1,29 @@
 <form [formGroup]="newInstanceForm">
   {{dataType.name}}
   <br>
-  <div class="form-group" style="width: 40%; display: inline-grid;" *ngFor="let item of resourcesArray">
+  <div class="form-group" style="width: 40%; display: inline-block;" *ngFor="let item of resourcesArray">
     <mat-form-field appearance="standard">
       <mat-label>{{item['name']}}</mat-label>
       <input matInput type="text" class="form-control" name="item['name']" [formControlName]="item['name']">
     </mat-form-field>
-  </div> &nbsp; &nbsp;
-  <button mat-button cdkFocusInitial class="submit-button" type="button" (click)="onSubmit()" [mat-dialog-close]
-    style="left: 24em;top: 2em" *ngIf="dataType.type == 'update'">
+  </div> 
+  <div style="display: flex; flex-direction: row;">
+    <button mat-button cdkFocusInitial class="submit-button" type="button" (click)="onSubmit()" [mat-dialog-close]
+    style="margin: 0 5%;" *ngIf="dataType.type == 'update'">
     Update</button>
   <button mat-button cdkFocusInitial class="submit-button" type="button" (click)="onSubmit()" [mat-dialog-close]
-    style="left: 24em;top: 2em" *ngIf="dataType.type == 'update'">
+  style="margin: 0 5%;" *ngIf="dataType.type == 'update'">
     Replace</button>
   <button mat-button cdkFocusInitial class="submit-button" type="button" (click)="onSubmit()" [mat-dialog-close]
-    style="left: 24em;top: 2em" *ngIf="dataType.type == 'create'">
+  style="margin: 0 5%;" *ngIf="dataType.type == 'create'">
     Create</button>
   <button mat-button cdkFocusInitial class="submit-button" type="button" (click)="onSubmit()" [mat-dialog-close]
-    style="left: 24em;top: 2em" *ngIf="dataType.type == 'write'">
+  style="margin: 0 5%;"*ngIf="dataType.type == 'write'">
     Write</button>
   <button mat-button cdkFocusInitial class="cancel-button" [mat-dialog-close]
-    style="left: 24em;top: 2em">Cancel</button>
+  style="margin: 0 5%;">Cancel</button>
+
+  </div>
 
 
   <br>

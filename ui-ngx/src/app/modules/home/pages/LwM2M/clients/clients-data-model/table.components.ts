@@ -117,8 +117,8 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
         this.lwService.timeout = this.timeOut;
 
         this.dialog.open(formDialog, {
-            height: '483px',
-            width: '768px',
+            height: '50%',
+            width: '50%',
         }).afterClosed().toPromise().then(async (clientsData) => {
             // await this.dynamicRender();
             this.lwService.formData = [];

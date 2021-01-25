@@ -1,136 +1,89 @@
-<div class="mat-table-padding" style="margin: 10px;padding: 10px;">
-  <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
-    *ngIf="isLoading">
-  </mat-progress-bar>
-  <div
-    style="box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);">
-    <div mat-header style="margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;">
-
-      <div
-        style="float: left;
-    text-align-last: auto;
-    margin-left: 30px;
-    margin-top: 10px;
-    height: 40px;
-    padding: 8px 12px 8px 7px;
-    border-radius: 4px;
-    box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;">
-        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-        <input type="text" placeholder="Search" (keyup)="faultsSearch($event)" style="position: static;
-width: 225px;
-height: 24px;
-left: 35px;
-top: 8px;
-
-/* P16 / Regular */
-
-font-family: SF Pro Display;
-font-style: normal;
-font-weight: normal;
-font-size: 16px;
-line-height: 24px;
-/* identical to box height, or 150% */
-
-display: flex;
-align-items: center;
-
-/* Shade of Greys / Grey 06 */
-
-color: #000000;
-
-/* Inside Auto Layout */
-
-flex: none;
-order: 1;
-flex-grow: 1;
-border: none;
-display: inline;
-outline: none;
-border-bottom-style: inset;" />
+<div class="mat-table-padding">
+  <mat-progress-bar color="warn" mode="indeterminate"*ngIf="isLoading"></mat-progress-bar>
+  <div class="faultsContainer">
+    <div mat-header class="faultsHeader">
+      <div class="searchContainer">
+        <div class="search">
+          <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+          <input type="text" placeholder="Search" (keyup)="faultsSearch($event)" />
+        </div>
       </div>
-      <button (click)="downloadDeviceFaultsDataCSV()"
-        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF"
-        mat-stroked-button>Download</button>
-      <div style=" width:15px; height:auto; display:inline-block;"></div>
-      <button mat-stroked-button color="warn" style="width: 136px; height: 40px; border: 1px solid #eb4224;  text-align-last: auto;" (click)="deleteFaults()">Delete</button>
-
+      <div class="buttons">
+        <button (click)="downloadDeviceFaultsDataCSV()" mat-stroked-button>Download</button>
+        <button mat-stroked-button class="red" color="warn" (click)="deleteFaults()">Delete</button>
+      </div>
     </div>
+    <div class="table" style="width: 100%;">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <!--- Note that these columns can be defined in any order.
-            The actual rendered columns are set as a property on the row definition" -->
-
-      <!-- Position Column -->
-      <ng-container matColumnDef="Device">
-
-        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Device </th>
-        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
-            name="{{element['_id']}}"> {{element['device']}} </td>
-      </ng-container>
-
-
-      <!-- Channel Column -->
-      <ng-container matColumnDef="Channel">
-        <th mat-header-cell *matHeaderCellDef> Channel </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['channel']}}
-        </td>
-      </ng-container>
-
-
-      <!-- Code Column -->
-      <ng-container matColumnDef="Code">
-        <th mat-header-cell *matHeaderCellDef> Code </th>
-        <td mat-cell *matCellDef="let element"> {{element['code']}}
-        </td>
-      </ng-container>
-
-      <!-- Message Column -->
-      <ng-container matColumnDef="Message">
-        <th mat-header-cell *matHeaderCellDef> Message </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['message']}}
-        </td>
-      </ng-container>
-
-      <!-- Detail Column -->
-
-      <ng-container matColumnDef="Detail">
-        <th mat-header-cell *matHeaderCellDef> Detail </th>
-        <td mat-cell *matCellDef="let element">
-          faultCode:{{element['detail']['faultCode']}}faultString:{{element['detail']['faultString']}}setParameterValuesFault:{{element['detail']['setParameterValuesFault']}}
-        </td>
-      </ng-container>
-
-      <!-- Retries Column -->
-
-      <ng-container matColumnDef="Retries">
-        <th mat-header-cell *matHeaderCellDef>Retries</th>
-        <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
-          {{element['retries']}}
-
-        </td>
-      </ng-container>
-      <!-- Timestamp Column -->
-
-      <ng-container matColumnDef="Timestamp">
-        <th mat-header-cell *matHeaderCellDef> Timestamp </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['timestamp'] | date: 'MMM d, y, h:mm:ss a'}}
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-
-    </table>
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+  
+        <!-- Position Column -->
+        <ng-container matColumnDef="Device">
+  
+          <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Device </th>
+          <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
+              name="{{element['_id']}}"> {{element['device']}} </td>
+        </ng-container>
+  
+  
+        <!-- Channel Column -->
+        <ng-container matColumnDef="Channel">
+          <th mat-header-cell *matHeaderCellDef> Channel </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['channel']}}
+          </td>
+        </ng-container>
+  
+  
+        <!-- Code Column -->
+        <ng-container matColumnDef="Code">
+          <th mat-header-cell *matHeaderCellDef> Code </th>
+          <td mat-cell *matCellDef="let element"> {{element['code']}}
+          </td>
+        </ng-container>
+  
+        <!-- Message Column -->
+        <ng-container matColumnDef="Message">
+          <th mat-header-cell *matHeaderCellDef> Message </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['message']}}
+          </td>
+        </ng-container>
+  
+        <!-- Detail Column -->
+  
+        <ng-container matColumnDef="Detail">
+          <th mat-header-cell *matHeaderCellDef> Detail </th>
+          <td mat-cell *matCellDef="let element">
+            faultCode:{{element['detail']['faultCode']}}faultString:{{element['detail']['faultString']}}setParameterValuesFault:{{element['detail']['setParameterValuesFault']}}
+          </td>
+        </ng-container>
+  
+        <!-- Retries Column -->
+  
+        <ng-container matColumnDef="Retries">
+          <th mat-header-cell *matHeaderCellDef>Retries</th>
+          <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
+            {{element['retries']}}
+  
+          </td>
+        </ng-container>
+        <!-- Timestamp Column -->
+  
+        <ng-container matColumnDef="Timestamp">
+          <th mat-header-cell *matHeaderCellDef> Timestamp </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['timestamp'] | date: 'MMM d, y, h:mm:ss a'}}
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+  
+      </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-
   </div>
 </div>

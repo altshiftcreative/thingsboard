@@ -45,6 +45,7 @@ export class PageNotFoundRoutingModule { }
 @NgModule({
   declarations: [
     AppComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -56,6 +57,7 @@ export class PageNotFoundRoutingModule { }
     DashboardRoutingModule,
     PageNotFoundRoutingModule,
     ReactiveFormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

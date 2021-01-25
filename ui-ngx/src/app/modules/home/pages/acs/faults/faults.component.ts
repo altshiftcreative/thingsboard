@@ -15,7 +15,9 @@ export interface Task {
 
 @Component({
     selector: 'acs-faults',
-    templateUrl: './faults.component.html'
+    templateUrl: './faults.component.html',
+    styleUrls: ['./faults.component.scss']
+
 })
 
 
