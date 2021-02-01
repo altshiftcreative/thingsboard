@@ -52,11 +52,11 @@ public class EventService extends EventSourceServlet {
 	private static final String EVENT_COAP_LOG = "COAPLOG";
 	private static final String QUERY_PARAM_ENDPOINT = "ep";
 
-	// private static final Logger LOG = LoggerFactory.getLogger(EventListeners.class);
+	private final ClientMongodbService clientMongodbService;
 
 	private final Gson gson;
 
-	private final LeshanServer server;
+	// private final LeshanServer server;
 
 	private final CoapMessageTracer coapMessageTracer;
 
@@ -142,8 +142,8 @@ public class EventService extends EventSourceServlet {
 		}
 	};
 
-	public EventService(LeshanServer server) {
-		this.server = server;
+	public EventService(ClientMongodbService clientMongodbService, LeshanServer server) {
+		// this.server = server;
 		server.getRegistrationService().addListener(this.registrationListener);
 		server.getObservationService().addListener(this.observationListener);
 		server.getPresenceService().addListener(this.presenceListener);
@@ -159,6 +159,8 @@ public class EventService extends EventSourceServlet {
 		gsonBuilder.registerTypeHierarchyAdapter(LwM2mNode.class, new LwM2mNodeSerializer());
 		gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 		this.gson = gsonBuilder.create();
+
+		this.clientMongodbService = clientMongodbService;
 	}
 
 	private synchronized void sendEvent(String event, String data, String endpoint) {
@@ -252,7 +254,11 @@ public class EventService extends EventSourceServlet {
 	}
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			super.doGet(request, response);
+		} catch (IOException | ServletException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

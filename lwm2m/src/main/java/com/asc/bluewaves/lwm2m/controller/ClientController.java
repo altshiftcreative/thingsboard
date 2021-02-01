@@ -1,12 +1,12 @@
 package com.asc.bluewaves.lwm2m.controller;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,94 +18,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asc.bluewaves.lwm2m.errors.BadRequestException;
-import com.asc.bluewaves.lwm2m.errors.ResourceAlreadyExistException;
-import com.asc.bluewaves.lwm2m.model.ClientDTO;
-import com.asc.bluewaves.lwm2m.service.ClientService;
+import com.asc.bluewaves.lwm2m.model.dto.ClientDTO;
+import com.asc.bluewaves.lwm2m.service.ClientMongodbService;
+import com.asc.bluewaves.lwm2m.service.ClientServerService;
 
 @RestController
 @RequestMapping("/lwm2m/api/clients")
 public class ClientController extends BaseController {
 
-	private final ClientService clientService;
+	private final ClientServerService clientServerService;
+	private final ClientMongodbService clientMongodbService;
 
-	ClientController(ClientService clientService) {
-		this.clientService = clientService;
+	ClientController(ClientServerService clientServerService, ClientMongodbService clientMongodbService) {
+		this.clientServerService = clientServerService;
+		this.clientMongodbService = clientMongodbService;
 	}
 
-//	@GetMapping("/clients")
-//	public ResponseEntity<Iterator<Registration>> getAllClients() {
-//		try {
-//			return ResponseEntity.ok(lwm2mService.getAllClients());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-//		}
-//	}
-
-//	@GetMapping("/clients/{" + ENDPOINT + "}")
-//	public ResponseEntity<Registration> getClientByEndpoint(@PathVariable(ENDPOINT) String endpoint) {
-//		try {
-//			checkParameter(ENDPOINT, endpoint);
-//			return ResponseEntity.ok(lwm2mService.getClientByEndpoint(endpoint));
-//
-//		} catch (NullPointerException e) {
-//			e.printStackTrace();
-//			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-//		}
-//	}
-
-//	@DeleteMapping("/{" + ENDPOINT + "}")
-//	public ResponseEntity<Void> deleteDevice(@PathVariable(ENDPOINT) List<String> endpoints) {
-//		// checkParameter(ENDPOINT, endpoint);
-//		try {
-//			clientService.deleteClient(endpoints);
-//			return ResponseEntity.noContent().build();
-//
-//		} catch (NullPointerException e) {
-//			e.printStackTrace();
-//			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-//		}
-//	}
-	
 	@DeleteMapping("")
 	public ResponseEntity<Void> deleteDevices(@RequestBody List<String> endpoints) {
-		try {
-			clientService.deleteClient(endpoints);
-			return ResponseEntity.noContent().build();
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		clientMongodbService.removeClient(endpoints);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("")
-	public ResponseEntity<String> saveDevice(@RequestBody ClientDTO client) {
-		try {
-			clientService.saveClient(client);
-			return ResponseEntity.created(new URI("/api/clients/" + client.getEndpoint())).build();
+	public ResponseEntity<String> saveDevice(@RequestBody ClientDTO client) throws URISyntaxException {
+		clientMongodbService.addClient(client);
+		return ResponseEntity.created(new URI("/api/clients/" + client.getEndpoint())).build();
+	}
 
-		} catch (ResourceAlreadyExistException bre) {
-			bre.printStackTrace();
-			throw new BadRequestException(bre.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+	@GetMapping("/{" + ENDPOINT + "}/run")
+	public ResponseEntity<Void> runDevice(@PathVariable(ENDPOINT) String endpoint) throws URISyntaxException {
+		clientMongodbService.runClient(endpoint);
+		return ResponseEntity.noContent().build();
 	}
 
 	// /clients/endPoint/LWRequest : do LightWeight M2M read request on a given client.
@@ -116,17 +60,7 @@ public class ClientController extends BaseController {
 			@RequestParam(value = "timeout", defaultValue = "5") Integer timeout, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		try {
-			clientService.doReadRequest(request, response, format, timeout);
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		clientServerService.doReadRequest(request, response, format, timeout);
 	}
 
 	// at least /endpoint/objectId/instanceId : do LightWeight M2M update or replcae request on a given client.
@@ -139,16 +73,7 @@ public class ClientController extends BaseController {
 			HttpServletResponse response) {
 
 		checkParameter(ENDPOINT, endpoint);
-		try {
-			clientService.doUpdateRequest(request, response, replace, format, timeout);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		clientServerService.doUpdateRequest(request, response, replace, format, timeout);
 	}
 
 	// /clients/endPoint/LWRequest : do LightWeight M2M create request on a given client.
@@ -159,17 +84,7 @@ public class ClientController extends BaseController {
 			HttpServletResponse response) {
 
 		checkParameter(ENDPOINT, endpoint);
-		try {
-			clientService.doPostRequest(request, response, format, timeout);
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		clientServerService.doPostRequest(request, response, format, timeout);
 	}
 
 	// /clients/endPoint/LWRequest : do LightWeight M2M delete request on a given client.
@@ -179,17 +94,8 @@ public class ClientController extends BaseController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		checkParameter(ENDPOINT, endpoint);
-		try {
-			clientService.doDeleteRequest(request, response, timeout);
+		clientServerService.doDeleteRequest(request, response, timeout);
 
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
 	}
 
 }
