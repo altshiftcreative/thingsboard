@@ -14,37 +14,37 @@ import { LwService } from "../../Lw-service";
 
 export class LwPublicKeycateomponent implements OnInit, AfterViewInit {
 
-    constructor(private http: HttpClient, public dialog: MatDialog,private lwService: LwService) { }
-    displayedColumns: string[] = ['params', 'x','y'];
+    constructor(private http: HttpClient, public dialog: MatDialog, private lwService: LwService) { }
+    displayedColumns: string[] = ['params', 'x', 'y'];
     datacertificate;
     dataSource: MatTableDataSource<any>;
     hexCode;
     ngOnInit(): void {
-        
+
     }
     ngAfterViewInit() {
         this.getDevices();
     }
 
     getDevices() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + "/api/security/server", { withCredentials: true }).subscribe((certificateData) => {
             this.dataSource = new MatTableDataSource(certificateData);
             console.log(this.dataSource)
             this.datacertificate = certificateData;
-            this.hexCode=this.base64ToHex(this.datacertificate.certificate.pubkey.b64Der);
+            this.hexCode = this.base64ToHex(this.datacertificate.certificate.pubkey.b64Der);
         })
     }
 
 
-     base64ToHex(str) {
+    base64ToHex(str) {
         const raw = atob(str);
         let result = '';
         for (let i = 0; i < raw.length; i++) {
-          const hex = raw.charCodeAt(i).toString(16);
-          result += (hex.length === 2 ? hex : '0' + hex);
+            const hex = raw.charCodeAt(i).toString(16);
+            result += (hex.length === 2 ? hex : '0' + hex);
         }
         return result.toUpperCase();
-      }
-      
+    }
+
 
 }

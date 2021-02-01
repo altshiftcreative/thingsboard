@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AcsService } from '../../acs-service';
 import { configDialog } from './config-dialog.component';
-import { el } from 'date-fns/locale';
 
 
 @Component({
@@ -21,13 +20,6 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
     constructor(private http: HttpClient, public dialog: MatDialog, private acsService: AcsService) { }
     displayedColumns: string[] = ['_id', 'value', 'Action'];
     dataSource: MatTableDataSource<any>;
-    private httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }),
-        withCredentials: true 
-    };
 
     ngOnInit(): void {
     }
@@ -45,7 +37,6 @@ export class AcsAdminConfigComponent implements OnInit, AfterViewInit {
 
 
     openDialog(row) {
-        console.log("this is row", row)
         if (row) {
             this.dialog.open(configDialog,
                 {

@@ -59,7 +59,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.startsWith('/api/')) {
+    if (req.url.startsWith('/api/') || req.url.startsWith('/lwm2m/')) {
       const config = this.getInterceptorConfig(req);
       const isLoading = !this.isInternalUrlPrefix(req.url);
       this.updateLoadingState(config, isLoading);
@@ -103,7 +103,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
   private handleRequestError(req: HttpRequest<any>, err): Observable<HttpEvent<any>> {
     const config = this.getInterceptorConfig(req);
-    if (req.url.startsWith('/api/')) {
+    if (req.url.startsWith('/api/') || req.url.startsWith('/lwm2m/')) {
       this.updateLoadingState(config, false);
     }
     return throwError(err);
@@ -111,14 +111,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
   private handleResponse(req: HttpRequest<any>, response: HttpResponseBase) {
     const config = this.getInterceptorConfig(req);
-    if (req.url.startsWith('/api/')) {
+    if (req.url.startsWith('/api/') || req.url.startsWith('/lwm2m/')) {
       this.updateLoadingState(config, false);
     }
   }
 
   private handleResponseError(req: HttpRequest<any>, next: HttpHandler, errorResponse: HttpErrorResponse): Observable<HttpEvent<any>> {
     const config = this.getInterceptorConfig(req);
-    if (req.url.startsWith('/api/')) {
+    if (req.url.startsWith('/api/') || req.url.startsWith('/lwm2m/')) {
       this.updateLoadingState(config, false);
     }
     let unhandled = false;
@@ -236,7 +236,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
   }
 
   private isTokenBasedAuthEntryPoint(url): boolean {
-    return  url.startsWith('/api/') &&
+    return  (url.startsWith('/api/') || url.startsWith('/lwm2m/')) &&
       !url.startsWith(Constants.entryPoints.login) &&
       !url.startsWith(Constants.entryPoints.tokenRefresh) &&
       !url.startsWith(Constants.entryPoints.nonTokenBased);

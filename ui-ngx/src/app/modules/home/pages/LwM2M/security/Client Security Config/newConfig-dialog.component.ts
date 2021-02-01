@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LwClientSecurityConfigComponent } from './clientSecurityConfig.component';
 import { LwService } from '../../Lw-service';
 
 
@@ -28,7 +27,7 @@ export class newConfigDialog implements OnInit {
 
     
      onSubmit() {
-        this.http.put(this.lwService.lwm2mBaseUri+'/api/v1/Lw/addClientsSecurity',
+        this.http.put(this.lwService.lwm2mBaseUri+"/api/security/clients/",
 
         { 
             "endpoint": this.newConfigForm.value.endpoint,

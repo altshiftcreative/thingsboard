@@ -1,10 +1,9 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ThemePalette } from '@angular/material/core';
-import _, { kebabCase } from 'lodash';
 import { AcsService } from '../../acs-service';
 import { provisionsDialog } from './provisions-dialog.component';
 export interface Task {
@@ -21,9 +20,6 @@ export interface Task {
 
 
 })
-
-
-
 
 export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
     isTag: Boolean = false;
@@ -46,16 +42,15 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        
+
     }
 
     getAdminProvisions() {
 
-        this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
+        this.http.get<any[]>(this.acsService.acsBaseUri + '/api/v1/tr69/provisions').subscribe((ProvisionsData) => {
             this.dataSource = new MatTableDataSource(ProvisionsData)
             this.dataSource.paginator = this.paginator;
         })
-
     }
 
 
@@ -64,7 +59,7 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
         else {
             let confirmation = confirm('Deleting ' + this.checkedItems.length + ' provisions. Are you sure?');
             if (confirmation == true) {
-                for(let e of this.checkedItems){
+                for (let e of this.checkedItems) {
                     await this.acsService.deleteProvisions(e);
                 }
                 this.acsService.progress('Deleted', true);
@@ -73,30 +68,12 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getRecord(row) {
-        console.log(row)
-    }
-
-
-
-    // updateValue(deviceID, SSIDvalue, parameterName) {
-    //     let newValue = prompt(parameterName, SSIDvalue);
-    //     this.acsService.change(deviceID, parameterName, newValue);
-    //     console.log('comeonnn', parameterName);
-
-
-    // };
-
 
     toggleVisibility(event) {
-        // console.log("eventtt", event.target.name);
         if (event.target.checked) {
             this.checkedItems.push(event.target.name);
-            console.log("Array Checked", this.checkedItems);
-
         }
         else {
-            // this.acsService.removeA(this.checkedItems,event.target.name)
             this.acsService.removeItem(this.checkedItems, event.target.name);
         }
     }
@@ -115,7 +92,6 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
             newArray.push(item['script']);
             this.csvDataArray.push(newArray);
         })
-
         let d = new Date().toISOString();
         let csvContent = "data:text/csv;charset=utf-8," + this.csvDataArray.map(e => e.join(",")).join("\n");
         let encodedUri = encodeURI(csvContent);
@@ -130,36 +106,33 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
 
     provisionsSearch(event) {
 
-        this.http.get(this.acsService.acsBaseUri+'/api/v1/tr69/searchprovisions/?_id=' + event.target.value).subscribe((result: any[]) => {
+        this.http.get(this.acsService.acsBaseUri + '/api/v1/tr69/searchprovisions/?_id=' + event.target.value).subscribe((result: any[]) => {
             this.dataSource.data = result;
-
         })
     }
 
     openDialog(row) {
-
         if (row) {
             this.dialog.open(provisionsDialog,
                 {
                     data: row,
                     height: '400px',
                     width: '600px',
-                  
+
                 },
-                
-            ).afterClosed().subscribe(result =>{
+
+            ).afterClosed().subscribe(result => {
                 this.getAdminProvisions();
             })
         } else {
-            this.dialog.open(provisionsDialog,{
+            this.dialog.open(provisionsDialog, {
                 height: '400px',
                 width: '600px',
 
-            }).afterClosed().subscribe(result =>{
+            }).afterClosed().subscribe(result => {
                 this.getAdminProvisions();
             })
         }
-        
     }
 
 
@@ -179,5 +152,4 @@ export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
 }

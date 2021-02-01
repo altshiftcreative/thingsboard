@@ -1,62 +1,10 @@
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<div class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;padding-left: 1.2em; padding-right: 1.2em;">
+  <div class="shadow-div">
+    <div mat-header class="header-of-table">
 
-<div class="mat-table-padding" style="margin: 10px;padding: 10px;">
-  <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
-    *ngIf="isLoading">
-  </mat-progress-bar>
-  <div
-    style="box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);">
-    <div mat-header style="margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;">
-
-      <div
-        style="float: left;
-    text-align-last: auto;
-    margin-left: 30px;
-    margin-top: 10px;
-    height: 40px;
-    padding: 8px 12px 8px 7px;
-    border-radius: 4px;
-    box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;">
+      <div class="search-div">
         <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-        <input type="text" placeholder="Search" (keyup)="presetsSearch($event)" style="position: static;
-width: 225px;
-height: 24px;
-left: 35px;
-top: 8px;
- 
-/* P16 / Regular */
-
-font-family: SF Pro Display;
-font-style: normal;
-font-weight: normal;
-font-size: 16px;
-line-height: 24px;
-/* identical to box height, or 150% */
-
-display: flex;
-align-items: center;
-
-/* Shade of Greys / Grey 06 */
-
-color: #000000;
-
-/* Inside Auto Layout */
-
-flex: none;
-order: 1;
-flex-grow: 1;
-border: none;
-display: inline;
-outline: none;
-border-bottom-style: inset;" />
+        <input type="text" placeholder="Search" (keyup)="presetsSearch($event)" class="search-input"/>
       </div>
 
       <button (click)="openDialog()"
@@ -74,9 +22,6 @@ border-bottom-style: inset;" />
     </div>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
 
       <!-- Name Column -->
       <ng-container matColumnDef="Name">

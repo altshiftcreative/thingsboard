@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DialogAlert } from './popup/popup-show';
+import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
@@ -18,7 +17,7 @@ export class AcsService {
     public others_devices = 0;
     public online_counter = 1;
     public deviceArrayData = [];
-    public acsBaseUri=""
+    public acsBaseUri = ""
 
     constructor(private http: HttpClient, public dialog: MatDialog, private _snackBar: MatSnackBar, protected store: Store<AppState>) { }
 
@@ -34,7 +33,7 @@ export class AcsService {
 
     public async change(id, parameterName, newValue, element): Promise<any> {
         if (element['onlineStatus'] == 'Online' || element == 'Online') {
-            await this.http.post(this.acsBaseUri+'/api/v1/tr69/tasks/?deviceID=' + id,
+            await this.http.post(this.acsBaseUri + '/api/v1/tr69/tasks/?deviceID=' + id,
                 [
                     {
                         "device": id,
@@ -58,7 +57,7 @@ export class AcsService {
     }
 
     public async refresh(id, parameterName): Promise<any> {
-        await this.http.post(this.acsBaseUri+'/api/v1/tr69/tasks/?deviceID=' + id,
+        await this.http.post(this.acsBaseUri + '/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "getParameterValues",
@@ -75,33 +74,33 @@ export class AcsService {
 
 
     public async deleteDevice(id): Promise<any> {
-        await this.http.delete(this.acsBaseUri+'/api/v1/tr69/devices/?deviceID=' + id).toPromise().then((dta) => { })
+        await this.http.delete(this.acsBaseUri + '/api/v1/tr69/devices/?deviceID=' + id).toPromise().then((dta) => { })
 
     }
 
 
     public async deleteFault(id): Promise<any> {
-        await this.http.delete(this.acsBaseUri+'/api/v1/tr69/faults/?faultsId=' + id).toPromise().then((dta) => { })
+        await this.http.delete(this.acsBaseUri + '/api/v1/tr69/faults/?faultsId=' + id).toPromise().then((dta) => { })
     }
 
 
     public async deletePresets(id): Promise<any> {
-        await this.http.delete(this.acsBaseUri+'/api/v1/tr69/presets/?presetsId=' + id).toPromise().then((dta) => { })
+        await this.http.delete(this.acsBaseUri + '/api/v1/tr69/presets/?presetsId=' + id).toPromise().then((dta) => { })
     }
 
 
     public async deleteProvisions(id): Promise<any> {
-        await this.http.delete(this.acsBaseUri+'/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => { })
+        await this.http.delete(this.acsBaseUri + '/api/v1/tr69/provisions/?provisionsId=' + id).toPromise().then((dta) => { })
     }
 
     public async deleteConfig(id): Promise<any> {
-        await this.http.delete(this.acsBaseUri+'/api/v1/tr69/config/?configId=' + id).toPromise().then((dta) => { })
+        await this.http.delete(this.acsBaseUri + '/api/v1/tr69/config/?configId=' + id).toPromise().then((dta) => { })
     }
 
 
 
     public rebootDevice(id): void {
-        this.http.post(this.acsBaseUri+'/api/v1/tr69/tasks/?deviceID=' + id,
+        this.http.post(this.acsBaseUri + '/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "reboot",
@@ -112,7 +111,7 @@ export class AcsService {
     }
 
     public resetDevice(id): void {
-        this.http.post(this.acsBaseUri+'/api/v1/tr69/tasks/?deviceID=' + id,
+        this.http.post(this.acsBaseUri + '/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "factoryReset",
@@ -123,14 +122,12 @@ export class AcsService {
     }
 
     public async tagDevice(id, tagValue: Record<string, boolean>): Promise<any> {
-        await this.http.post(this.acsBaseUri+'/api/v1/tr69/tag/?deviceID=' + id,
+        await this.http.post(this.acsBaseUri + '/api/v1/tr69/tag/?deviceID=' + id,
             tagValue).toPromise().then((dta) => { })
     }
 
     public async untagDevice(id, untagValue: Record<string, boolean>): Promise<any> {
-        console.log('untaaaaag');
-
-        await this.http.post(this.acsBaseUri+'/api/v1/tr69/tag/?deviceID=' + id,
+        await this.http.post(this.acsBaseUri + '/api/v1/tr69/tag/?deviceID=' + id,
             untagValue).toPromise().then((dta) => { })
     }
 
@@ -156,7 +153,7 @@ export class AcsService {
     }
 
     public addInstance(id, name): void {
-        this.http.post(this.acsBaseUri+'/api/v1/tr69/tasks/?deviceID=' + id,
+        this.http.post(this.acsBaseUri + '/api/v1/tr69/tasks/?deviceID=' + id,
             [
                 {
                     "name": "addObject",
@@ -187,16 +184,16 @@ export class AcsService {
     }
 
     progress(res, stat) {
-        let type: NotificationType  = stat ? 'success' : 'error'
-            this.store.dispatch(new ActionNotificationShow(
-                {
-                    message: res,
-                    type: type,
-                    duration: 2000,
-                    verticalPosition: 'bottom',
-                    horizontalPosition: 'center'
-                }));
-        
+        let type: NotificationType = stat ? 'success' : 'error'
+        this.store.dispatch(new ActionNotificationShow(
+            {
+                message: res,
+                type: type,
+                duration: 2000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'center'
+            }));
+
     }
 
 }

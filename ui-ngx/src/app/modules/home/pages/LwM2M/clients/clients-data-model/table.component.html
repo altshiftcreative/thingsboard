@@ -48,8 +48,8 @@
                         <td>/{{dataModel['id']}}/{{instance}}/{{x['id']}}</td>
 
                         <td style="text-align-last: end; padding: 8px;">
-                            <span *ngIf="data['field' +instance+ i] != undefined">{{data['field' +instance+
-                                i]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span *ngIf="data['field' +dataModel['id'] +instance+ i] != undefined">{{data['field' +dataModel['id'] +instance+
+                                x['id']]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-stroked-button>
                                  Actions
                                 &nbsp; |

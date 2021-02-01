@@ -57,7 +57,7 @@
             /{{item['id']}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [dataModel]='dataSource[i]' [instanceObject]='clientByEndpoint' [instanceNumber]='instanceNumber' [timeOut]="selectedTime" [format]="selectedSingle"></Lw-clients-data-model-table>
+        <Lw-clients-data-model-table *ngIf="dataSource && col ==0" [data]='data' [dataModel]='dataSource[i]' [instanceObject]='clientByEndpoint' [instanceNumber]='instanceNumber' [timeOut]="selectedTime" [format]="selectedSingle"></Lw-clients-data-model-table>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

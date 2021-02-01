@@ -18,20 +18,20 @@ export class LwService {
     lwm2mBaseUri="/lwm2m"
     formType;
     finalWriteValue;
-    constructor(private http: HttpClient,protected store: Store<AppState>) { }
+    notificationData:any[] = [];
+    constructor(private http: HttpClient, protected store: Store<AppState>) { }
 
     progress(res, stat) {
-        let type: NotificationType  = stat ? 'success' : 'error'
-            this.store.dispatch(new ActionNotificationShow(
-                {
-                    message: res,
-                    type: type,
-                    duration: 2000,
-                    verticalPosition: 'bottom',
-                    horizontalPosition: 'center'
-                }));
-        
+        let type: NotificationType = stat ? 'success' : 'error'
+        this.store.dispatch(new ActionNotificationShow(
+            {
+                message: res,
+                type: type,
+                duration: 2000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'center'
+            }));
     }
-    
+
 
 }

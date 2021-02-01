@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { LwService } from "../../Lw-service";
 import { formDialog } from "../global-form/form.component";
@@ -11,21 +11,37 @@ import { formDialog } from "../global-form/form.component";
 })
 
 
-export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
+export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() dataModel: object;
     @Input() instanceObject: object;
     @Input() instanceNumber: number;
     @Input() timeOut: string;
     @Input() format: string;
+    @Input() data: any = {};
+
     readDataObject: any;
     observeDataObject: any;
-    data: any = {};
     dataSource: any[];
     clientByEndpoint: any = {};
+    stopObserveArray: any[] = [];
     constructor(private lwService: LwService, private http: HttpClient, public dialog: MatDialog) { }
 
-    ngAfterViewInit(): void {
+
+    ngOnDestroy(): void {
+        this.stopObserveArray.forEach(async item => {
+            if (item['value']) {
+                await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + item['instance'] + '/' + item['value'] + '/observe', {}
+                ).toPromise().then((observeData) => { })
+
+            }
+            else {
+                await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + item['instance'] + '/observe', {}
+                ).toPromise().then((observeData) => { })
+            }
+        })
     }
+
+    ngAfterViewInit(): void { }
     ngOnInit(): void {
 
 
@@ -35,7 +51,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.value = this.dataModel['id'];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-        this.lwService.formType = {type:'create',name:'Create Instance'};
+        this.lwService.formType = { type: 'create', name: 'Create Instance' };
 
         for (const element of this.dataModel['resourcedefs']) {
             if (element['operations'] == 'W' || element['operations'] == 'RW') {
@@ -56,10 +72,10 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     }
 
     async dynamicRender() {
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsData/?endpoint=' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/objectspecs/' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             this.dataSource = clientData
         })
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/clientsByEndpoint/?endpoint=' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
             this.dataSource.forEach(element => {
                 let urlArray = []
                 clientDataEndpoint['objectLinks'].forEach(item => {
@@ -78,7 +94,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     async readData(value, index, instance) {
         let v = [this.dataModel['id'], instance, value]
 
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/' + value + '?format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
             this.readDataObject = readData;
         })
 
@@ -86,45 +102,47 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.lwService.progress(this.readDataObject['status'], false);
         }
         else {
-            this.data['field' + instance + index] = this.readDataObject['content']['value'];
+            this.data['field'+this.dataModel['id'] + instance + index] = this.readDataObject['content']['value'];
             this.lwService.progress("SUCCESS", true);
 
         }
     }
 
     async readAllData(instance) {
-        let v = [this.dataModel['id'], instance];
-        await this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/read/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut).toPromise().then((readData) => {
+        await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '?format=' + this.format + '&timeout=' + this.timeOut).toPromise().then(async (readData) => {
             this.readDataObject = readData;
+
+            for await (const element of this.readDataObject['content']['resources']) {
+                this.data['field'+this.dataModel['id'] + instance + element['id']] = element['value'];
+            }
+            this.lwService.progress("SUCCESS", true);
         })
-        this.readDataObject['content']['resources'].forEach(element => {
-            this.data['field' + instance + element['id']] = element['value'];
-        });
-        this.lwService.progress("SUCCESS", true);
+
     }
 
     async writeData(value, index, instance) {
-        this.lwService.formType = {type:'write',name:'Update resource '+this.dataModel['resourcedefs'][index]['name'],'id':index};
-        let writeObject = {'id':value,'mandatory':true,'name':this.dataModel['resourcedefs'][index]['name']}
+        this.lwService.formType = { type: 'write', name: 'Update resource ' + this.dataModel['resourcedefs'][index]['name'], 'id': index };
+        let writeObject = { 'id': value, 'mandatory': true, 'name': this.dataModel['resourcedefs'][index]['name'] }
         this.lwService.formData.push(writeObject)
 
         this.lwService.value = [this.dataModel['id'], instance, value];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-        
+
         this.dialog.open(formDialog, {
-            height: '483px',
-            width: '768px',
+            height: '50%',
+            width: '50%',
         }).afterClosed().toPromise().then(async (clientsData) => {
-            await this.dynamicRender();
+            // await this.dynamicRender();
             this.lwService.formData = [];
-            this.data['field' + instance + index] = this.lwService.finalWriteValue;
+
+            this.data['field'+this.dataModel['id'] + instance + index] = this.lwService.finalWriteValue;
         })
     }
 
     async startObserve(value, index, instance) {
-        let v = [this.dataModel['id'], instance, value];
-        await this.http.post(this.lwService.lwm2mBaseUri+'/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
+
+        await this.http.post(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/' + value + '/observe?format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
             this.observeDataObject = observeData;
 
@@ -134,48 +152,50 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
             this.lwService.progress(this.observeDataObject['status'], false);
         }
         else {
-            this.data['field' + instance + index] = this.observeDataObject['content']['value'];
+            this.data['field'+this.dataModel['id'] + instance + index] = this.observeDataObject['content']['value'];
             this.lwService.progress("STARTED", true);
         }
+
+        this.stopObserveArray.push({ value: value, instance: instance })
     }
 
 
 
     async startObserveAll(instance) {
-        let v = [this.dataModel['id'], instance];
-        await this.http.post(this.lwService.lwm2mBaseUri+'/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&format=' + this.format + '&timeout=' + this.timeOut, {}
+        await this.http.post(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/observe?format=' + this.format + '&timeout=' + this.timeOut, {}
         ).toPromise().then((observeData) => {
             this.observeDataObject = observeData;
         })
 
         this.observeDataObject['content']['resources'].forEach(element => {
-            this.data['field' + instance + element['id']] = element['value'];
+            this.data['field' +this.dataModel['id']+ instance + element['id']] = element['value'];
         });
         this.lwService.progress("STARTED", true);
+
+        this.stopObserveArray.push({ instance: instance })
     }
 
 
 
     async stopObserve(value, instance) {
-        let v = [this.dataModel['id'], instance, value];
 
-        await this.http.delete(this.lwService.lwm2mBaseUri+'/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v, {}
+
+        await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/' + value + '/observe', {}
         ).toPromise().then((observeData) => {
             this.lwService.progress('STOPED', true);
         })
     }
 
     async stopObserveAll(instance) {
-        let v = [this.dataModel['id'], instance];
-        await this.http.delete(this.lwService.lwm2mBaseUri+'/api/v1/Lw/observe/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v, {}
+        await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '/observe', {}
         ).toPromise().then((observeData) => {
             this.lwService.progress('STOPED', true);
         })
     }
 
     async execute(value, instance) {
-        let v = [this.dataModel['id'], instance, value];
-        await this.http.post(this.lwService.lwm2mBaseUri+'/api/v1/Lw/execute/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
+
+        await this.http.post(this.lwService.lwm2mBaseUri + "/api/clients/" + this.lwService.clientEndpoint + "/" + this.dataModel['id'] + "/" + instance + "/" + value + "?timeout=" + this.timeOut, {}
         ).toPromise().then((executeData) => {
             if (executeData['failure'])
                 this.lwService.progress(executeData['status'], false);
@@ -189,8 +209,8 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
     async deleteInstance(instance) {
         let confirmation = confirm('Deleting instance. Are you sure?');
         if (confirmation == true) {
-            let v = [this.dataModel['id'], instance];
-            await this.http.delete(this.lwService.lwm2mBaseUri+'/api/v1/Lw/instance/?endpoint=' + this.lwService.clientEndpoint + '&value=' + v + '&timeout=' + this.timeOut, {}
+
+            await this.http.delete(this.lwService.lwm2mBaseUri + "/api/clients/" + this.lwService.clientEndpoint + "/" + this.dataModel['id'] + "/" + instance + "?timeout=" + this.timeOut, {}
             ).toPromise().then((observeData) => {
                 this.lwService.progress('DELETED', true);
             })
@@ -203,23 +223,22 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit {
         this.lwService.value = [this.dataModel['id'], instance];
         this.lwService.format = this.format;
         this.lwService.timeout = this.timeOut;
-        this.lwService.formType = {type:'update',name:'Update Instance'};
+        this.lwService.formType = { type: 'update', name: 'Update Instance' };
 
         for (const element of this.dataModel['resourcedefs']) {
             if (element['operations'] == 'W' || element['operations'] == 'RW') {
                 this.lwService.formData.push(element);
             }
         }
-        console.log('deep : ',this.lwService.formData);
-        
-
-        this.dialog.open(formDialog, {
-            height: '483px',
-            width: '768px',
-        }).afterClosed().toPromise().then(async (clientsData) => {
-            await this.dynamicRender();
-            this.lwService.formData = [];
-        })
+        if (this.lwService.formData.length > 0) {
+            this.dialog.open(formDialog, {
+                height: '483px',
+                width: '768px',
+            }).afterClosed().toPromise().then(async (clientsData) => {
+                await this.dynamicRender();
+                this.lwService.formData = [];
+            })
+        }
     }
 
 }

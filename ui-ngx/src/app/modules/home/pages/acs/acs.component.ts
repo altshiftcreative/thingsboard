@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, ElementRef , ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 @Component({
     selector: 'tb-acs',
     templateUrl: './acs.component.html',
@@ -6,14 +6,10 @@ import { Component, OnInit, Inject, ViewChild, AfterViewInit, EventEmitter, Elem
     encapsulation: ViewEncapsulation.None
 
 })
-export class AcsComponent implements OnInit{
-    ngOnInit(): void {
-
-}
-
+export class AcsComponent implements OnInit {
+    ngOnInit(): void { }
     tabIndex = 0;
     changeTab(event) {
-        console.log(event.index)
         this.tabIndex = event.index;
     }
 }

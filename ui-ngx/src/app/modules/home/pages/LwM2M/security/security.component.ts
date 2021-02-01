@@ -10,14 +10,11 @@ import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/co
 
 
 export class LwSecurityComponent implements OnInit, AfterViewInit {
-    ngAfterViewInit(): void {
-    }
-    ngOnInit(): void {
-    }
+    ngAfterViewInit(): void { }
+    ngOnInit(): void { }
 
     tabIndex = 0;
     changeTab(event) {
-        console.log(event.index)
         this.tabIndex = event.index;
     }
 }

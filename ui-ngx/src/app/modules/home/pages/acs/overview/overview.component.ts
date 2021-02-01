@@ -1,7 +1,7 @@
 
 import { AfterViewInit, Component, OnInit, } from '@angular/core';
-import {  ChartType } from 'chart.js';
-import { MultiDataSet, Label ,Color} from 'ng2-charts';
+import { ChartType } from 'chart.js';
+import { MultiDataSet, Label, Color } from 'ng2-charts';
 import { AcsService } from '../acs-service';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,29 +12,29 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./overview.component.scss']
 })
 
-export class AcsOverview implements OnInit,AfterViewInit{
+export class AcsOverview implements OnInit, AfterViewInit {
 
-  constructor(private acsService: AcsService,private http: HttpClient) { }
+  constructor(private acsService: AcsService, private http: HttpClient) { }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit() {
-    this.http.get<any[]>(this.acsService.acsBaseUri+'/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
-       this.acsService.statusCounter(deviceData); 
-       this.doughnutChartData = [
+    this.http.get<any[]>(this.acsService.acsBaseUri + '/api/v1/tr69/devices', { withCredentials: true }).subscribe((deviceData) => {
+      this.acsService.statusCounter(deviceData);
+      this.doughnutChartData = [
         [this.acsService.online_devices, this.acsService.past_devices, this.acsService.others_devices]
       ]
       this.totalDevices = deviceData.length;
     })
-   
 
-}
+
+  }
   totalDevices: number;
   doughnutChartLabels: Label[] = ['Online now', 'Past 24 hours', 'Others']
   doughnutChartData: MultiDataSet = [];
   doughnutChartType: ChartType = 'doughnut';
-  
+
 
   colors: Color[] = [
     {
@@ -45,8 +45,8 @@ export class AcsOverview implements OnInit,AfterViewInit{
       ]
     }
   ];
-  public barChartOptions:any = {
-    legend: {position: 'bottom'},
-  }  
+  public barChartOptions: any = {
+    legend: { position: 'bottom' },
+  }
 
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../Lw-service";
@@ -10,33 +10,55 @@ import { LwService } from "../Lw-service";
 })
 
 
-export class LwClientsComponent implements OnInit, AfterViewInit {
+export class LwClientsComponent implements OnInit, AfterViewInit , OnDestroy{
     dataSource: MatTableDataSource<any>;
     displayedColumns: string[] = ['Client Endpoint', 'Registration ID', 'Registration Date', 'Last Update', 'Action'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    clientsArray: any[];
+    clientsArray: any[] = [];
     dataModelComponent: Boolean = false;
     clientsCounter: number;
     clientEndpoint: string;
     myData: any;
+    eventArray = [];
+    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event');
     constructor(private http: HttpClient, private lwService: LwService) { }
+    ngOnDestroy(): void {
+        this.sse.close();
+    }
 
     ngAfterViewInit(): void {
         this.getClients();
 
     }
     ngOnInit(): void {
-      
+        let mainThis = this;
+        this.sse.addEventListener("REGISTRATION", function (e) {            
+            mainThis.clientsArray.push(JSON.parse(e['data']))
+            mainThis.eventUpdate();
+        }, true)
+
+        this.sse.addEventListener("DEREGISTRATION", function (e) {
+            let index = mainThis.clientsArray.indexOf(JSON.parse(e['data']));
+            if(index != -1) mainThis.clientsArray.splice(index,1);
+            mainThis.eventUpdate();
+        }, true)
+
+        
+
+        // this.sse.addEventListener("COAPLOG", function (e) {
+        // }, true)
     }
 
     getClients() {
-        // /api/clients
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/clients', { withCredentials: true }).toPromise().then((clientsData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients', { withCredentials: true }).toPromise().then((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;
             this.clientsCounter = clientsData.length;
             this.clientsArray = clientsData;
+            console.log('data format :', this.dataSource);
+           
         })
+
     }
 
     clientsSearch(event) {
@@ -57,6 +79,10 @@ export class LwClientsComponent implements OnInit, AfterViewInit {
         this.clientEndpoint = endpoint;
         this.lwService.clientEndpoint = endpoint;
         this.dataModelComponent = true;
+    }
+
+    eventUpdate(){
+            this.dataSource.data = this.clientsArray;
     }
 
 

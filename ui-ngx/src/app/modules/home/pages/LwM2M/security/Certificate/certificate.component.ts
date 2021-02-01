@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTableDataSource } from "@angular/material/table";
 import { LwService } from "../../Lw-service";
 
 @Component({
@@ -18,6 +17,7 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['Hex', 'Base64'];
     datacertificate;
     hexCode;
+    fileUrl;
     ngOnInit(): void {
         
     }
@@ -26,13 +26,12 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
     }
 
     getDevices() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri+'/api/v1/Lw/certificate', { withCredentials: true }).subscribe((certificateData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri+"/api/security/server", { withCredentials: true }).subscribe((certificateData) => {
             this.datacertificate = certificateData;
             this.hexCode=this.base64ToHex(this.datacertificate.certificate.b64Der);
         })
     }
-
-
+   
      base64ToHex(str) {
         const raw = atob(str);
         let result = '';
@@ -42,6 +41,5 @@ export class LwCertificateomponent implements OnInit, AfterViewInit {
         }
         return result.toUpperCase();
       }
-
 
 }
