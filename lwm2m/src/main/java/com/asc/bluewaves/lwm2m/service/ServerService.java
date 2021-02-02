@@ -23,12 +23,12 @@ import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.security.EditableSecurityStore;
-import org.eclipse.leshan.server.security.FileSecurityStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
+import com.asc.bluewaves.lwm2m.config.MongoSecurityStore;
 import com.asc.bluewaves.lwm2m.converter.MagicLwM2mValueConverter;
 import com.asc.bluewaves.lwm2m.model.LwM2mDemoConstant;
 
@@ -41,9 +41,12 @@ public class ServerService {
 	private LeshanServer server;
 	private X509Certificate serverCertificate;
 
+	private ClientMongodbService clientMongodbService;
+	
 	// get the Redis hostname:port
 
-	ServerService(@Value("${coap.secure-address}") String secureAddress, @Value("${coap.secure-port}") Integer securePort) {
+	ServerService(ClientMongodbService clientMongodbService, @Value("${coap.secure-address}") String secureAddress, @Value("${coap.secure-port}") Integer securePort) {
+		this.clientMongodbService = clientMongodbService;
 		startLwm2mServer(secureAddress, securePort);
 	}
 
@@ -73,7 +76,8 @@ public class ServerService {
 		builder.disableUnsecuredEndpoint();
 
 		// TODO: we have to implement our security store that save data to mongoDB
-		EditableSecurityStore securityStore = new FileSecurityStore();
+		// EditableSecurityStore securityStore = new FileSecurityStore();
+		EditableSecurityStore securityStore = new MongoSecurityStore(clientMongodbService);
 		builder.setSecurityStore(securityStore);
 
 		// public key or server certificated is not defined
@@ -113,7 +117,7 @@ public class ServerService {
 		server.start();
 
 		// Add event listeners
-		new EventService(server);
+		new EventService(clientMongodbService, server);
 
 		log.info("LWM2M transport started!");
 	}
@@ -135,8 +139,8 @@ public class ServerService {
 
 	@Bean(name = "securityStore")
 	@DependsOn(value = "server")
-	public EditableSecurityStore getSecurityStore() {
-		return (EditableSecurityStore) server.getSecurityStore();
+	public MongoSecurityStore getSecurityStore() {
+		return (MongoSecurityStore) server.getSecurityStore();
 	}
 
 	@Bean(name = "serverCertificate")

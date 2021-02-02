@@ -32,15 +32,12 @@ export class LwClientsComponent implements OnInit, AfterViewInit , OnDestroy{
     }
     ngOnInit(): void {
         let mainThis = this;
-        this.sse.addEventListener("REGISTRATION", function (e) {
-            console.log('REGISTRATION',JSON.parse(e['data']));
-            
+        this.sse.addEventListener("REGISTRATION", function (e) {            
             mainThis.clientsArray.push(JSON.parse(e['data']))
             mainThis.eventUpdate();
         }, true)
 
         this.sse.addEventListener("DEREGISTRATION", function (e) {
-            console.log('message data be like : 2')
             let index = mainThis.clientsArray.indexOf(JSON.parse(e['data']));
             if(index != -1) mainThis.clientsArray.splice(index,1);
             mainThis.eventUpdate();
@@ -48,19 +45,11 @@ export class LwClientsComponent implements OnInit, AfterViewInit , OnDestroy{
 
         
 
-        this.sse.addEventListener("COAPLOG", function (e) {
-        }, true)
-
-
-        
-
-
-
-
+        // this.sse.addEventListener("COAPLOG", function (e) {
+        // }, true)
     }
 
     getClients() {
-        // /api/clients
         this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients', { withCredentials: true }).toPromise().then((clientsData) => {
             this.dataSource = new MatTableDataSource(clientsData)
             this.dataSource.paginator = this.paginator;

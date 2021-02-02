@@ -23,15 +23,28 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
     observeDataObject: any;
     dataSource: any[];
     clientByEndpoint: any = {};
+    stopObserveArray: any[] = [];
     constructor(private lwService: LwService, private http: HttpClient, public dialog: MatDialog) { }
-    ngOnDestroy(): void {
 
+
+    ngOnDestroy(): void {
+        this.stopObserveArray.forEach(async item => {
+            if (item['value']) {
+                await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + item['instance'] + '/' + item['value'] + '/observe', {}
+                ).toPromise().then((observeData) => { })
+
+            }
+            else {
+                await this.http.delete(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + item['instance'] + '/observe', {}
+                ).toPromise().then((observeData) => { })
+            }
+        })
     }
 
     ngAfterViewInit(): void { }
     ngOnInit(): void {
 
-           
+
     }
 
     openDialog() {
@@ -89,7 +102,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
             this.lwService.progress(this.readDataObject['status'], false);
         }
         else {
-            this.data['field' + instance + index] = this.readDataObject['content']['value'];
+            this.data['field'+this.dataModel['id'] + instance + index] = this.readDataObject['content']['value'];
             this.lwService.progress("SUCCESS", true);
 
         }
@@ -100,7 +113,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
             this.readDataObject = readData;
 
             for await (const element of this.readDataObject['content']['resources']) {
-                this.data['field' + instance + element['id']] = element['value'];
+                this.data['field'+this.dataModel['id'] + instance + element['id']] = element['value'];
             }
             this.lwService.progress("SUCCESS", true);
         })
@@ -123,7 +136,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
             // await this.dynamicRender();
             this.lwService.formData = [];
 
-            // this.data['field' + instance + index] = this.lwService.finalWriteValue;
+            this.data['field'+this.dataModel['id'] + instance + index] = this.lwService.finalWriteValue;
         })
     }
 
@@ -139,9 +152,11 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
             this.lwService.progress(this.observeDataObject['status'], false);
         }
         else {
-            this.data['field' + instance + index] = this.observeDataObject['content']['value'];
+            this.data['field'+this.dataModel['id'] + instance + index] = this.observeDataObject['content']['value'];
             this.lwService.progress("STARTED", true);
         }
+
+        this.stopObserveArray.push({ value: value, instance: instance })
     }
 
 
@@ -153,9 +168,11 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
         })
 
         this.observeDataObject['content']['resources'].forEach(element => {
-            this.data['field' + instance + element['id']] = element['value'];
+            this.data['field' +this.dataModel['id']+ instance + element['id']] = element['value'];
         });
         this.lwService.progress("STARTED", true);
+
+        this.stopObserveArray.push({ instance: instance })
     }
 
 

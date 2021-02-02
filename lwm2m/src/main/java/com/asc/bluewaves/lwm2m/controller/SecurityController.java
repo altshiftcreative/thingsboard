@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asc.bluewaves.lwm2m.errors.BadRequestException;
+import com.asc.bluewaves.lwm2m.exception.errors.BadRequestException;
 import com.asc.bluewaves.lwm2m.service.SecurityService;
 
 @RestController
@@ -26,47 +26,16 @@ public class SecurityController extends BaseController {
 
 	@GetMapping("/**")
 	public void readRequest(HttpServletRequest request, HttpServletResponse response) {
-
-		try {
-			securityService.doReadRequest(request, response);
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		securityService.doReadRequest(request, response);
 	}
 
-	@PutMapping("/**" )
+	@PutMapping("/**")
 	public void updateRequest(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			securityService.doUpdateRequest(request, response);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		securityService.doUpdateRequest(request, response);
 	}
 
 	@DeleteMapping("/clients/{" + ENDPOINT + "}")
 	public void deleteRequest(@PathVariable(ENDPOINT) String endpoint, HttpServletRequest request, HttpServletResponse response) {
-
-		try {
-			securityService.doDeleteRequest(request, response, endpoint);
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BadRequestException(INTERNAL_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR, null);
-		}
+		securityService.doDeleteRequest(request, response, endpoint);
 	}
 }
