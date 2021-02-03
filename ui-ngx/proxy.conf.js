@@ -16,12 +16,18 @@
 
 const forwardUrl = "http://localhost:8080";
 const wsForwardUrl = "ws://localhost:8080";
-const ruleNodeUiforwardUrl = forwardUrl;
 const lwm2mUrl = "http://localhost:9090";
+const tr69Url = "http://localhost:3000";
+
+const ruleNodeUiforwardUrl = forwardUrl;
 
 const PROXY_CONFIG = {
   "/lwm2m": {
     "target": lwm2mUrl,
+    "secure": false,
+  },
+  "/tr69": {
+    "target": tr69Url,
     "secure": false,
   },
   "/api": {

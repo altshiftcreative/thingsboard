@@ -51,7 +51,6 @@ public class MongoSecurityStore implements EditableSecurityStore {
 	public SecurityInfo remove(String endpoint, boolean infosAreCompromised) {
 		SecurityInfo info = getByEndpoint(endpoint);
 		if (info != null) {
-
 			clientMongodbService.removeClient(endpoint);
 
 			if (listener != null) {
@@ -67,7 +66,7 @@ public class MongoSecurityStore implements EditableSecurityStore {
 	}
 
 	private SecurityInfo toSecurityInfo(ClientDTO dto) {
-		if (dto.getEndpoint() == null || dto.getIdentity() == null || dto.getPreSharedKey() == null) {
+		if (dto == null || dto.getEndpoint() == null || dto.getIdentity() == null || dto.getPreSharedKey() == null) {
 			return null;
 		}
 		return SecurityInfo.newPreSharedKeyInfo(dto.getEndpoint(), dto.getIdentity(), dto.getPreSharedKey().getBytes());

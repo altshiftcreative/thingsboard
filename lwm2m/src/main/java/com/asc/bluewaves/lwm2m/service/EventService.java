@@ -3,6 +3,9 @@ package com.asc.bluewaves.lwm2m.service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,31 +16,51 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.californium.core.network.Endpoint;
 import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSourceServlet;
+import org.eclipse.leshan.core.Link;
 import org.eclipse.leshan.core.node.LwM2mNode;
 import org.eclipse.leshan.core.observation.Observation;
+import org.eclipse.leshan.core.request.ContentFormat;
+import org.eclipse.leshan.core.request.ReadRequest;
 import org.eclipse.leshan.core.response.ObserveResponse;
+import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.observation.ObservationListener;
 import org.eclipse.leshan.server.queue.PresenceListener;
 import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
+import com.asc.bluewaves.lwm2m.model.dto.ClientDTO;
 import com.asc.bluewaves.lwm2m.model.json.LwM2mNodeSerializer;
 import com.asc.bluewaves.lwm2m.model.json.RegistrationSerializer;
 import com.asc.bluewaves.lwm2m.model.log.CoapMessage;
 import com.asc.bluewaves.lwm2m.model.log.CoapMessageListener;
 import com.asc.bluewaves.lwm2m.model.log.CoapMessageTracer;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service("EventService")
 @Slf4j
 public class EventService extends EventSourceServlet {
+
+	// @Value("${tb.base-url}")
+	private String tbBaseUrl;
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +79,7 @@ public class EventService extends EventSourceServlet {
 
 	private final Gson gson;
 
-	// private final LeshanServer server;
+	private final LeshanServer server;
 
 	private final CoapMessageTracer coapMessageTracer;
 
@@ -66,10 +89,8 @@ public class EventService extends EventSourceServlet {
 
 		@Override
 		public void registered(Registration registration, Registration previousReg, Collection<Observation> previousObsersations) {
-			// TODO: if client is not in our DB destroy it
-
 			String jReg = gson.toJson(registration);
-			log.info("Client regestiration: " + registration.getEndpoint());
+			sendTelemetryData(registration);
 			sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
 		}
 
@@ -79,14 +100,12 @@ public class EventService extends EventSourceServlet {
 			regUpdate.registration = updatedRegistration;
 			regUpdate.update = update;
 			String jReg = gson.toJson(regUpdate);
-			log.info("Client update regestiration: " + updatedRegistration.getEndpoint());
 			sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
 		}
 
 		@Override
 		public void unregistered(Registration registration, Collection<Observation> observations, boolean expired, Registration newReg) {
 			String jReg = gson.toJson(registration);
-			log.info("Client deregestiration: " + registration.getEndpoint());
 			sendEvent(EVENT_DEREGISTRATION, jReg, registration.getEndpoint());
 		}
 
@@ -143,7 +162,7 @@ public class EventService extends EventSourceServlet {
 	};
 
 	public EventService(ClientMongodbService clientMongodbService, LeshanServer server) {
-		// this.server = server;
+		this.server = server;
 		server.getRegistrationService().addListener(this.registrationListener);
 		server.getObservationService().addListener(this.observationListener);
 		server.getPresenceService().addListener(this.presenceListener);
@@ -259,6 +278,93 @@ public class EventService extends EventSourceServlet {
 			super.doGet(request, response);
 		} catch (IOException | ServletException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private void sendTelemetryData(Registration registration) {
+		boolean flag = false;
+		for (Link link : registration.getObjectLinks()) {
+			if ("/3313/0".equals(link.getUrl())) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			return;
+		}
+
+		ClientDTO client = clientMongodbService.getByEndpoint(registration.getEndpoint());
+		if (client == null || !StringUtils.hasText(client.getAccessToken())) {
+			return;
+		}
+		String telemetryUrl = clientMongodbService.tbBaseUrl + "/v1/" + client.getAccessToken() + "/telemetry";
+
+		RestTemplate restTemplate = new RestTemplate();
+		final ObjectMapper mapper = new ObjectMapper();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		Map<String, Object> body = getData(registration, mapper);
+
+		try {
+			HttpEntity<String> teleRequest = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
+			restTemplate.postForEntity(telemetryUrl, teleRequest, String.class);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Map<String, Object> getData(Registration registration, ObjectMapper mapper) {
+		try {
+			ReadRequest request = new ReadRequest(ContentFormat.fromName("TLV"), "/3313/0");
+			ReadResponse cResponse = server.send(registration, request, 5000);
+			String dataStr = this.gson.toJson(cResponse);
+
+			JsonNode resources = mapper.readTree(dataStr).findValue("resources");
+			ObjectReader reader = mapper.readerFor(new TypeReference<List<Resource>>() { });
+			List<Resource> list = reader.readValue(resources);
+			
+			Map<String, Object> data = new HashMap<>();
+			for (Resource resource : list) {
+				if (resource.id == 5702) {
+					data.put("xValue", resource.value);
+					
+				} else if (resource.id == 5703) {
+					data.put("yValue", resource.value);
+					
+				} else if (resource.id == 5704) {
+					data.put("zValue", resource.value);
+				}
+			}
+			return data;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static class Resource {
+		private int id;
+		private Object value;
+
+		Resource() {
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public Object getValue() {
+			return value;
+		}
+
+		public void setValue(Object value) {
+			this.value = value;
 		}
 	}
 }

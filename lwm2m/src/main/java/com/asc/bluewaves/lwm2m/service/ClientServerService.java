@@ -61,21 +61,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientServerService extends BaseService {
 
-	@Value("${tb.base-url}")
-	private String tbBaseUrl;
-
-	@Value("${tb.username}")
-	private String tbUsername;
-
-	@Value("${tb.password}")
-	private String tbPassword;
-
-	@Value("${tb.provision.key}")
-	private String tbProvisionKey;
-
-	@Value("${tb.provision.secret}")
-	private String tbProvisionSecret;
-
 	// Server fields
 	private final LeshanServer server;
 	private final LwM2mModel model;
@@ -98,39 +83,6 @@ public class ClientServerService extends BaseService {
 		gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 		this.gson = gsonBuilder.create();
 	}
-
-//	public void saveClient(ClientDTO clientDto) {
-//		// check if the endpoint client is exist
-//		// Bson filter = and(eq("endpoint", clientDto.getEndpoint()));
-//		// Iterable<Document> clientDB = mongoTemplate.getCollection("client").find(filter);
-//		// if (clientDB.iterator().hasNext()) {
-//		ClientDTO dbClient = getByEndpoint(clientDto.getEndpoint());
-//		if (dbClient != null) {
-//			throw new ResourceAlreadyExistException("The client you are trying to create is already exist: " + clientDto.getEndpoint());
-//		}
-//
-//		// Get access token for new device
-//		clientDto.setAccessToken(getNewAccessToken(clientDto.getEndpoint()));
-//
-//		// Add the client to our running Leshan server
-//		addClientToServer(clientDto);
-//
-//		// Save client to MongoDB
-//		// mongoTemplate.getCollection("client").insertOne(Document.parse(mapper.writeValueAsString(clientDto)));
-//		add(clientDto);
-//	}
-
-//	public void deleteClient(List<String> endpoints) {
-//		if (endpoints == null || endpoints.isEmpty()) {
-//			return;
-//		}
-//		Bson filter = and(in("endpoint", endpoints));
-//		mongoTemplate.getCollection("client").deleteMany(filter);
-//
-//		for (String endpoint : endpoints) {
-//			securityStore.remove(endpoint, true);
-//		}
-//	}
 
 	// Leshan Server Methods
 	public void doReadRequest(HttpServletRequest req, HttpServletResponse resp, String format, Integer timeout) {

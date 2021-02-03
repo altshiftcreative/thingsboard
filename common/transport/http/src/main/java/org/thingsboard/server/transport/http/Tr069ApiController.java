@@ -61,7 +61,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/devices")
+                    .url(genieBaseUrl + "/tr69/api/devices")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
             Response  response = client.newCall(request).execute();
@@ -78,7 +78,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/faults")
+                    .url(genieBaseUrl + "/tr69/api/faults")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
             Response  response = client.newCall(request).execute();
@@ -95,7 +95,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/presets")
+                    .url(genieBaseUrl + "/tr69/api/presets")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
             Response  response = client.newCall(request).execute();
@@ -112,7 +112,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/provisions")
+                    .url(genieBaseUrl + "/tr69/api/provisions")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
             Response  response = client.newCall(request).execute();
@@ -129,7 +129,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/config")
+                    .url(genieBaseUrl + "/tr69/api/config")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .build();
             Response  response = client.newCall(request).execute();
@@ -144,7 +144,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/devices/"+deviceId)
+                    .url(genieBaseUrl + "/tr69/api/devices/"+deviceId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .delete()
                     .build();
@@ -159,7 +159,7 @@ public class Tr069ApiController {
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
 
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/faults/" + faultsId);
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/faults/" + faultsId);
 //            ub.addParameter("filter", "LOWER(DeviceID.SerialNumber) LIKE \"%" + faultsId + "%\"");
             String url = ub.toString();
 
@@ -177,7 +177,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/presets/" + presetsId);
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/presets/" + presetsId);
             String url = ub.toString();
             Request request = new Request.Builder()
                     .url(url)
@@ -193,7 +193,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/provisions/" + provisionsId);
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/provisions/" + provisionsId);
             String url = ub.toString();
             Request request = new Request.Builder()
                     .url(url)
@@ -209,7 +209,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/config/" + configId);
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/config/" + configId);
             String url = ub.toString();
             Request request = new Request.Builder()
                     .url(url)
@@ -230,7 +230,7 @@ public class Tr069ApiController {
             okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,taskRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/devices/"+deviceID+"/tasks")
+                    .url(genieBaseUrl + "/tr69/api/devices/"+deviceID+"/tasks")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .post(formBody)
                     .build();
@@ -251,7 +251,7 @@ public class Tr069ApiController {
             okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,tagRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/devices/" + deviceID + "/tags")
+                    .url(genieBaseUrl + "/tr69/api/devices/" + deviceID + "/tags")
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .post(formBody)
                     .build();
@@ -270,7 +270,7 @@ public class Tr069ApiController {
             okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,presetsRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/presets/" + presetsId)
+                    .url(genieBaseUrl + "/tr69/api/presets/" + presetsId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .put(formBody)
                     .build();
@@ -289,7 +289,7 @@ public class Tr069ApiController {
             okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,presetsRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/provisions/" + presetsId)
+                    .url(genieBaseUrl + "/tr69/api/provisions/" + presetsId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .put(formBody)
                     .build();
@@ -309,7 +309,7 @@ public class Tr069ApiController {
             okhttp3.RequestBody formBody =  okhttp3.RequestBody.create(JSON,configRequest);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(genieBaseUrl + "/api/config/" + configId)
+                    .url(genieBaseUrl + "/tr69/api/config/" + configId)
                     .addHeader("Cookie","genieacs-ui-jwt="+token)
                     .put(formBody)
                     .build();
@@ -326,7 +326,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/devices/");
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/devices/");
             ub.addParameter("filter", "LOWER(DeviceID.SerialNumber) LIKE \"%" + serialNumber + "%\"");
             String url = ub.toString();
             Request request = new Request.Builder()
@@ -345,7 +345,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/faults/");
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/faults/");
             ub.addParameter("filter", "LOWER(device) LIKE \"%" + device + "%\"");
             String url = ub.toString();
             Request request = new Request.Builder()
@@ -364,7 +364,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/presets/");
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/presets/");
             ub.addParameter("filter", "LOWER(_id) LIKE \"%" + _id + "%\"");
             String url = ub.toString();
             Request request = new Request.Builder()
@@ -383,7 +383,7 @@ public class Tr069ApiController {
             String token = getToken();
             token = token.replaceAll("^\"|\"$", "");
             OkHttpClient client = new OkHttpClient();
-            URIBuilder ub = new URIBuilder(genieBaseUrl + "/api/provisions/");
+            URIBuilder ub = new URIBuilder(genieBaseUrl + "/tr69/api/provisions/");
             ub.addParameter("filter", "LOWER(_id) LIKE \"%" + _id + "%\"");
             String url = ub.toString();
             Request request = new Request.Builder()
