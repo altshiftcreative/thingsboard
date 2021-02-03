@@ -112,5 +112,4 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
         })
     }
 
-
 }

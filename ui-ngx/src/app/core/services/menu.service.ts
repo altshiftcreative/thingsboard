@@ -262,6 +262,13 @@ export class MenuService {
       },
       {
         id: guid(),
+        name: 'SNMP',
+        type: 'link',
+        path: '/snmp',
+        icon: 'router'
+      },
+      {
+        id: guid(),
         name: 'device.devices',
         type: 'link',
         path: '/devices',

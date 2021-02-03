@@ -18,6 +18,7 @@ const forwardUrl = "http://localhost:8080";
 const wsForwardUrl = "ws://localhost:8080";
 const lwm2mUrl = "http://localhost:9090";
 const tr69Url = "http://localhost:3000";
+const snmpUrl="http://localhost:8888"
 
 const ruleNodeUiforwardUrl = forwardUrl;
 
@@ -28,6 +29,10 @@ const PROXY_CONFIG = {
   },
   "/tr69": {
     "target": tr69Url,
+    "secure": false,
+  },
+  "/snmp": {
+    "target": snmpUrl,
     "secure": false,
   },
   "/api": {
