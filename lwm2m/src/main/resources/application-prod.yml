@@ -1,6 +1,6 @@
-logging:
-  level:
-    ROOT: error
+#logging:
+#  level:
+#    ROOT: error
     
 spring:
   devtools:

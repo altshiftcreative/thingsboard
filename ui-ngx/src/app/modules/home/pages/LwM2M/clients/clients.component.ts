@@ -20,7 +20,7 @@ export class LwClientsComponent implements OnInit, AfterViewInit , OnDestroy{
     clientEndpoint: string;
     myData: any;
     eventArray = [];
-    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event');
+    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?access_token=' + localStorage.getItem('jwt_token'));
     constructor(private http: HttpClient, private lwService: LwService) { }
     ngOnDestroy(): void {
         this.sse.close();

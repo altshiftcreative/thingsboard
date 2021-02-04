@@ -112,7 +112,7 @@ export class LwClientsDataTableComponent implements OnInit, AfterViewInit, OnDes
         await this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint + '/' + this.dataModel['id'] + '/' + instance + '?format=' + this.format + '&timeout=' + this.timeOut).toPromise().then(async (readData) => {
             this.readDataObject = readData;
 
-            for await (const element of this.readDataObject['content']['resources']) {
+            for (const element of this.readDataObject['content']['resources']) {
                 this.data['field'+this.dataModel['id'] + instance + element['id']] = element['value'];
             }
             this.lwService.progress("SUCCESS", true);

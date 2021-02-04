@@ -90,8 +90,8 @@ public class EventService extends EventSourceServlet {
 		@Override
 		public void registered(Registration registration, Registration previousReg, Collection<Observation> previousObsersations) {
 			String jReg = gson.toJson(registration);
-			sendTelemetryData(registration);
 			sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
+			sendTelemetryData(registration);
 		}
 
 		@Override
@@ -101,6 +101,7 @@ public class EventService extends EventSourceServlet {
 			regUpdate.update = update;
 			String jReg = gson.toJson(regUpdate);
 			sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
+			sendTelemetryData(previousRegistration);
 		}
 
 		@Override
