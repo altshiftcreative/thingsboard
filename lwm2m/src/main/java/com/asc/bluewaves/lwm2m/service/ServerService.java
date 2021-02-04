@@ -97,10 +97,12 @@ public class ServerService {
 		dtlsConfig.setRecommendedCipherSuitesOnly(true);
 		builder.setDtlsConfig(dtlsConfig);
 
-		// Load s
-		// Define model provider
+		// Load model provider
 		List<ObjectModel> models = ObjectLoader.loadAllDefault();
 		try {
+			// To load our custom models
+			// models.addAll(ObjectLoader.loadObjectsFromDir(new File(modelsFolderPath), true));
+			
 			models.addAll(ObjectLoader.loadDdfResources("/models/", LwM2mDemoConstant.modelPaths));
 			LwM2mModelProvider modelProvider = new VersionedModelProvider(models);
 			builder.setObjectModelProvider(modelProvider);

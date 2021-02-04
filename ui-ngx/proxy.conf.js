@@ -16,43 +16,51 @@
 
 const forwardUrl = "http://localhost:8080";
 const wsForwardUrl = "ws://localhost:8080";
-const ruleNodeUiforwardUrl = forwardUrl;
+
+// on dev
 const lwm2mUrl = "http://localhost:9090";
-const snmpUrl="http://localhost:8888"
+const tr69Url = "http://localhost:3000";
+const snmpUrl = "http://localhost:8888";
+
+const ruleNodeUiforwardUrl = forwardUrl;
 
 const PROXY_CONFIG = {
   "/lwm2m": {
-    "target": lwm2mUrl,
-    "secure": false,
+    target: lwm2mUrl,
+    secure: false,
+  },
+  "/tr69": {
+    target: tr69Url,
+    secure: false,
   },
   "/snmp": {
-    "target": snmpUrl,
-    "secure": false,
+    target: snmpUrl,
+    secure: false,
   },
   "/api": {
-    "target": forwardUrl,
-    "secure": false,
+    target: forwardUrl,
+    secure: false,
   },
   "/static/rulenode": {
-    "target": ruleNodeUiforwardUrl,
-    "secure": false,
+    target: ruleNodeUiforwardUrl,
+    secure: false,
   },
   "/oauth2": {
-    "target": forwardUrl,
-    "secure": false,
+    target: forwardUrl,
+    secure: false,
   },
   "/login/oauth2": {
-    "target": forwardUrl,
-    "secure": false,
+    target: forwardUrl,
+    secure: false,
   },
   "/static": {
-    "target": forwardUrl,
-    "secure": false,
+    target: forwardUrl,
+    secure: false,
   },
   "/api/ws": {
-    "target": wsForwardUrl,
-    "ws": true,
-    "secure": false
+    target: wsForwardUrl,
+    ws: true,
+    secure: false,
   },
 };
 
