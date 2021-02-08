@@ -87,7 +87,7 @@ lwClientControllers.controller('ClientListCtrl', [
             $scope.clientslist = true;
 
             // listen for clients registration/deregistration
-            $scope.eventsource = new EventSource('lwm2m/event');
+            $scope.eventsource = new EventSource('lwm2m/event?access_token=' + localStorage.getItem('token'), { withCredentials: true });
 
             var registerCallback = function(msg) {
                 $scope.$apply(function() {
@@ -196,7 +196,7 @@ lwClientControllers.controller('ClientDetailCtrl', [
             });
 
             // listen for clients registration/deregistration/observe
-            $scope.eventsource = new EventSource('lwm2m/event?ep=' + $routeParams.clientId);
+            $scope.eventsource = new EventSource('lwm2m/event?ep=' + $routeParams.clientId + '&access_token=' + localStorage.getItem('token'));
 
             var registerCallback = function(msg) {
                 $scope.$apply(function() {

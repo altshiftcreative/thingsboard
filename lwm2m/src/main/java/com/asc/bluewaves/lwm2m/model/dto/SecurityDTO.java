@@ -1,4 +1,4 @@
-package com.asc.bluewaves.lwm2m.model;
+package com.asc.bluewaves.lwm2m.model.dto;
 
 import java.io.Serializable;
 

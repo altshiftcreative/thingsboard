@@ -21,7 +21,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
     clientByEndpoint: any = {};
     panelOpenState = false;
     clientEndpoint = this.lwService.clientEndpoint;
-    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?ep=' + this.lwService.clientEndpoint);
+    sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?ep=' + this.lwService.clientEndpoint + '&access_token=' + localStorage.getItem('jwt_token'));
     data: any = {};
     counterArray = [];
     updateArray = [];
@@ -111,6 +111,5 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
             })
         })
     }
-
 
 }

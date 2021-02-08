@@ -1,6 +1,6 @@
-package com.asc.bluewaves.lwm2m.errors;
+package com.asc.bluewaves.lwm2m.exception.errors;
 
-public class ResourceAlreadyExistException extends Exception {
+public class ResourceAlreadyExistException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -48,6 +48,9 @@
                 <ul class="nav navbar-nav navbar-right" id="navbar">
                     <li id="client-navlink" class="navlink"><a href="#/clients">Clients</a></li>
                     <li id="security-navlink" class="navlink"><a href="#/security">Security</a></li>
+                    <!-- Trigger the modal with a button -->
+                    <li id="auth-navlink" class="navlink"><a data-toggle="modal"
+                        data-target="#myModal">Authorize</a></li>
                 </ul>
             </div>
 
@@ -85,5 +88,27 @@
         </div>
     </div>
 
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Authorization Token</h4>
+        </div>
+        <div class="modal-body">
+          <label for="token">Token:</label>
+          <textarea class="form-control" id="token" ng-model="token"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addToken(token)">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 </body>
 </html>

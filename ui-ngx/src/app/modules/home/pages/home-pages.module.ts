@@ -39,6 +39,7 @@ import {ACSModule} from '@home/pages/acs/acs.module'
 import { CookieService } from 'ngx-cookie-service';
 import {ChartsModule} from 'ng2-charts'
 import { LwModule } from './LwM2M/Lw.module';
+import { SnmpModule } from './snmp/snmp.module';
 
 @NgModule({
   imports:[ChartsModule],
@@ -61,7 +62,8 @@ import { LwModule } from './LwM2M/Lw.module';
     ApiUsageModule,
     UserModule,
     ACSModule,
-    LwModule
+    LwModule,
+    SnmpModule
   ],
   providers: [
     {

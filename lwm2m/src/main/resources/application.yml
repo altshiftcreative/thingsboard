@@ -27,6 +27,10 @@ spring:
 #      password:
 #      - A
 
+security:
+  jwt:
+    secret: XNPEklRL6ipppDu4zmpZ5wAIcZH0TiKsiqdoylFpP48ap1lCJdiyh1SiFZe3Xbizhu91WiV3Jmbw+XGH5Mip8s6Yrl7N6jLCza0aZNstMDgNYa6eGpkjmpqvQUnqo62flpiUzCldVh5oTCFL9puA1yx0a2ZiRJRZ93PYS7hFIsc9P7OIp3oqJ3B/VB7GE+DKzCWDEWLPt/3b77klJ/MNw16gtIgASZUZXtPLyQ==
+
 server:
   address: localhost
   port: 9090
