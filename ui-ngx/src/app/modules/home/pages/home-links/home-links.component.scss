@@ -13,10 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import '../../../../../scss/constants';
-
+@import "../../../../../scss/constants";
+.card-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 15px;
+  .sections {
+    background: #ffffff;
+    box-shadow: 0px 0px 10px rgba(202, 202, 202, 0.25);
+    border-radius: 10px;
+    margin: 10px 0;
+    &:nth-child(1),
+    &:nth-child(2),
+    &:nth-child(3) {
+      width: 30%;
+      margin: 10px 10px;
+      @media(max-width: 767px){
+        width: 100%;
+        margin: 15px;
+      }
+    }
+    &:nth-child(4),
+    &:nth-child(5),
+    &:nth-child(6),
+    &:nth-child(7) {
+      width: 46%;
+      @media(max-width: 767px){
+        width: 100%;
+        margin: 15px;
+      }
+    }
+    &:hover{
+      box-shadow: 20px rgba(202, 202, 202, 0.25);
+    }
+    .section-card{
+      h3{
+        background-color: #ccc;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        margin: 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      .card-content {
+        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        justify-items: center;
+        .card-sections{
+          /* @media(max-width: 500px){
+            width: 100%;
+            margin: 15px;
+          } */
+        }
+        a{
+          border-bottom: none;
+          justify-items: center;
+          mat-icon{
+            margin: 0 5%;
+          }
+        }
+      }
+    }
+  }
+}
 :host ::ng-deep {
   .tb-home-links {
+    padding: 15px !important;
     .mat-headline {
       font-size: 20px;
       @media #{$mat-gt-xmd} {
@@ -26,11 +94,12 @@
     mat-card {
       padding: 0;
       margin: 8px;
+      display: block;
       mat-card-title {
         margin: 0;
         padding: 24px 16px 16px;
       }
-      mat-card-title+mat-card-content {
+      mat-card-title + mat-card-content {
         padding-top: 0;
       }
       mat-card-content {
@@ -77,4 +146,3 @@
     }
   }
 }
-

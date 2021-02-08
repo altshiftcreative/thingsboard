@@ -15,7 +15,23 @@
     limitations under the License.
 
 -->
-<mat-grid-list class="tb-home-links" [cols]="cols" rowHeight="280px">
+<div class="card-container">
+  <div class="sections" *ngFor="let section of homeSections$| async">
+    <div class="section-card">
+      <h3 translate> {{section.name}} </h3>
+      <div class="card-content">
+        <div class="card-sections" *ngFor="let place of section.places">
+          <a routerLink="{{place.path}}">
+            <mat-icon *ngIf="!place.isMdiIcon" class="material-icons tb-mat-96">{{place.icon}}</mat-icon>
+            <mat-icon *ngIf="place.isMdiIcon" class="tb-mat-96" [svgIcon]="place.icon"></mat-icon>
+            <h4 translate>{{place.name}}</h4>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <mat-grid-list class="tb-home-links" [cols]="cols" rowHeight="280px">
   <mat-grid-tile [colspan]="sectionColspan(section)" *ngFor="let section of homeSections$| async">
     <mat-card style="width: 100%;">
       <mat-card-title>
@@ -34,4 +50,4 @@
       </mat-card-content>
     </mat-card>
   </mat-grid-tile>
-</mat-grid-list>
+</mat-grid-list> -->
