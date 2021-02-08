@@ -35,11 +35,7 @@ export class SnmpComponent implements OnInit {
         .set('val', this.setForm.value.val);
        const fullURL = `${baseURL}?${params.toString()}`;
         console.log({ fullURL });
-        this.http.post<any>(fullURL,
-        { 
-           
-        }
-    ).subscribe((dta) => {})
+        this.http.post(fullURL,{responseType: 'text'}).subscribe((dta) => {})
     
     }
 
@@ -50,9 +46,11 @@ export class SnmpComponent implements OnInit {
         .set('OID', this.setForm.value.OID)
        const fullURL = `${baseURL}?${params.toString()}`;
         console.log({ fullURL });
-     this.http.get<any>(fullURL).subscribe((dta) => {
+     this.http.get(fullURL,{responseType: 'text'}).subscribe((dta) => {
          console.log(dta)
          this.snmpValue=dta;
+         
+        
      })
 
     }
