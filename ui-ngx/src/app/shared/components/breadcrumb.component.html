@@ -29,6 +29,9 @@
         {{ breadcrumb.ignoreTranslate ? (breadcrumb.labelFunction ? breadcrumb.labelFunction() : breadcrumb.label) : (breadcrumb.label | translate) }}
 	    </a>
 	    <span *ngSwitchCase="true">
+        <p>
+          {{ breadcrumb.ignoreTranslate ? (breadcrumb.labelFunction ? breadcrumb.labelFunction() : breadcrumb.label) : (breadcrumb.label | translate) }}
+        </p>
         <mat-icon *ngIf="breadcrumb.isMdiIcon" [svgIcon]="breadcrumb.icon">
 	    	</mat-icon>
 	    	<mat-icon *ngIf="!breadcrumb.isMdiIcon" class="material-icons">

@@ -248,27 +248,6 @@ export class MenuService {
       },
       {
         id: guid(),
-        name: 'TR-69',
-        type: 'link',
-        path: '/acs',
-        icon: 'cloud_queue'
-      },
-      {
-        id: guid(),
-        name: 'LwM2M',
-        type: 'link',
-        path: '/LwM2M',
-        icon: 'memory'
-      },
-      {
-        id: guid(),
-        name: 'SNMP',
-        type: 'link',
-        path: '/snmp',
-        icon: 'router'
-      },
-      {
-        id: guid(),
         name: 'device.devices',
         type: 'link',
         path: '/devices',
@@ -295,6 +274,27 @@ export class MenuService {
         type: 'link',
         path: '/widgets-bundles',
         icon: 'now_widgets'
+      },
+      {
+        id: guid(),
+        name: 'TR-69',
+        type: 'link',
+        path: '/acs',
+        icon: 'cloud_queue'
+      },
+      {
+        id: guid(),
+        name: 'LwM2M',
+        type: 'link',
+        path: '/LwM2M',
+        icon: 'memory'
+      },
+      {
+        id: guid(),
+        name: 'SNMP',
+        type: 'link',
+        path: '/snmp',
+        icon: 'router'
       },
       {
         id: guid(),
