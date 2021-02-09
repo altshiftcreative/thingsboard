@@ -1,10 +1,13 @@
 <div class="mat-table-padding">
-  <mat-progress-bar color="warn" mode="indeterminate"*ngIf="isLoading"></mat-progress-bar>
   <div class="faultsContainer">
     <div mat-header class="faultsHeader">
       <div class="searchContainer">
         <div class="search">
-          <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z"
+              fill="#BFBFBF" />
+          </svg>
           <input type="text" placeholder="Search" (keyup)="faultsSearch($event)" />
         </div>
       </div>
@@ -18,16 +21,17 @@
 
         <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
-  
+
         <!-- Position Column -->
         <ng-container matColumnDef="Device">
-  
-          <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Device </th>
-          <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
-              name="{{element['_id']}}"> {{element['device']}} </td>
+
+          <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)">
+            Device </th>
+          <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes"
+              (change)="toggleVisibility($event)" name="{{element['_id']}}"> {{element['device']}} </td>
         </ng-container>
-  
-  
+
+
         <!-- Channel Column -->
         <ng-container matColumnDef="Channel">
           <th mat-header-cell *matHeaderCellDef> Channel </th>
@@ -35,15 +39,15 @@
             {{element['channel']}}
           </td>
         </ng-container>
-  
-  
+
+
         <!-- Code Column -->
         <ng-container matColumnDef="Code">
           <th mat-header-cell *matHeaderCellDef> Code </th>
           <td mat-cell *matCellDef="let element"> {{element['code']}}
           </td>
         </ng-container>
-  
+
         <!-- Message Column -->
         <ng-container matColumnDef="Message">
           <th mat-header-cell *matHeaderCellDef> Message </th>
@@ -51,37 +55,37 @@
             {{element['message']}}
           </td>
         </ng-container>
-  
+
         <!-- Detail Column -->
-  
+
         <ng-container matColumnDef="Detail">
           <th mat-header-cell *matHeaderCellDef> Detail </th>
           <td mat-cell *matCellDef="let element">
             faultCode:{{element['detail']['faultCode']}}faultString:{{element['detail']['faultString']}}setParameterValuesFault:{{element['detail']['setParameterValuesFault']}}
           </td>
         </ng-container>
-  
+
         <!-- Retries Column -->
-  
+
         <ng-container matColumnDef="Retries">
           <th mat-header-cell *matHeaderCellDef>Retries</th>
-          <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
+          <td mat-cell *matCellDef="let element">
             {{element['retries']}}
-  
+
           </td>
         </ng-container>
         <!-- Timestamp Column -->
-  
+
         <ng-container matColumnDef="Timestamp">
           <th mat-header-cell *matHeaderCellDef> Timestamp </th>
           <td mat-cell *matCellDef="let element">
             {{element['timestamp'] | date: 'MMM d, y, h:mm:ss a'}}
           </td>
         </ng-container>
-  
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-  
+
       </table>
     </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

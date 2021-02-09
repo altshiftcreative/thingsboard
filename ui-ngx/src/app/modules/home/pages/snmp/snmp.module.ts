@@ -8,13 +8,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { MatRippleModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     SnmpComponent,
 
-   
+
 
   ],
   imports: [
@@ -30,6 +32,7 @@ import { CommonModule } from '@angular/common';
     CommonModule
 
     
+    MatDialogModule
   ],
   exports:[
     ReactiveFormsModule,
@@ -39,6 +42,6 @@ import { CommonModule } from '@angular/common';
     MatRippleModule,
 
 ]
-  
+
 })
 export class SnmpModule { }

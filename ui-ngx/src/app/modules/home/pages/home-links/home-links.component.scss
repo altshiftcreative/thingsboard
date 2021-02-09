@@ -24,13 +24,13 @@
     background: #ffffff;
     box-shadow: 0px 0px 10px rgba(202, 202, 202, 0.25);
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 15px 0;
     &:nth-child(1),
     &:nth-child(2),
     &:nth-child(3) {
       width: 30%;
       margin: 10px 10px;
-      @media(max-width: 767px){
+      @media (max-width: 800px) {
         width: 100%;
         margin: 15px;
       }
@@ -40,16 +40,16 @@
     &:nth-child(6),
     &:nth-child(7) {
       width: 46%;
-      @media(max-width: 767px){
+      @media (max-width: 800px) {
         width: 100%;
         margin: 15px;
       }
     }
-    &:hover{
+    &:hover {
       box-shadow: 20px rgba(202, 202, 202, 0.25);
     }
-    .section-card{
-      h3{
+    .section-card {
+      .sec-title {
         background-color: #ccc;
         color: #ffffff;
         text-align: center;
@@ -57,25 +57,29 @@
         margin: 0;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
+        text-transform: capitalize;
       }
       .card-content {
-        padding: 15px;
+        padding: 5px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: space-around;
         justify-items: center;
-        .card-sections{
-          /* @media(max-width: 500px){
-            width: 100%;
-            margin: 15px;
-          } */
-        }
-        a{
+        a {
+          font-size: 18px;
+          color: #1890ff;
           border-bottom: none;
+          display: flex;
+          flex-direction: column;
           justify-items: center;
-          mat-icon{
-            margin: 0 5%;
+          mat-icon {
+            justify-items: center;
+            align-self: center;
+          }
+          h4 {
+            text-transform: capitalize;
+            margin: 5px;
           }
         }
       }

@@ -3,26 +3,31 @@
         <h3>Walk</h3>
         <form [formGroup]="walkForm" (ngSubmit)="onSubmit3()">
             <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label for="host">host</mat-label>
-                    <input matInput type="text" id="host" class="form-control" name="host" formControlName="host">
-                </mat-form-field>
+              <mat-label for="host">Host</mat-label>
+              <input matInput type="text" id="host" class="form-control"
+                name="host" formControlName="host" placeholder="Host">
             </div>
             <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>Community</mat-label>
-                    <input matInput type="text" id="community" class="form-control" name="community"
-                        formControlName="community">
-                </mat-form-field>
+              <mat-label>Community</mat-label>
+              <input matInput type="text" id="community" class="form-control"
+                name="community" formControlName="community" placeholder="Community">
             </div>
             <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>OID</mat-label>
-                    <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
-                </mat-form-field>
+              <mat-label>OID</mat-label>
+              <input matInput type="text" id="OID" class="form-control"
+                name="OID" formControlName="OID" placeholder="OID">
+            </div>
+            <div class="form-group">
+              <mat-label>Value</mat-label>
+              <input matInput type="text" id="val" class="form-control"
+                name="val" formControlName="val" placeholder="Value">
             </div>
             <br>
             <div class="form-group">
+                <button mat-button cdkFocusInitial [mat-dialog-close]
+                  class="submit-button" type="submit">
+                    Set
+                </button>
                 <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Walk</button>
             </div>
         </form>
@@ -31,17 +36,14 @@
         <h3>Get</h3>
         <form [formGroup]="getForm" (ngSubmit)="onSubmit2()">
             <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label for="host">host</mat-label>
-                    <input matInput type="text" id="host" class="form-control" name="host" formControlName="host">
-                </mat-form-field>
+              <mat-label for="host">Host</mat-label>
+              <input matInput type="text" id="host" class="form-control"
+                name="host" formControlName="host" placeholder="Host">
             </div>
             <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>Community</mat-label>
-                    <input matInput type="text" id="community" class="form-control" name="community"
-                        formControlName="community">
-                </mat-form-field>
+              <mat-label for="community">Community</mat-label>
+              <input matInput type="text" id="community" class="form-control"
+                name="community" formControlName="community" placeholder="Community">
             </div>
             <div class="form-group" *ngIf="walkData">
                 <mat-form-field appearance="standard">
@@ -59,12 +61,9 @@
                 </mat-form-field>
             </div>
             <div class="form-group">
-                <mat-form-field appearance="standard" >
-                    <mat-label>{{snmpValue}}</mat-label>
-                    <input matInput type="text" disabled>
-                </mat-form-field>
+              <mat-label>Get SNMP Value</mat-label>
+              <input matInput type="text" class="form-control" disabled placeholder="{{snmpValue}}">
             </div>
-            <br>
             <div class="form-group">
                 <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Get</button>
             </div>

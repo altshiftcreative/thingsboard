@@ -1,50 +1,54 @@
 <div class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;">
-  <mat-progress-bar color="warn" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
-    *ngIf="isLoading">
-  </mat-progress-bar>
   <div class="shadow-div">
     <div mat-header class="header-of-table">
       <div class="search-div">
-        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z"
+            fill="#BFBFBF" />
+        </svg>
         <input type="text" placeholder="Search" (keyup)="liveSearchParameter($event)" class="search-input" />
       </div>
-      <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
-          src="../../../../../assets/img/action-arrow.svg"></button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="openDialog()"> <img src="../../../../../assets/img/plus-dialog.svg"> &nbsp; New
-          Config</button>
-      </mat-menu>
+      <div class="btns">
+        <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp;
+          <img src="../../../../../assets/img/action-arrow.svg"></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openDialog()"> <img src="../../../../../assets/img/plus-dialog.svg"> &nbsp; New
+            Config</button>
+        </mat-menu>
+      </div>
     </div>
+    <div class="table">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container matColumnDef="_id">
+          <th mat-header-cell *matHeaderCellDef> Config </th>
+          <td mat-cell *matCellDef="let element"> {{element['_id']}} </td>
+        </ng-container>
 
-      <!-- Position Column -->
-      <ng-container matColumnDef="_id">
-        <th mat-header-cell *matHeaderCellDef> Config </th>
-        <td mat-cell *matCellDef="let element"> {{element['_id']}} </td>
-      </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['value']}}
+          </td>
+        </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="value">
-        <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['value']}}
-        </td>
-      </ng-container>
+        <!-- Action Column -->
+        <ng-container matColumnDef="Action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <img src="../../../../../assets/img/write_img.svg" (click)="openDialog(element)" style="cursor: pointer;" />
+            <img src="../../../../../assets/img/close-delete.svg" (click)="deleteConfig(element['_id'])"
+              style="cursor: pointer;" />
+          </td>
+        </ng-container>
 
-      <!-- Action Column -->
-      <ng-container matColumnDef="Action">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <img src="../../../../../assets/img/write_img.svg" (click)="openDialog(element)" style="cursor: pointer;" />
-          <img src="../../../../../assets/img/close-delete.svg" (click)="deleteConfig(element['_id'])"
-            style="cursor: pointer;" />
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+      </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
 </div>

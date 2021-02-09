@@ -8,14 +8,12 @@ import { AcsService } from '../../acs-service';
 @Component({
     selector: 'provisions-dialog',
     templateUrl: './provisions-dialog.component.html',
-    // styleUrls: ['./presets-dialog.component.scss'],
-
-
+    //styleUrls: ['./provisions-dialog.component.scss']
 })
 
 
 export class provisionsDialog implements OnInit {
-    
+
     constructor(private http: HttpClient,@Inject(MAT_DIALOG_DATA) public data: {_id: string, script: string},private acsService: AcsService) { }
     name: null;
     provisionsForm: FormGroup;
@@ -41,7 +39,7 @@ export class provisionsDialog implements OnInit {
         this.http.put(this.acsService.acsBaseUri+'/api/v1/tr69/provisions/?provisionsId=' + this.provisionsForm.value.provisionsName,
         {
             "script": this.provisionsForm.value.script,
-  
+
         }
     ).subscribe((dta) => { })
     this.acsService.progress('Created', true);
