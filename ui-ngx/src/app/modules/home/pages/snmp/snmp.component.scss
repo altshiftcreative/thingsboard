@@ -1,15 +1,31 @@
 .container {
-  padding: 15px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: auto;
   .formContainer {
     background-color: #fff;
-    width: 42%;
-    margin:3% 4%;
+    width: 44%;
+    margin:1% 3%;
     border-radius: 15px;
     padding: 0 0 20px;
+    &:nth-child(1){
+      width: 100%;
+      margin-bottom: 1% !important;
+      form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        div{
+          width: 25%;
+          &:nth-child(4){
+            width: 20%;
+            margin: auto 2.5%;
+          }
+        }
+      }
+    }
     h3 {
       background-color: #ccc;
       color: #fff;
@@ -44,7 +60,7 @@
       ::placeholder {
         color: #a5a5a5 !important;
       }
-      mat-label{
+      mat-label {
         font-size: 16px;
         color: #8a8a89;
         padding: 5px;
@@ -56,7 +72,7 @@
         color: #fff;
         font-size: 18px;
         width: 100%;
-        border-radius: 15px;
+        border-radius: 20px;
         margin: auto;
         z-index: 10;
         margin-bottom: -4px;

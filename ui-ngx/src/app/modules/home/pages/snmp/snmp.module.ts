@@ -6,18 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     SnmpComponent,
-
-
-
   ],
   imports: [
     SnmpRoutingModule,
@@ -29,9 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatRippleModule,
     MatSelectModule,
     MatOptionModule,
-    CommonModule
-
-    
+    CommonModule,
     MatDialogModule
   ],
   exports:[
@@ -40,7 +34,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatInputModule,
     MatRippleModule,
-
 ]
 
 })
