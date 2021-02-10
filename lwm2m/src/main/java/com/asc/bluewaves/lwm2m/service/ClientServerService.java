@@ -373,4 +373,19 @@ public class ClientServerService extends BaseService {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public void createObserverForDemoDevices(Integer devicesNo) {
+		// POST /api/clients/ebraheem-fedora/1/0/0/observe?format=TLV&timeout=5
+		for (int i = 1; i <= devicesNo; i++) {
+			try {
+				Registration registration = server.getRegistrationService().getByEndpoint("ep" + i);
+				if (registration != null) {
+					ObserveRequest request = new ObserveRequest(ContentFormat.fromName("TLV"), "3313/0");
+					server.send(registration, request, 10000);
+				}
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 }

@@ -16,24 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.californium.core.network.Endpoint;
 import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSourceServlet;
-import org.eclipse.leshan.core.Link;
 import org.eclipse.leshan.core.node.LwM2mNode;
 import org.eclipse.leshan.core.observation.Observation;
-import org.eclipse.leshan.core.request.ContentFormat;
-import org.eclipse.leshan.core.request.ReadRequest;
 import org.eclipse.leshan.core.response.ObserveResponse;
-import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.observation.ObservationListener;
 import org.eclipse.leshan.server.queue.PresenceListener;
 import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -59,9 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventService extends EventSourceServlet {
 
-	// @Value("${tb.base-url}")
-	private String tbBaseUrl;
-
 	private static final long serialVersionUID = 1L;
 
 	private static final String EVENT_DEREGISTRATION = "DEREGISTRATION";
@@ -78,11 +69,7 @@ public class EventService extends EventSourceServlet {
 	private final ClientMongodbService clientMongodbService;
 
 	private final Gson gson;
-
-	private final LeshanServer server;
-
 	private final CoapMessageTracer coapMessageTracer;
-
 	private Set<LeshanEventSource> eventSources = Collections.newSetFromMap(new ConcurrentHashMap<LeshanEventSource, Boolean>());
 
 	private final RegistrationListener registrationListener = new RegistrationListener() {
@@ -91,7 +78,6 @@ public class EventService extends EventSourceServlet {
 		public void registered(Registration registration, Registration previousReg, Collection<Observation> previousObsersations) {
 			String jReg = gson.toJson(registration);
 			sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
-			sendTelemetryData(registration);
 		}
 
 		@Override
@@ -101,7 +87,6 @@ public class EventService extends EventSourceServlet {
 			regUpdate.update = update;
 			String jReg = gson.toJson(regUpdate);
 			sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
-			sendTelemetryData(previousRegistration);
 		}
 
 		@Override
@@ -141,11 +126,13 @@ public class EventService extends EventSourceServlet {
 			}
 
 			if (registration != null) {
+				String responseData = gson.toJson(response.getContent());
 				String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\",\"res\":\"")
-						.append(observation.getPath().toString()).append("\",\"val\":").append(gson.toJson(response.getContent()))
+						.append(observation.getPath().toString()).append("\",\"val\":").append(responseData)
 						.append("}").toString();
 
 				sendEvent(EVENT_NOTIFICATION, data, registration.getEndpoint());
+				sendTelemetryData(registration.getEndpoint(), observation.getPath().toString(), responseData);
 			}
 		}
 
@@ -163,7 +150,6 @@ public class EventService extends EventSourceServlet {
 	};
 
 	public EventService(ClientMongodbService clientMongodbService, LeshanServer server) {
-		this.server = server;
 		server.getRegistrationService().addListener(this.registrationListener);
 		server.getObservationService().addListener(this.observationListener);
 		server.getPresenceService().addListener(this.presenceListener);
@@ -257,7 +243,9 @@ public class EventService extends EventSourceServlet {
 			try {
 				emitter.event(event, data);
 			} catch (IOException e) {
-				e.printStackTrace();
+				if (e.getCause() != null && !e.getCause().getMessage().equals("Broken pipe")) {
+					e.printStackTrace();
+				}
 				onClose();
 			}
 		}
@@ -282,19 +270,14 @@ public class EventService extends EventSourceServlet {
 		}
 	}
 
-	private void sendTelemetryData(Registration registration) {
-		boolean flag = false;
-		for (Link link : registration.getObjectLinks()) {
-			if ("/3313/0".equals(link.getUrl())) {
-				flag = true;
-				break;
-			}
-		}
-		if (!flag) {
+	private void sendTelemetryData(String endpoint, String path, String responseData) {
+		if (!"/3313/0".equals(path)) {
 			return;
 		}
 
-		ClientDTO client = clientMongodbService.getByEndpoint(registration.getEndpoint());
+		log.info("send telemetry data for Accelometer 3313");
+		
+		ClientDTO client = clientMongodbService.getByEndpoint(endpoint);
 		if (client == null || !StringUtils.hasText(client.getAccessToken())) {
 			return;
 		}
@@ -306,7 +289,11 @@ public class EventService extends EventSourceServlet {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		Map<String, Object> body = getData(registration, mapper);
+		Map<String, Object> body = getData(responseData, mapper);
+
+		if (body == null) {
+			return;
+		}
 
 		try {
 			HttpEntity<String> teleRequest = new HttpEntity<String>(mapper.writeValueAsString(body), headers);
@@ -317,55 +304,37 @@ public class EventService extends EventSourceServlet {
 		}
 	}
 
-	private Map<String, Object> getData(Registration registration, ObjectMapper mapper) {
+	private Map<String, Object> getData(String responseData, ObjectMapper mapper) {
 		try {
-			ReadRequest request = new ReadRequest(ContentFormat.fromName("TLV"), "/3313/0");
-			ReadResponse cResponse = server.send(registration, request, 5000);
-			String dataStr = this.gson.toJson(cResponse);
+			log.info("Inside getData method, ResponseData: " + responseData);
 
-			JsonNode resources = mapper.readTree(dataStr).findValue("resources");
-			ObjectReader reader = mapper.readerFor(new TypeReference<List<Resource>>() { });
+			JsonNode resources = mapper.readTree(responseData).findValue("resources");
+			ObjectReader reader = mapper.readerFor(new TypeReference<List<Resource>>() {
+			});
 			List<Resource> list = reader.readValue(resources);
-			
+
 			Map<String, Object> data = new HashMap<>();
 			for (Resource resource : list) {
 				if (resource.id == 5702) {
 					data.put("xValue", resource.value);
-					
+
 				} else if (resource.id == 5703) {
 					data.put("yValue", resource.value);
-					
+
 				} else if (resource.id == 5704) {
 					data.put("zValue", resource.value);
 				}
 			}
 			return data;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
+		return null;
 	}
-	
+
+	@Data
 	private static class Resource {
 		private int id;
 		private Object value;
-
-		Resource() {
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		public Object getValue() {
-			return value;
-		}
-
-		public void setValue(Object value) {
-			this.value = value;
-		}
 	}
 }

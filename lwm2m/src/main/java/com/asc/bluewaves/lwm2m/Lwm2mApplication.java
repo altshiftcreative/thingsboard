@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import com.asc.bluewaves.lwm2m.config.ApplicationProperties;
 
 @SpringBootApplication(exclude= {UserDetailsServiceAutoConfiguration.class})
-@ComponentScan("com.asc.bluewaves.lwm2m")
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class Lwm2mApplication {
 

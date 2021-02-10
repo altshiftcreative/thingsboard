@@ -43,15 +43,27 @@ public class ClientController extends BaseController {
 	@PostMapping("")
 	public ResponseEntity<String> saveDevice(@RequestBody ClientDTO client) throws URISyntaxException {
 		clientMongodbService.addClient(client);
-		return ResponseEntity.created(new URI("/api/clients/" + client.getEndpoint())).build();
+		return ResponseEntity.created(new URI("/api/clients/" + client.getEndpoint())).build(); 
 	}
 
 	@GetMapping("/{" + ENDPOINT + "}/run")
-	public ResponseEntity<Void> runDevice(@PathVariable(ENDPOINT) String endpoint) throws URISyntaxException {
+	public ResponseEntity<Void> runDevice(@PathVariable(ENDPOINT) String endpoint) {
 		clientMongodbService.runClient(endpoint);
 		return ResponseEntity.noContent().build();
 	}
 
+	@PostMapping("/demo")
+	public ResponseEntity<Void> createDemoDevices(@RequestParam(value = "devicesNo", defaultValue = "1") Integer devicesNo) {
+		clientMongodbService.createDemoDevices(devicesNo);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/demo/observer")
+	public ResponseEntity<Void> createObserverForDemoDevices(@RequestParam(value = "devicesNo", defaultValue = "1") Integer devicesNo) {
+		clientServerService.createObserverForDemoDevices(devicesNo);
+		return ResponseEntity.noContent().build();
+	}
+	
 	// /clients/endPoint/LWRequest : do LightWeight M2M read request on a given client.
 	// GET //localhost:8080/api/clients/ebraheem-fedora/1/0?format=TLV&timeout=5
 	@GetMapping(value = { "", "/{" + ENDPOINT + "}/**" })

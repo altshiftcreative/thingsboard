@@ -149,7 +149,7 @@ public class ClientMongodbService extends BaseService {
 
 	private String getServerAddress(boolean isSecure) {
 		String address = isSecure ? "coaps://" : "coap://";
-		address += secureAddress + ":" + securePort;
+		address += "localhost:" + securePort;
 		return address;
 	}
 
@@ -231,5 +231,17 @@ public class ClientMongodbService extends BaseService {
 			throw new BadRequestException("Endpoint cannot be empty");
 		}
 		addClientToServer(getByEndpoint(endpoint));
+	}
+	
+	public void createDemoDevices(Integer devicesNo) {
+		for (int i = 1; i <= devicesNo; i++) {
+			ClientDTO clientDto = new ClientDTO();
+			clientDto.setEndpoint("ep" + i);
+			clientDto.setIdentity(i + "");
+			clientDto.setPreSharedKey(i + "" + i);
+
+			addClient(clientDto);
+			addClientToServer(clientDto);
+		}
 	}
 }

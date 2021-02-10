@@ -20,11 +20,11 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
     col: number = 0;
     clientByEndpoint: any = {};
     panelOpenState = false;
-    clientEndpoint = this.lwService.clientEndpoint;
     sse: EventSource = new EventSource(this.lwService.lwm2mBaseUri + '/event?ep=' + this.lwService.clientEndpoint + '&access_token=' + localStorage.getItem('jwt_token'));
     data: any = {};
     counterArray = [];
     updateArray = [];
+
     constructor(private lwService: LwService, private http: HttpClient) { }
 
     ngOnDestroy(): void {
@@ -85,7 +85,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     getDataModel() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/objectspecs/' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/objectspecs/' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientData) => {
             clientData.sort((a, b) => (a.id > b.id) ? 1 : -1)
             this.dataSource = clientData
             this.getDataModelByEndpoint();
@@ -93,7 +93,7 @@ export class LwClientsDataComponent implements OnInit, AfterViewInit, OnDestroy 
         })
     }
     getDataModelByEndpoint() {
-        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
+        this.http.get<any[]>(this.lwService.lwm2mBaseUri + '/api/clients/' + this.lwService.clientEndpoint, { withCredentials: true }).toPromise().then((clientDataEndpoint) => {
             this.dataSource.forEach(element => {
                 let urlArray = []
                 clientDataEndpoint['objectLinks'].forEach(item => {
