@@ -1,9 +1,47 @@
-.submit-button{
-    text-align-last: auto;
-    z-index: 10; margin-bottom: -4px;
-    width: 121px; 
-    height: 40px; 
-    border: 1px solid #1890FF; 
-    background: #1890FF; 
-    color: white;
+.add-new-client {
+  padding: 10px;
+  form {
+    .form-group {
+      display: grid;
+      padding: 10px 15px;
+      @media (max-width: 767px) {
+        padding: 10px 0;
+      }
+      .form-control {
+        width: 95%;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        margin: auto;
+        padding: 12px;
+        background: #f7f7f7;
+        box-sizing: border-box;
+        outline: none;
+        &:focus {
+          border: 2px solid #1890ff;
+          outline: none;
+        }
+      }
+      ::placeholder {
+        color: #a5a5a5 !important;
+      }
+      mat-label {
+        font-size: 16px;
+        color: #8a8a89;
+        padding: 5px;
+        margin-left: 3%;
+        margin-bottom: 1%;
+      }
+    }
+    .submit-button {
+      margin: 1% 2%;
+      text-align-last: auto;
+      width: 96%;
+      border: 1px solid #1890ff;
+      background: #1890ff;
+      color: white;
+      font-size: 16px;
+      padding: 6px;
+      border-radius: 20px;
+    }
+  }
 }

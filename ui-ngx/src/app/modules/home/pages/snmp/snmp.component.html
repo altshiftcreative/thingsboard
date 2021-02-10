@@ -25,27 +25,30 @@
     <h3>Set</h3>
     <form [formGroup]="setForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <mat-label for="host">host</mat-label>
-        <input matInput type="text" id="host" class="form-control" name="host" formControlName="host">
+        <mat-label for="host">Host</mat-label>
+        <input matInput type="text" id="host" class="form-control" name="host" formControlName="host" placeholder="Host">
       </div>
       <div class="form-group">
         <mat-label>Community</mat-label>
-        <input matInput type="text" id="community" class="form-control" name="community" formControlName="community">
+        <input matInput type="text" id="community" class="form-control"
+          name="community" formControlName="community" placeholder="Community">
       </div>
       <div class="form-group" *ngIf="walkData">
         <mat-label>OID</mat-label>
-        <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
+        <mat-select id="OID" class="form-control"
+          name="OID" formControlName="OID" placeholder="OID">
           <mat-option> 1.3.6.1.2.1.4.2.0</mat-option>
           <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
         </mat-select>
       </div>
       <div class="form-group" *ngIf="!walkData">
         <mat-label>OID</mat-label>
-        <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
+        <input matInput type="text" id="OID" class="form-control"
+          name="OID" formControlName="OID" placeholder="OID">
       </div>
       <div class="form-group">
         <mat-label>Value</mat-label>
-        <input matInput type="text" id="val" class="form-control" name="val" formControlName="val">
+        <input matInput type="text" id="val" class="form-control" name="val" formControlName="val" placeholder="Value">
       </div>
       <div class="form-group">
         <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Set</button>
@@ -57,24 +60,24 @@
     <form [formGroup]="getForm" (ngSubmit)="onSubmit2()">
       <div class="form-group">
         <mat-label for="host">Host</mat-label>
-        <input matInput type="text" id="host" class="form-control" name="host" formControlName="host"
-          placeholder="Host">
+        <input matInput type="text" id="host" class="form-control"
+          name="host" formControlName="host" placeholder="Host">
       </div>
       <div class="form-group">
         <mat-label for="community">Community</mat-label>
-        <input matInput type="text" id="community" class="form-control" name="community" formControlName="community"
-          placeholder="Community">
+        <input matInput type="text" id="community" class="form-control"
+          name="community" formControlName="community" placeholder="Community">
       </div>
       <div class="form-group" *ngIf="walkData">
         <mat-label>OID</mat-label>
-        <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
+        <mat-select id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
           <mat-option> 1.3.6.1.2.1.4.2.0</mat-option>
           <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
         </mat-select>
       </div>
       <div class="form-group" *ngIf="!walkData">
         <mat-label>OID</mat-label>
-        <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
+        <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
       </div>
       <div class="form-group">
         <mat-label>Get SNMP Value</mat-label>

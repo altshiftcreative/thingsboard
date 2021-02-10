@@ -1,27 +1,30 @@
 <div class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;" >
     <div class="shadow-div" style="background-color: white; border-radius: 8px; padding: 0; margin: 0;">
-        <div class="header-of-table" mat-header style="border-radius: 8px;">
+        <div class="header-of-table" mat-header>
             <div>
                 <p class="headerStyle">Certificate <span class="spanHead">(x509v3 der encoded)</span></p>
             </div>
             <div class="downloadB">
-                <button (click)="saveAsBlob('server_cert')" class="downloadCSV" mat-stroked-button style="border-color: #1890FF;">Download</button>
+                <!-- <button (click)="saveAsBlob('server_cert')" class="downloadCSV" mat-stroked-button">Download</button> -->
+                <button class="downloadCSV" mat-stroked-button>Download</button>
             </div>
         </div>
         <div class="tests">
             <div class="test">
                 <ng-container *ngIf="hexCode" >
                     <label class="label1" mat-header>Hex</label>
-                    <textarea matInput class="textArea" readonly id="text1"> {{hexCode}}</textarea> 
-                </ng-container>    
+                    <textarea matInput class="textArea" readonly id="text1"> {{hexCode}}</textarea>
+                </ng-container>
             </div>
             <div class="test">
                 <ng-container *ngIf="datacertificate" >
                     <label class="label2" mat-header>Base64</label>
                     <textarea matInput class="textArea" readonly > {{datacertificate.certificate.b64Der}}</textarea>
-                </ng-container>    
+                </ng-container>
             </div>
         </div>
-        <p style="font-size:14px; color: #595959; padding-left: 1em;padding-bottom: 1em;">Clients generally need it for X509 authentication.</p>
+        <p>
+          Clients generally need it for X509 authentication.
+        </p>
     </div>
-</div> 
+</div>

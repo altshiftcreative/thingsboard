@@ -13,6 +13,10 @@
     &:nth-child(1){
       width: 100%;
       margin-bottom: 1% !important;
+      @media (min-width: 768px) and (max-width: 1200px) {
+        width: 98% !important;
+        margin: 1% !important;
+      }
       form {
         display: flex;
         flex-direction: row;
@@ -22,6 +26,9 @@
           &:nth-child(4){
             width: 20%;
             margin: auto 2.5%;
+          }
+          @media (max-width: 767px){
+            width: 100%;
           }
         }
       }
