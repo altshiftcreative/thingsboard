@@ -13,9 +13,12 @@ const baseURL = '/snmp';
 })
 
 export class SnmpComponent implements OnInit {
+    selectedFile: any;
 
     constructor(private http: HttpClient) { }
     walkData: Object ;
+    fileContent: string [];
+    showData:boolean;
 
     setForm: FormGroup;
     getForm: FormGroup;
@@ -48,6 +51,19 @@ export class SnmpComponent implements OnInit {
 
     }
 
+
+   onFileSelect(event) {
+       this.showData=true;
+    this.selectedFile = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = reader.result.toString().trim();
+      this.fileContent = text.split(",");
+
+    };
+    reader.readAsText(this.selectedFile);
+  }
+
     onSubmit() {
 
         const params = new HttpParams().set('host', this.setForm.value.host)
@@ -55,7 +71,6 @@ export class SnmpComponent implements OnInit {
         .set('OID', this.setForm.value.OID)
         .set('val', this.setForm.value.val);
        const fullURL = `${baseURL}?${params.toString()}`;
-        console.log({ fullURL });
         this.http.post(fullURL,{responseType: 'text'}).subscribe((dta) => {})
     
     }
@@ -66,9 +81,7 @@ export class SnmpComponent implements OnInit {
         .set('community', this.getForm.value.community)
         .set('OID', this.getForm.value.OID)
        const fullURL = `${baseURL}?${params.toString()}`;
-        console.log({ fullURL });
      this.http.get(fullURL,{responseType: 'text'}).subscribe((dta) => {
-         console.log(dta)
          this.snmpValue=dta;
         
      })
@@ -76,15 +89,13 @@ export class SnmpComponent implements OnInit {
     }
     
     onSubmit3() {
-
+        this.showData=false;
         const params = new HttpParams().set('host', this.walkForm.value.host)
         .set('community', this.walkForm.value.community)
         .set('OID', this.walkForm.value.OID)
        const fullURL = `snmpWalk?${params.toString()}`;
-        console.log({ fullURL });
      this.http.get(fullURL).subscribe((dta) => {
          this.walkData=dta
-         console.log(this.walkData)
          
      })
 

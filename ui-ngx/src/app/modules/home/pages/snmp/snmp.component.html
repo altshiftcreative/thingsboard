@@ -27,6 +27,14 @@
             </div>
         </form>
     </div>
+
+    <div class="formContainer">
+        <label class="custom-file-upload">
+        <input type="file" (change)="onFileSelect($event)">
+        <i class="fa fa-cloud-upload"></i> Upload MIB file
+        </label>
+    </div>
+
     <div class="formContainer">
         <h3>Get</h3>
         <form [formGroup]="getForm" (ngSubmit)="onSubmit2()">
@@ -43,23 +51,30 @@
                         formControlName="community">
                 </mat-form-field>
             </div>
-            <div class="form-group" *ngIf="walkData">
+            <div class="form-group" *ngIf="fileContent && showData">
                 <mat-form-field appearance="standard">
-                    <mat-label>OID</mat-label>
+                    <mat-label>OID from MIB</mat-label>
                     <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
-                        <mat-option> 1.3.6.1.2.1.4.2.0</mat-option>
-                        <mat-option  *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+                        <mat-option *ngFor="let i of fileContent" [value]="i">{{i}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="form-group" *ngIf="!walkData">
+            <div class="form-group" *ngIf="walkData && !showData">
+                <mat-form-field appearance="standard">
+                    <mat-label>OID From walk</mat-label>
+                    <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
+                        <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group" *ngIf="!walkData && !fileContent">
                 <mat-form-field appearance="standard">
                     <mat-label>OID</mat-label>
                     <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
                 </mat-form-field>
             </div>
             <div class="form-group">
-                <mat-form-field appearance="standard" >
+                <mat-form-field appearance="standard">
                     <mat-label>{{snmpValue}}</mat-label>
                     <input matInput type="text" disabled>
                 </mat-form-field>
@@ -86,16 +101,23 @@
                         formControlName="community">
                 </mat-form-field>
             </div>
-            <div class="form-group" *ngIf="walkData">
+            <div class="form-group" *ngIf="fileContent && showData">
                 <mat-form-field appearance="standard">
-                    <mat-label>OID</mat-label>
+                    <mat-label>OID from MIB</mat-label>
                     <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
-                        <mat-option> 1.3.6.1.2.1.4.2.0</mat-option>
-                        <mat-option  *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+                        <mat-option *ngFor="let i of fileContent" [value]="i">{{i}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="form-group" *ngIf="!walkData">
+            <div class="form-group" *ngIf="walkData && !showData">
+                <mat-form-field appearance="standard">
+                    <mat-label>OID from Walk</mat-label>
+                    <mat-select id="OID" class="form-control" name="OID" formControlName="OID">
+                        <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group" *ngIf="!walkData && !fileContent">
                 <mat-form-field appearance="standard">
                     <mat-label>OID</mat-label>
                     <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
@@ -107,12 +129,13 @@
                     <input matInput type="text" id="val" class="form-control" name="val" formControlName="val">
                 </mat-form-field>
             </div>
-        
+
             <br>
             <div class="form-group">
-                <button mat-button cdkFocusInitial class="submit-button" type="submit"  [mat-dialog-close]>Set</button>
+                <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Set</button>
             </div>
         </form>
     </div>
- 
+
+
 </div>
