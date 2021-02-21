@@ -3,31 +3,30 @@
   </mat-progress-bar>
   <div class="shadow-div">
     <div class="header-of-table" mat-header>
-
       <div class="header-child search">
         <div class="search-div " *ngIf="devices">
-          <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z"
+              fill="#BFBFBF" />
+          </svg>
           <input class="search-input" type="text" placeholder="Search" (keyup)="liveSearch($event)" />
         </div>
-  
-  
         <div *ngIf="!devices" class="leftArrowBack" (click)="devices = true"><img
-            src="../../../../../../assets/img/leftArrow.svg"><span> &nbsp; Devices</span></div>
-  
+            src="../../../../../../assets/img/leftArrow.svg">
+            <span> &nbsp; Devices</span>
+        </div>
       </div>
-    
-
-
-        <div class="header-child">
-          <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp; <img
-            src="../../../../../../assets/img/action-arrow.svg"></button>
+      <div class="header-child">
+        <button mat-button [matMenuTriggerFor]="menu" class="menu-buttons" mat-raised-button> Actions &nbsp; | &nbsp;
+          <img src="../../../../../../assets/img/action-arrow.svg"></button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="operations('reboot')" style="width: 121px;"> <img
               src="../../../../../assets/img/reboot-icon.svg"> &nbsp; Reboot</button>
           <button mat-menu-item (click)="operations('reset')" style="width: 121px;"><img
               src="../../../../../assets/img/reset-icon.svg"> &nbsp; Reset</button>
-          <button mat-menu-item style="width: 121px;" (click)="pushFile()"><img
-              src="../../../../../assets/img/pushFile-icon.svg"> &nbsp; Push File</button>
+          <button mat-menu-item style="width: 121px;"><img src="../../../../../assets/img/pushFile-icon.svg"> &nbsp;
+            Push File</button>
           <button mat-menu-item (click)="operations('tag')" style="width: 121px;" *ngIf="devices"><img
               src="../../../../../assets/img/tag-icon.svg"> &nbsp; Tag</button>
           <button mat-menu-item (click)="operations('untag')" style="width: 121px;" *ngIf="devices"><img
@@ -35,25 +34,22 @@
           <button mat-menu-item (click)="operations('delete')" style="width: 121px;"><img
               src="../../../../../assets/img/delete-icon.svg"> &nbsp; Delete</button>
         </mat-menu>
-
         <button (click)="downloadCSV()" class="downloadCSV" mat-stroked-button>Download</button>
-        </div>
-
-
+      </div>
     </div>
     <div class="table" style="width: 100%;">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="devices">
 
         <!-- Position Column -->
         <ng-container matColumnDef="Device Name">
-  
+
           <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)">
             Device Name </th>
           <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes"
               (change)="toggleVisibility($event)" name="{{element['DeviceID.ID']['value'][0]}}">
             {{element['DeviceID.ID']['value'][0]}} </td>
         </ng-container>
-  
+
         <!-- Name Column -->
         <ng-container matColumnDef="SSID">
           <th mat-header-cell *matHeaderCellDef> SSID </th>
@@ -62,17 +58,17 @@
             <img src="../../../../../assets/img/write_img.svg"
               (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID']['value'][0],'InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID',element)"
               style="cursor: pointer;" />
-  
+
           </td>
         </ng-container>
-  
+
         <!-- Weight Column -->
         <ng-container matColumnDef="Last Inform">
           <th mat-header-cell *matHeaderCellDef> Last Inform </th>
           <td mat-cell *matCellDef="let element"> {{element['Events.Inform']['value'][0] | date: 'MMM d, y, h:mm:ss a'}}
           </td>
         </ng-container>
-  
+
         <!-- Symbol Column -->
         <ng-container matColumnDef="IP">
           <th mat-header-cell *matHeaderCellDef> IP </th>
@@ -82,10 +78,10 @@
             <img src="../../../../../assets/img/write_img.svg"
               (click)="updateValue(element['DeviceID.ID']['value'][0],element['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress']['value'][0],'InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress',element)"
               style="cursor: pointer;" />
-  
+
           </td>
         </ng-container>
-  
+
         <ng-container matColumnDef="Online">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let element">
@@ -99,9 +95,8 @@
           </td>
           <!-- <td mat-cell *ngIf="isPast"> Past 24 hours</td>
           <td mat-cell *ngIf="isOther"> Others</td> -->
-  
         </ng-container>
-  
+
         <ng-container matColumnDef="Tag">
           <th mat-header-cell *matHeaderCellDef> Tags </th>
           <td mat-cell *matCellDef="let element"><span *ngIf="element['Tags_Pure']"><span class="tag-span"
@@ -109,25 +104,25 @@
                 &nbsp;</span></span>
           </td>
         </ng-container>
-  
+
         <!-- Action Column -->
-  
+
         <ng-container matColumnDef="Action">
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
             <img src="../../../../../assets/img/actions-eye.svg" style="cursor: pointer;" />
-  
+
           </td>
         </ng-container>
-  
-  
+
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-  
+
       </table>
     </div>
 
-    
+
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="devices"></mat-paginator>
     <dialog-data-example-dialog *ngIf="!devices"></dialog-data-example-dialog>
   </div>

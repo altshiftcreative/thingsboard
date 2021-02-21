@@ -1,108 +1,107 @@
-<div class="mat-table-padding" style="border-radius: 8px; padding-top: 0px;margin-top: 1px;padding-left: 1.2em; padding-right: 1.2em;">
+<div class="mat-table-padding">
   <div class="shadow-div">
     <div mat-header class="header-of-table">
-
       <div class="search-div">
-        <img src="../../../../../assets/img/search-icon-asc.svg" style="cursor: pointer;"> &nbsp;
-        <input type="text" placeholder="Search" (keyup)="presetsSearch($event)" class="search-input"/>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z"
+            fill="#BFBFBF" />
+        </svg>
+        <input type="text" placeholder="Search" (keyup)="presetsSearch($event)" class="search-input" />
       </div>
-
-      <button (click)="openDialog()"
-        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF "
-        mat-stroked-button>New</button>
-      <div style=" width:15px; height:auto; display:inline-block;"></div>
-      <button (click)="downloadDevicePresetsDataCSV()"
-        style="width: 136px; height: 40px; border: 1px solid #1890FF; background: #FFFFFF; text-align-last: auto; color:#1890FF "
-        mat-stroked-button>Download</button>
-      <div style=" width:15px; height:auto; display:inline-block;"></div>
-      <button mat-stroked-button color="warn"
-        style="width: 136px; height: 40px; border: 1px solid #eb4224;  text-align-last: auto;"
-        (click)="deletePresets()">Delete</button>
-
+      <div class="btns">
+        <button (click)="openDialog()" mat-stroked-button>New</button>
+        <div style=" width:15px; height:auto; display:inline-block;"></div>
+        <button (click)="downloadDevicePresetsDataCSV()" mat-stroked-button>Download</button>
+        <div style=" width:15px; height:auto; display:inline-block;"></div>
+        <button mat-stroked-button class="warn" (click)="deletePresets()">Delete</button>
+      </div>
     </div>
+    <div class="table">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Name Column -->
+        <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)">
+            Name
+          </th>
+          <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes"
+              (change)="toggleVisibility($event)" name="{{element['_id']}}"> {{element['_id']}} </td>
+        </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="Name">
+        <!-- Channel Column -->
+        <ng-container matColumnDef="Channel">
+          <th mat-header-cell *matHeaderCellDef> Channel </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['channel']}}
+          </td>
+        </ng-container>
 
-        <th mat-header-cell *matHeaderCellDef> <input type="checkbox" id="select-all" (change)="checkAll($event)"> Name </th>
-        <td mat-cell *matCellDef="let element"> <input type="checkbox" class="checkboxes" (change)="toggleVisibility($event)"
-            name="{{element['_id']}}"> {{element['_id']}} </td>
-      </ng-container>
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Weight">
+          <th mat-header-cell *matHeaderCellDef> Weight </th>
+          <td mat-cell *matCellDef="let element"> {{element['weight']}}
 
-      <!-- Channel Column -->
-      <ng-container matColumnDef="Channel">
-        <th mat-header-cell *matHeaderCellDef> Channel </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['channel']}}
-        </td>
-      </ng-container>
+          </td>
+        </ng-container>
 
-      <!-- Weight Column -->
-      <ng-container matColumnDef="Weight">
-        <th mat-header-cell *matHeaderCellDef> Weight </th>
-        <td mat-cell *matCellDef="let element"> {{element['weight']}}
+        <!-- Schedule Column -->
+        <ng-container matColumnDef="Schedule">
+          <th mat-header-cell *matHeaderCellDef> Schedule </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['schedule']}}
+          </td>
+        </ng-container>
 
-        </td>
-      </ng-container>
+        <!-- Events Column -->
 
-      <!-- Schedule Column -->
-      <ng-container matColumnDef="Schedule">
-        <th mat-header-cell *matHeaderCellDef> Schedule </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['schedule']}}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="Events">
+          <th mat-header-cell *matHeaderCellDef> Events </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['events']}}
+          </td>
+        </ng-container>
 
-      <!-- Events Column -->
+        <!-- Precondition Column -->
+        Provision
+        <ng-container matColumnDef="Precondition">
+          <th mat-header-cell *matHeaderCellDef> Precondition </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['precondition']}}
+          </td>
+        </ng-container>
+        <!-- Provision Column -->
 
-      <ng-container matColumnDef="Events">
-        <th mat-header-cell *matHeaderCellDef> Events </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['events']}}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="Provision">
+          <th mat-header-cell *matHeaderCellDef> Provision </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['provision']}}
+          </td>
+        </ng-container>
+        <!-- Arguments Column -->
 
-      <!-- Precondition Column -->
-      Provision
-      <ng-container matColumnDef="Precondition">
-        <th mat-header-cell *matHeaderCellDef> Precondition </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['precondition']}}
-        </td>
-      </ng-container>
-      <!-- Provision Column -->
+        <ng-container matColumnDef="Arguments">
+          <th mat-header-cell *matHeaderCellDef> Arguments </th>
+          <td mat-cell *matCellDef="let element">
+            {{element['provisionArgs']}}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="Provision">
-        <th mat-header-cell *matHeaderCellDef> Provision </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['provision']}}
-        </td>
-      </ng-container>
-      <!-- Arguments Column -->
+        <!-- Action Column -->
 
-      <ng-container matColumnDef="Arguments">
-        <th mat-header-cell *matHeaderCellDef> Arguments </th>
-        <td mat-cell *matCellDef="let element">
-          {{element['provisionArgs']}}
-        </td>
-      </ng-container>
-
-      <!-- Action Column -->
-
-      <ng-container matColumnDef="Action">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
-          <img src="../../../../../assets/img/actions-eye.svg" style="cursor: pointer;" />
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="Action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" (click)="openDialog(element)">
+            <img src="../../../../../assets/img/actions-eye.svg" style="cursor: pointer;" />
+          </td>
+        </ng-container>
 
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
 
-    </table>
+      </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
 </div>

@@ -1,71 +1,59 @@
-.mat-table-padding{
-    margin: 10px;
-    padding: 10px;
+.mat-table-padding {
+  border-radius: 8px;
+  padding-top: 0px;
+  margin-top: 1px;
+  padding-left: 1.2em;
+  padding-right: 1.2em;
+  .shadow-div {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    .header-of-table {
+      margin: 0px;
+      padding: 33px;
+      background: white;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      @media (max-width: 800px) {
+        justify-content: center !important;
+      }
+      .search-div {
+        margin-bottom: 2%;
+        position: relative;
+        svg {
+          position: absolute;
+          margin: 10px;
+        }
+        input {
+          padding: 8px 28px;
+          border: 1px solid #d9d9d9;
+          outline: none;
+          &:focus {
+            border: 1px solid #1890ff;
+            outline: none;
+          }
+        }
+      }
+      .btns {
+        .menu-buttons {
+          text-align-last: auto;
+          z-index: 10;
+          margin-bottom: -4px;
+          width: 121px;
+          height: 40px;
+          border: 1px solid #1890ff;
+          background: #1890ff;
+          color: white;
+        }
+      }
+    }
+    .table {
+      @media (max-width: 800px) {
+        overflow-x: scroll;
+        height: auto;
+        width: auto;
+      }
+    }
+  }
 }
-
-.mat-progress{
-    z-index: 10; 
-    margin-bottom: -4px; 
-    width: 100%;
-}
-
-.shadow-div{
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-}
-
-.header-of-table{
-  margin: 0px;
-  padding: 33px;
-  width: 100%;
-  float: right;
-  text-align-last: end;
-  background: white;
-}
-
-.search-div{
-    float: left;
-    text-align-last: auto;
-    margin-left: 30px;
-    margin-top: 10px;
-    height: 40px;
-    padding: 8px 12px 8px 7px;
-    border-radius: 4px;
-    box-shadow: inset 1px 0px 0px #D9D9D9, inset 0px 1px 0px #D9D9D9, inset -1px 0px 0px #D9D9D9, inset 0px -1px 0px #D9D9D9;
-}
-
-.search-input{
-    position: static;
-    width: 225px;
-    height: 24px;
-    left: 35px;
-    top: 8px;
-    font-family: SF Pro Display;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;    
-    display: flex;
-    align-items: center;    
-    color: #000000;    
-    flex: none;
-    order: 1;
-    flex-grow: 1;
-    border: none;
-    display: inline;
-    outline: none;
-    border-bottom-style: inset;
-}
-
-
-.menu-buttons{
-    text-align-last: auto;
-    z-index: 10; margin-bottom: -4px;
-    width: 121px; 
-    height: 40px; 
-    border: 1px solid #1890FF; 
-    background: #1890FF; 
-    color: white;
-}
-
-
-        

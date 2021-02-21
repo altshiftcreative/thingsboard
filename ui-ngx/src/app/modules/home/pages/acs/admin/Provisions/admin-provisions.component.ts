@@ -17,8 +17,7 @@ export interface Task {
 @Component({
     selector: 'admin-provisions',
     templateUrl: './admin-provisions.component.html',
-
-
+    styleUrls: ['./provisions-dialog.component.scss']
 })
 
 export class AcsAdminProvisionsComponent implements OnInit, AfterViewInit {
