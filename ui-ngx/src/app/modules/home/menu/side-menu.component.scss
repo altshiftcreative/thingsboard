@@ -17,36 +17,31 @@
 :host {
   width: 100%;
 }
-
 :host ::ng-deep {
-
   .tb-side-menu,
   .tb-side-menu ul {
     padding: 0;
     margin-top: 0;
     list-style: none;
   }
-
-  .tb-side-menu > li {
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
-  }
-
   a.mat-button {
     display: flex;
     overflow: hidden;
     line-height: 40px;
     border-radius: 0;
     &:hover {
-      border-bottom: none;
-      background-color: rgba(255,255,255,0.08);
+      background-color: #fafafa;
     }
     &:focus {
       border-bottom: none;
     }
     &.tb-active {
       font-weight: 500;
-      color: #1BA2E8;
-      background-color: #F5F5F5
+      color: #1890ff;
+      background: #fafafa;
+      border-left: 5px solid #1890ff;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     .mat-button-wrapper {
@@ -66,6 +61,27 @@
           padding-bottom: 12px;
         }
       }
+    }
+  }
+  .tb-side-menu {
+    li {
+      tb-menu-link {
+        a {
+          color: #bfbfbf;
+          font-size: 14px;
+          font-weight: 400;
+          padding-top: 7px !important;
+          padding-bottom: 7px !important;
+        }
+      }
+    }
+    p {
+      font-size: 14px;
+      color: #8c8c8c;
+      font-weight: 400;
+      padding-left: 12px;
+      margin-top: 18px;
+      margin-bottom: 0;
     }
   }
 }

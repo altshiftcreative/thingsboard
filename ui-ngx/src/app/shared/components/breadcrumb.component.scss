@@ -36,8 +36,8 @@
 
     a {
       border: none;
-      opacity: .75;
-      transition: opacity .35s;
+      opacity: 0.75;
+      transition: opacity 0.35s;
       color: inherit;
       text-decoration: none;
       outline: none;
@@ -52,6 +52,29 @@
 
     .divider {
       padding: 0 20px;
+    }
+  }
+}
+.tb-breadcrumb {
+  span {
+    span {
+      font-size: 25px;
+      line-height: 28px;
+      font-weight: 600;
+      color: #003a8c;
+      p {
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 400;
+        color: #8c8c8c;
+        margin: 5px;
+      }
+      mat-icon {
+        color: #1890ff;
+        height: 31px;
+        width: 31px;
+        font-size: 30px;
+      }
     }
   }
 }

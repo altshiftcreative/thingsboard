@@ -1,71 +1,123 @@
-.container{
-    padding: 15px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: auto;
-    .formContainer{
-        background-color: #fff;
-        width: 46%;
-        margin: 0 1%;
-        margin-bottom: 1%;
-        border-radius: 15px;
-        padding:0 0 15px;
-        h3{
-            background-color: #ccc;
-            padding: 15px;
-            font-size: 20px;
-            margin-top: 0;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+.container {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: auto;
+  .formContainer {
+    background-color: #fff;
+    width: 44%;
+    margin: 1% 3%;
+    border-radius: 15px;
+    padding: 0 0 20px;
+    &:nth-child(1),
+    &:nth-child(2) {
+      width: 100%;
+      margin-bottom: 1% !important;
+      @media (min-width: 768px) and (max-width: 1200px) {
+        width: 98% !important;
+        margin: 1% !important;
+      }
+      form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        div {
+          width: 25%;
+          &:nth-child(4) {
+            width: 20%;
+            margin: auto 2.5%;
+          }
+          @media (max-width: 767px) {
+            width: 100%;
+          }
         }
-        .form-group{
-            display: grid;
-            padding: 10px;
-            mat-label{
-                color: grey;
-            }
-            input{
-                width: 80%;
-                &:hover{
-                    border-bottom: #1890FF;
-                }
-            }
-            .submit-button{
-                background-color: #1890FF;
-                color: #fff;
-                font-size: 18px;
-                width: 100%;
-                border-radius: 15px;
-                margin: auto;
-                z-index: 10; 
-                margin-bottom: -4px;
-                &:hover{
-                    background-color: #fff;
-                    color: #1890FF;
-                }
-            }
-        }
-        @media (max-width: 767px){
-            width: 98%;
-            margin: 1%;
-        }
+      }
     }
-}
-input[type="file"] {
-    display: none;
-}
-.custom-file-upload {
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
+    &:nth-child(2) {
+      div{
+        label {
+          padding: 20px;
+          color: grey;
+          input{
+            outline: none;
+            &:focus{
+              border: none;
+            }
+          }
+          i {
+            font-size: 18px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    h3 {
 
-    margin-top: 25%;
-    margin-left: 39%;
-    padding: 5%;
-    width: 100;
-    color: blue;
-    border-color: aliceblue;
-    border-radius: 5%;
-    background-color: aliceblue;
+      background-color: #ccc;
+      color: #fff;
+      padding: 15px;
+      font-size: 22px;
+      margin-top: 0;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+    .form-group {
+      display: grid;
+      padding: 10px 15px;
+      margin-bottom: 1%;
+      mat-label {
+        color: grey;
+      }
+      .form-control {
+        width: 95%;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        padding: 10px;
+        margin: auto;
+        padding: 12px;
+        background: #f7f7f7;
+        box-sizing: border-box;
+        outline: none;
+        &:focus {
+          border: 2px solid #1890ff;
+          outline: none;
+        }
+      }
+      ::placeholder {
+        color: #a5a5a5 !important;
+      }
+      mat-label {
+        font-size: 16px;
+        color: #8a8a89;
+        padding: 5px;
+        margin-left: 3%;
+        margin-bottom: 1%;
+      }
+      .submit-button {
+        background-color: #1890ff;
+        color: #fff;
+        font-size: 18px;
+        width: 100%;
+        border-radius: 20px;
+        margin: auto;
+        z-index: 10;
+        margin-bottom: -4px;
+        padding: 8px 5px;
+        &:hover {
+          background-color: #eee;
+          color: #1890ff;
+          border: 2px solid #1890ff;
+        }
+      }
+    }
+    @media (max-width: 767px) {
+      width: 98%;
+      margin: 1%;
+    }
+    @media (min-width: 768px) and (max-width: 1200px) {
+      width: 48% !important;
+      margin: 1% !important;
+    }
+  }
 }
