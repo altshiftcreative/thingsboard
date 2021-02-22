@@ -76,7 +76,7 @@ export class SnmpComponent implements OnInit {
     }
 
     onSubmit2() {
-
+        
         const params = new HttpParams().set('host', this.getForm.value.host)
         .set('community', this.getForm.value.community)
         .set('OID', this.getForm.value.OID)
@@ -85,6 +85,10 @@ export class SnmpComponent implements OnInit {
          this.snmpValue=dta;
         
      })
+     console.log("host",this.getForm.value.host)
+     console.log("host",this.getForm.value.community)
+     console.log("host",this.getForm.value.OID)
+
 
     }
     

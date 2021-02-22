@@ -96,8 +96,13 @@
           <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
       </div>
       <div class="form-group">
-        <mat-label>{{snmpValue}}</mat-label>
-          <input matInput type="text" disabled class="form-control" placeholder="Value">
+
+        <mat-form-field appearance="standard">
+          <mat-label>{{snmpValue}}</mat-label>
+          <input matInput type="text" disabled>
+      </mat-form-field>
+
+
       </div>
       <br>
       <div class="form-group">
