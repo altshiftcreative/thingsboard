@@ -48,12 +48,14 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
             this.clientsArray = clientsData;
         })
     }
-    async deletClients(id) {
+    
+    deletClients(id) {
         let confirmation = confirm('Deleting client. Are you sure?');
         if (confirmation == true) {
-            await this.http.delete(this.lwService.lwm2mBaseUri + "/api/security/clients/" + id).toPromise().then((dta) => { })
-            this.getClients();
-            this.lwService.progress('DELETED', true);
+            this.http.delete(this.lwService.lwm2mBaseUri + "/api/security/clients/" + id).toPromise().then((dta) => { 
+                this.getClients();
+                this.lwService.progress('DELETED', true);
+            })
         }
 
     }
