@@ -1,70 +1,115 @@
 <div class="container">
-    <div class="formContainer">
-        <h3>Set</h3>
-        <form [formGroup]="setForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label for="host">host</mat-label>
-                    <input matInput type="text" id="host" class="form-control" name="host" formControlName="host">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>Community</mat-label>
-                    <input matInput type="text" id="community" class="form-control" name="community"
-                        formControlName="community">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>OID</mat-label>
-                    <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>Value</mat-label>
-                    <input matInput type="text" id="val" class="form-control" name="val" formControlName="val">
-                </mat-form-field>
-            </div>
-            <br>
-            <div class="form-group">
-                <button mat-button cdkFocusInitial class="submit-button" type="submit"  [mat-dialog-close]>Set</button>
-            </div>
-        </form>
+  <div class="formContainer">
+    <h3>Walk</h3>
+    <form [formGroup]="walkForm" (ngSubmit)="onSubmit3()">
+      <div class="form-group">
+        <mat-label for="host">Host</mat-label>
+        <input matInput type="text" id="host" class="form-control" name="host" formControlName="host" placeholder="Host">
+      </div>
+      <div class="form-group">
+        <mat-label>Community</mat-label>
+        <input matInput type="text" id="community" class="form-control" name="community" formControlName="community" placeholder="Community">
+      </div>
+      <div class="form-group">
+        <mat-label>OID</mat-label>
+        <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+      </div>
+      <br>
+      <div class="form-group">
+        <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Walk</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="formContainer">
+    <h3>Upload MIB File</h3>
+    <div>
+      <label class="custom-file-upload">
+        <input type="file" class="btn-2" (change)="onFileSelect($event)">
+        <i class="fa fa-cloud-upload"></i> Upload MIB file
+      </label>
     </div>
-    <div class="formContainer">
-        <h3>Get</h3>
-        <form [formGroup]="setForm" (ngSubmit)="onSubmit2()">
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label for="host">host</mat-label>
-                    <input matInput type="text" id="host" class="form-control" name="host" formControlName="host">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>Community</mat-label>
-                    <input matInput type="text" id="community" class="form-control" name="community"
-                        formControlName="community">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard">
-                    <mat-label>OID</mat-label>
-                    <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID">
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <mat-form-field appearance="standard" >
-                    <mat-label>{{snmpValue}}</mat-label>
-                    <input matInput type="text" disabled>
-                </mat-form-field>
-            </div>
-            <br>
-            <div class="form-group">
-                <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Get</button>
-            </div>
-        </form>
-    </div>
+  </div>
+
+  <div class="formContainer">
+    <h3>Set</h3>
+    <form [formGroup]="setForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <mat-label for="host">host</mat-label>
+          <input matInput type="text" id="host" class="form-control" name="host" formControlName="host" placeholder="Host">
+      </div>
+      <div class="form-group">
+        <mat-label>Community</mat-label>
+          <input matInput type="text" id="community" class="form-control" name="community" formControlName="community" placeholder="Community">
+      </div>
+      <div class="form-group" *ngIf="fileContent && showData">
+        <mat-label>OID from MIB</mat-label>
+          <mat-select id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+            <mat-option *ngFor="let i of fileContent" [value]="i">{{i}}</mat-option>
+          </mat-select>
+      </div>
+      <div class="form-group" *ngIf="walkData && !showData">
+        <mat-label>OID from Walk</mat-label>
+          <mat-select id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+            <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+          </mat-select>
+      </div>
+      <div class="form-group" *ngIf="!walkData && !fileContent">
+        <mat-label>OID</mat-label>
+        <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+      </div>
+      <div class="form-group">
+        <mat-label>Value</mat-label>
+        <input matInput type="text" id="val" class="form-control" name="val" formControlName="val" placeholder="Value">
+      </div>
+      <div class="form-group">
+        <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Set</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="formContainer">
+    <h3>Get</h3>
+    <form [formGroup]="getForm" (ngSubmit)="onSubmit2()">
+      <div class="form-group">
+        <mat-label for="host">host</mat-label>
+          <input matInput type="text" id="host" class="form-control" name="host" formControlName="host" placeholder="Host">
+      </div>
+      <div class="form-group">
+        <mat-label>Community</mat-label>
+          <input matInput type="text" id="community" class="form-control" name="community" formControlName="community" placeholder="Community">
+      </div>
+      <div class="form-group" *ngIf="fileContent && showData">
+        <mat-label>OID from MIB</mat-label>
+          <mat-select id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+            <mat-option *ngFor="let i of fileContent" [value]="i">{{i}}</mat-option>
+          </mat-select>
+      </div>
+      <div class="form-group" *ngIf="walkData && !showData">
+        <mat-label>OID From walk</mat-label>
+          <mat-select id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+            <mat-option *ngFor="let i of walkData" [value]="i">{{i}}</mat-option>
+          </mat-select>
+      </div>
+      <div class="form-group" *ngIf="!walkData && !fileContent">
+        <mat-label>OID</mat-label>
+          <input matInput type="text" id="OID" class="form-control" name="OID" formControlName="OID" placeholder="OID">
+      </div>
+      <div class="form-group">
+
+        <mat-form-field appearance="standard">
+          <mat-label>{{snmpValue}}</mat-label>
+          <input matInput type="text" disabled>
+      </mat-form-field>
+
+
+      </div>
+      <br>
+      <div class="form-group">
+        <button mat-button cdkFocusInitial class="submit-button" type="submit" [mat-dialog-close]>Get</button>
+      </div>
+    </form>
+  </div>
+
+
 </div>

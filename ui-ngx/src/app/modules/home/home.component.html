@@ -16,83 +16,76 @@
 
 -->
 <mat-sidenav-container>
-  <mat-sidenav #sidenav class="tb-site-sidenav mat-elevation-z2"
-               (click)="sidenavClicked()"
-               [mode]="sidenavMode"
-               [opened]="sidenavOpened && !forceFullscreen">
+  <mat-sidenav #sidenav class="tb-site-sidenav mat-elevation-z2" (click)="sidenavClicked()" [mode]="sidenavMode"
+    [opened]="sidenavOpened && !forceFullscreen">
     <header class="tb-nav-header">
       <mat-toolbar style="background-color: #ffffff" class="tb-nav-header-toolbar">
         <div fxFlex="auto" fxLayout="row">
-          <img [src]="logo"
-               aria-label="logo" class="tb-logo-title"/>
+          <img [src]="logo" aria-label="logo" class="tb-logo-title" />
         </div>
       </mat-toolbar>
     </header>
-    <mat-toolbar style="background-color: #ffffff;color:#969696" fxFlex="0%" class="tb-side-menu-toolbar" fxLayout="column" role="navigation">
+    <mat-toolbar style="background-color: #ffffff;color:#969696" fxFlex="0%" class="tb-side-menu-toolbar"
+      fxLayout="column" role="navigation">
       <tb-side-menu></tb-side-menu>
     </mat-toolbar>
   </mat-sidenav>
   <mat-sidenav-content>
     <div fxLayout="column" role="main" style="height: 100%;">
       <mat-toolbar fxLayout="row" class="mat-elevation-z1 tb-primary-toolbar toolbar">
-
-        <button [fxShow]="!forceFullscreen" mat-icon-button id="main"
-                [ngClass]="{'tb-invisible': displaySearchMode()}"
-                (click)="sidenav.toggle()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 18H15C15.55 18 16 17.55 16 17C16 16.45 15.55 16 15 16H4C3.45 16 3 16.45 3 17C3 17.55 3.45 18 4 18ZM4 13H12C12.55 13 13 12.55 13 12C13 11.45 12.55 11 12 11H4C3.45 11 3 11.45 3 12C3 12.55 3.45 13 4 13ZM3 7C3 7.55 3.45 8 4 8H15C15.55 8 16 7.55 16 7C16 6.45 15.55 6 15 6H4C3.45 6 3 6.45 3 7ZM20.3 14.88L17.42 12L20.3 9.12C20.69 8.73 20.69 8.1 20.3 7.71C19.91 7.32 19.28 7.32 18.89 7.71L15.3 11.3C14.91 11.69 14.91 12.32 15.3 12.71L18.89 16.3C19.28 16.69 19.91 16.69 20.3 16.3C20.68 15.91 20.69 15.27 20.3 14.88Z" fill="#85A5FF"/>
-              <rect x="3" y="2" width="17" height="2" rx="1" fill="#85A5FF"/>
-              <rect x="3" y="20" width="17" height="2" rx="1" fill="#85A5FF"/>
-            </svg>
+        <button [fxShow]="!forceFullscreen" mat-icon-button id="main" [ngClass]="{'tb-invisible': displaySearchMode()}"
+          (click)="sidenav.toggle()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 18H15C15.55 18 16 17.55 16 17C16 16.45 15.55 16 15 16H4C3.45 16 3 16.45 3 17C3 17.55 3.45 18 4 18ZM4 13H12C12.55 13 13 12.55 13 12C13 11.45 12.55 11 12 11H4C3.45 11 3 11.45 3 12C3 12.55 3.45 13 4 13ZM3 7C3 7.55 3.45 8 4 8H15C15.55 8 16 7.55 16 7C16 6.45 15.55 6 15 6H4C3.45 6 3 6.45 3 7ZM20.3 14.88L17.42 12L20.3 9.12C20.69 8.73 20.69 8.1 20.3 7.71C19.91 7.32 19.28 7.32 18.89 7.71L15.3 11.3C14.91 11.69 14.91 12.32 15.3 12.71L18.89 16.3C19.28 16.69 19.91 16.69 20.3 16.3C20.68 15.91 20.69 15.27 20.3 14.88Z"
+              fill="#85A5FF" />
+            <rect x="3" y="2" width="17" height="2" rx="1" fill="#85A5FF" />
+            <rect x="3" y="20" width="17" height="2" rx="1" fill="#85A5FF" />
+          </svg>
         </button>
         <div class="space"></div>
-        <button [fxShow]="forceFullscreen" mat-icon-button
-              [ngClass]="{'tb-invisible': displaySearchMode()}"
-              (click)="goBack()">
+        <button [fxShow]="forceFullscreen" mat-icon-button [ngClass]="{'tb-invisible': displaySearchMode()}"
+          (click)="goBack()">
           <mat-icon class="material-icons">arrow_back</mat-icon>
         </button>
-
-        <button mat-icon-button
-                [ngClass]="{'tb-invisible': !displaySearchMode()}"
-                (click)="closeSearch()">
+        <button mat-icon-button [ngClass]="{'tb-invisible': !displaySearchMode()}" (click)="closeSearch()">
           <mat-icon class="material-icons">arrow_back</mat-icon>
         </button>
-
         <div class="searchBox">
           <button mat-icon-button (click)="openSearch()">
             <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z" fill="#BFBFBF"/>
+              <path
+                d="M9.625 8.5H9.0325L8.8225 8.2975C9.5575 7.4425 10 6.3325 10 5.125C10 2.4325 7.8175 0.25 5.125 0.25C2.4325 0.25 0.25 2.4325 0.25 5.125C0.25 7.8175 2.4325 10 5.125 10C6.3325 10 7.4425 9.5575 8.2975 8.8225L8.5 9.0325V9.625L12.25 13.3675L13.3675 12.25L9.625 8.5ZM5.125 8.5C3.2575 8.5 1.75 6.9925 1.75 5.125C1.75 3.2575 3.2575 1.75 5.125 1.75C6.9925 1.75 8.5 3.2575 8.5 5.125C8.5 6.9925 6.9925 8.5 5.125 8.5Z"
+                fill="#BFBFBF" />
             </svg>
           </button>
-          <input #searchInput matInput [(ngModel)]="searchText"
-                placeholder="{{ 'common.enter-search' | translate }}"/>
+          <input #searchInput matInput [(ngModel)]="searchText" placeholder="{{ 'common.enter-search' | translate }}" />
         </div>
-
         <svg width="16" height="19" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5.5075 14.7575C5.5075 15.5825 6.175 16.25 7 16.25C7.825 16.25 8.4925 15.5825 8.4925 14.7575H5.5075ZM7 3.5C9.07 3.5 10.75 5.18 10.75 7.25V12.5H3.25V7.25C3.25 5.18 4.93 3.5 7 3.5ZM7 0.125C6.3775 0.125 5.875 0.6275 5.875 1.25V2.1275C3.52 2.6375 1.75 4.7375 1.75 7.25V11.75L0.25 13.25V14H13.75V13.25L12.25 11.75V7.25C12.25 4.7375 10.48 2.6375 8.125 2.1275V1.25C8.125 0.6275 7.6225 0.125 7 0.125Z" fill="#85A5FF"/>
+          <path
+            d="M5.5075 14.7575C5.5075 15.5825 6.175 16.25 7 16.25C7.825 16.25 8.4925 15.5825 8.4925 14.7575H5.5075ZM7 3.5C9.07 3.5 10.75 5.18 10.75 7.25V12.5H3.25V7.25C3.25 5.18 4.93 3.5 7 3.5ZM7 0.125C6.3775 0.125 5.875 0.6275 5.875 1.25V2.1275C3.52 2.6375 1.75 4.7375 1.75 7.25V11.75L0.25 13.25V14H13.75V13.25L12.25 11.75V7.25C12.25 4.7375 10.48 2.6375 8.125 2.1275V1.25C8.125 0.6275 7.6225 0.125 7 0.125Z"
+            fill="#85A5FF" />
         </svg>
-
-        <button *ngIf="fullscreenEnabled" [fxShow]="!displaySearchMode()"
-                mat-icon-button fxHide.lt-md (click)="toggleFullscreen()">
+        <button *ngIf="fullscreenEnabled" [fxShow]="!displaySearchMode()" mat-icon-button fxHide.lt-md
+          (click)="toggleFullscreen()">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1.83335 7.66699H0.166687V11.8337H4.33335V10.167H1.83335V7.66699ZM0.166687 4.33366H1.83335V1.83366H4.33335V0.166992H0.166687V4.33366ZM10.1667 10.167H7.66669V11.8337H11.8334V7.66699H10.1667V10.167ZM7.66669 0.166992V1.83366H10.1667V4.33366H11.8334V0.166992H7.66669Z" fill="#85A5FF"/>
+            <path
+              d="M1.83335 7.66699H0.166687V11.8337H4.33335V10.167H1.83335V7.66699ZM0.166687 4.33366H1.83335V1.83366H4.33335V0.166992H0.166687V4.33366ZM10.1667 10.167H7.66669V11.8337H11.8334V7.66699H10.1667V10.167ZM7.66669 0.166992V1.83366H10.1667V4.33366H11.8334V0.166992H7.66669Z"
+              fill="#85A5FF" />
             {{ isFullscreen() ? 'fullscreen_exit' : 'fullscreen' }}
           </svg>
         </button>
-
         <tb-user-menu [displayUserInfo]="!displaySearchMode()"></tb-user-menu>
-
       </mat-toolbar>
 
       <div class="pageActive">
-        <tb-breadcrumb [fxShow]="!displaySearchMode()"
-         [activeComponent]="activeComponent" class="mat-toolbar-tools">
+        <tb-breadcrumb [fxShow]="!displaySearchMode()" [activeComponent]="activeComponent" class="mat-toolbar-tools">
         </tb-breadcrumb>
-        <p>Overview Dashboard</p>
+        <p></p>
       </div>
 
       <mat-progress-bar color="" style="z-index: 10; margin-bottom: -4px; width: 100%;" mode="indeterminate"
-                        *ngIf="isLoading$ | async">
+        *ngIf="isLoading$ | async">
       </mat-progress-bar>
 
       <div fxFlex fxLayout="column" tb-toast class="tb-main-content">

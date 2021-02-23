@@ -21,7 +21,7 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
     dataModelComponent: Boolean = false;
     clientsCounter: number;
     clientEndpoint: string;
-    constructor(private http: HttpClient, public dialog: MatDialog, private lwService: LwService) { }
+    constructor(private http: HttpClient, public dialog: MatDialog, private lwService: LwService) {}
 
     ngAfterViewInit(): void {
         this.getClients();
@@ -33,8 +33,8 @@ export class LwClientSecurityConfigComponent implements OnInit, AfterViewInit {
 
     openDialog() {
         this.dialog.open(newConfigDialog, {
-            height: '450px',
-            width: '240px',
+            height: '62%',
+            width: '50%',
         }).afterClosed().subscribe((clientsData) => {
             this.getClients();
         })

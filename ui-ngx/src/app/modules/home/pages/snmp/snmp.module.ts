@@ -5,15 +5,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatRippleModule } from '@angular/material/core';
+import { MatOptionModule, MatRippleModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     SnmpComponent,
-
-   
-
   ],
   imports: [
     SnmpRoutingModule,
@@ -23,7 +23,9 @@ import { MatRippleModule } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatRippleModule,
-
+    MatSelectModule,
+    MatOptionModule,
+    CommonModule,
     
   ],
   exports:[
@@ -32,8 +34,7 @@ import { MatRippleModule } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatRippleModule,
-
 ]
-  
+
 })
 export class SnmpModule { }

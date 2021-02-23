@@ -18,7 +18,7 @@
 <div class="card-container">
   <div class="sections" *ngFor="let section of homeSections$| async">
     <div class="section-card">
-      <h3 translate> {{section.name}} </h3>
+      <h3 translate class="sec-title"> {{section.name}} </h3>
       <div class="card-content">
         <div class="card-sections" *ngFor="let place of section.places">
           <a routerLink="{{place.path}}">
