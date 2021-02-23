@@ -97,7 +97,7 @@ export class SnmpComponent implements OnInit {
         const params = new HttpParams().set('host', this.walkForm.value.host)
         .set('community', this.walkForm.value.community)
         .set('OID', this.walkForm.value.OID)
-       const fullURL = `snmpWalk?${params.toString()}`;
+       const fullURL = `snmp/walk?${params.toString()}`;
      this.http.get(fullURL).subscribe((dta) => {
          this.walkData=dta
          
