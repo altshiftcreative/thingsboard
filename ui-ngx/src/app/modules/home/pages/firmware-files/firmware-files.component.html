@@ -1,0 +1,13 @@
+<input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+
+<!-- <div class="file-upload">
+
+  {{fileName || "No file uploaded yet."}}
+
+</div> -->
+
+<a *ngFor="let i of pathsArray" [href]="sanitization.bypassSecurityTrustUrl(i.file)" style="line-height: 1em;
+display: inline-block;
+text-decoration: none;
+padding: 120px;
+margin: 42px;"> {{i.id}} </a>

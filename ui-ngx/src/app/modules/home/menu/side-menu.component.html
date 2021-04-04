@@ -36,7 +36,7 @@
   <p>Protocols</p>
   <ng-container *ngFor="let section of menuSections$ | async; let i = index; trackBy: trackByMenuSection" z
     [ngSwitch]="section.type === 'link'">
-    <li *ngIf="i > 7 && i <= 10">
+    <li *ngIf="i > 7 && i <= 11">
       <tb-menu-link *ngSwitchCase="true" [section]="section"></tb-menu-link>
       <tb-menu-toggle *ngSwitchCase="false" [section]="section"></tb-menu-toggle>
     </li>
@@ -45,7 +45,7 @@
   <p>Observing</p>
   <ng-container *ngFor="let section of menuSections$ | async; let i = index; trackBy: trackByMenuSection" z
     [ngSwitch]="section.type === 'link'">
-    <li *ngIf="i > 10">
+    <li *ngIf="i > 11">
       <tb-menu-link *ngSwitchCase="true" [section]="section"></tb-menu-link>
       <tb-menu-toggle *ngSwitchCase="false" [section]="section"></tb-menu-toggle>
     </li>

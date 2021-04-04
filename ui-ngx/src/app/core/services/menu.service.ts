@@ -277,6 +277,13 @@ export class MenuService {
       },
       {
         id: guid(),
+        name: 'Firmware',
+        type: 'link',
+        path: '/firmware',
+        icon: 'cloud_queue'
+      },
+      {
+        id: guid(),
         name: 'TR-69',
         type: 'link',
         path: '/acs',

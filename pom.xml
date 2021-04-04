@@ -122,6 +122,7 @@
         <module>application</module>
         <module>msa</module>
         <module>rest-client</module>
+        <module>BW-APIs</module>
     </modules>
 
     <profiles>
@@ -798,6 +799,13 @@
                 <artifactId>dao-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.thingsboard.common</groupId>
+                <artifactId>BW-APIs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.thingsboard.rule-engine</groupId>
                 <artifactId>rule-engine-api</artifactId>

@@ -40,6 +40,7 @@ import { CookieService } from 'ngx-cookie-service';
 import {ChartsModule} from 'ng2-charts'
 import { LwModule } from './LwM2M/Lw.module';
 import { SnmpModule } from './snmp/snmp.module';
+import { FirmwareModule } from './firmware-files/firmware-files.module';
 
 @NgModule({
   imports:[ChartsModule],
@@ -63,7 +64,8 @@ import { SnmpModule } from './snmp/snmp.module';
     UserModule,
     ACSModule,
     LwModule,
-    SnmpModule
+    SnmpModule,
+    FirmwareModule
   ],
   providers: [
     {
