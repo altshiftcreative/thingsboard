@@ -21,17 +21,12 @@ const wsForwardUrl = "ws://localhost:8080";
 const lwm2mUrl = "http://localhost:9090";
 const tr69Url = "http://localhost:3000";
 const snmpUrl = "http://localhost:8888";
-const firmware = "http://localhost:8086";
 
 const ruleNodeUiforwardUrl = forwardUrl;
 
 const PROXY_CONFIG = {
   "/lwm2m": {
     target: lwm2mUrl,
-    secure: false,
-  },
-  "/fwf": {
-    target: firmware,
     secure: false,
   },
   "/tr69": {

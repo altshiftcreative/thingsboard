@@ -1,11 +1,9 @@
-package org.thingsboard.server.firmware.model.DTO;
+package org.thingsboard.server.asc.model.DTO;
 
 
-import org.thingsboard.server.firmware.model.FirmwareFile;
+import org.thingsboard.server.asc.model.FirmwareFile;
 
-import java.sql.Blob;
 import java.util.Date;
-import java.time.Instant;
 
 public class FirmwareFileDTO {
 
@@ -19,6 +17,8 @@ public class FirmwareFileDTO {
     private String checksum;
     private Date creationDate;
     private String sampleUrl;
+    private String fakeUrl;
+    private String fileName;
 
     public Date getCreationDate() {
         return creationDate;
@@ -102,6 +102,22 @@ public class FirmwareFileDTO {
         this.sampleUrl = sampleUrl;
     }
 
+    public String getFakeUrl() {
+        return fakeUrl;
+    }
+
+    public void setFakeUrl(String fakeUrl) {
+        this.fakeUrl = fakeUrl;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public String toString() {
         return "FirmwareFileDTO{" +
@@ -115,6 +131,8 @@ public class FirmwareFileDTO {
                 ", checksum='" + checksum + '\'' +
                 ", creationDate=" + creationDate +
                 ", sampleUrl='" + sampleUrl + '\'' +
+                ", fakeUrl='" + fakeUrl + '\'' +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 
@@ -130,6 +148,8 @@ public class FirmwareFileDTO {
         entity.setChecksum(getChecksum());
         entity.setCreationDate(getCreationDate());
         entity.setSampleUrl(getSampleUrl());
+        entity.setFakeUrl(getFakeUrl());
+        entity.setFileName(getFileName());
         return entity;
     }
 }

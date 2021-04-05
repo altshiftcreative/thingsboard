@@ -1,12 +1,10 @@
-package org.thingsboard.server.firmware.model;
+package org.thingsboard.server.asc.model;
 
 import lombok.Data;
-import org.thingsboard.server.firmware.model.DTO.FirmwareFileDTO;
+import org.thingsboard.server.asc.model.DTO.FirmwareFileDTO;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.Date;
-import java.time.Instant;
 
 @Data
 @Entity
@@ -43,6 +41,13 @@ public class FirmwareFile {
 
     @Column(name = "sampleurl")
     private String sampleUrl;
+
+    @Column(name = "fakeurl")
+    private String fakeUrl;
+
+    @Column(name = "filename")
+    private String fileName;
+
 
     public String getSampleUrl() {
         return sampleUrl;
@@ -126,6 +131,22 @@ public class FirmwareFile {
         this.checksum = checksum;
     }
 
+    public String getFakeUrl() {
+        return fakeUrl;
+    }
+
+    public void setFakeUrl(String fakeUrl) {
+        this.fakeUrl = fakeUrl;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public String toString() {
         return "FirmwareFile{" +
@@ -139,6 +160,8 @@ public class FirmwareFile {
                 ", checksum='" + checksum + '\'' +
                 ", creationDate=" + creationDate +
                 ", sampleUrl='" + sampleUrl + '\'' +
+                ", fakeUrl='" + fakeUrl + '\'' +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 
@@ -154,6 +177,8 @@ public class FirmwareFile {
         dto.setChecksum(getChecksum());
         dto.setCreationDate(getCreationDate());
         dto.setSampleUrl(getSampleUrl());
+        dto.setFakeUrl(getFakeUrl());
+        dto.setFileName(getFileName());
         return dto;
     }
 }

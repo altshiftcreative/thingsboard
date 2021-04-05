@@ -32,6 +32,7 @@ import java.util.Arrays;
 @EnableSwagger2
 @EnableScheduling
 @ComponentScan({"org.thingsboard.server"})
+
 @EnableJpaRepositories("org.thingsboard.server.firmware.repository")
 @SpringBootApplication
 @EntityScan("org.thingsboard.server.firmware.model")

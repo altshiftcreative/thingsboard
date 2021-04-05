@@ -10,21 +10,13 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class FirmwareFilesComponent implements OnInit {
   fileName = '';
   file: any | undefined;
-
   pathsArray: string[] = [];
-  pathsArray2: any[] = [];
-  
-
 
   linksArray: any[]=[];
 
   constructor(private http: HttpClient, private sanitization: DomSanitizer) { }
   ngOnInit(): void {
-    this.http.get("/api/firmware-file", { withCredentials: true }).subscribe(data => {
-      console.log("DATAAA GET: ", data);
-      this.pathsArray2.push(data);
-      this.fillArray(data);
-    });
+   this.getLinks();
   }
 
   onFileSelected(event: any) {
@@ -48,18 +40,18 @@ export class FirmwareFilesComponent implements OnInit {
 
 
         const fileBody = {
-          "username": "Obada Tumah",
           "file": fileReader.result,
           "modelNumber": "22",
-          "fileType": "txt",
+          "fileType": file.type,
           "deviceType": "one",
           "firmwareVersion": "0.2",
-          "checksum": "22"
+          "checksum": "22",
+          "fileName":file.name
         }
 
         this.http.post("/api/firmware-file", fileBody).subscribe(data => {
           console.log("DATAAA POST: ", data);
-
+          this.getLinks();
         });
 
       }
@@ -68,13 +60,21 @@ export class FirmwareFilesComponent implements OnInit {
     fileReader.readAsDataURL(file);
   }
 
+
+  getLinks(){
+    this.http.get("/api/firmware-file", { withCredentials: true }).subscribe(data => {
+      console.log("DATAAA GET: ", data);
+      this.fillArray(data);
+    });
+  }
+
   fillArray(data: any) {
+    this.pathsArray = [];
     data.forEach((e: any) => {
       if (e.file !== null) {
         this.pathsArray.push(e);
       }
     });
-
   }
 
 }
