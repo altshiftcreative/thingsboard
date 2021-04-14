@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { FileUploadService } from './firmware-files-service';
 
 @Component({
   selector: 'tb-firmware-files',
@@ -8,73 +9,61 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   styleUrls: ['./firmware-files.component.scss']
 })
 export class FirmwareFilesComponent implements OnInit {
-  fileName = '';
-  file: any | undefined;
-  pathsArray: string[] = [];
+  @ViewChild("fileUpload", { static: false })
+  fileUpload!: ElementRef;
+   files:any  = [];  
+  fileName:string | undefined;
 
-  linksArray: any[]=[];
+  constructor(private fileUploadService:FileUploadService) { }
 
-  constructor(private http: HttpClient, private sanitization: DomSanitizer) { }
-  ngOnInit(): void {
-   this.getLinks();
+
+  ngOnInit() {
   }
 
-  onFileSelected(event: any) {
 
-    const file: File = event.target.files[0];
-    const fileNew: File = event.target.value;
-    console.log("FILES : ", fileNew);
-    console.log("FILES22 : ", file);
-
-
-    let fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      console.log(fileReader.result);
-
+  onClick() { 
+    try {
+      const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {  
+        for (let index = 0; index < fileUpload.files.length; index++)  
+        {  
+         const file = fileUpload.files[index];  
+          this.fileName = file.name +" is uploaded"
+         
+         this.files.push({ data: file, inProgress: false, progress: 0});  
+        }  
+          this.uploadFiles();  
+        };  
+        fileUpload.click();  
+    } catch (error) {
       
-
-      if (file) {
-        this.file = file;
-        this.fileName = file.name;
-
-
-
-        const fileBody = {
-          "file": fileReader.result,
-          "modelNumber": "22",
-          "fileType": file.type,
-          "deviceType": "one",
-          "firmwareVersion": "0.2",
-          "checksum": "22",
-          "fileName":file.name
-        }
-
-        this.http.post("/api/firmware-file", fileBody).subscribe(data => {
-          console.log("DATAAA POST: ", data);
-          this.getLinks();
-        });
-
-      }
-
-    }
-    fileReader.readAsDataURL(file);
-  }
+    } 
+    
+}
+private uploadFiles() {  
+  this.fileUpload.nativeElement.value = '';  
+  this.files.forEach((file: any) => {  
+    this.uploadFile(file);  
+  });  
+}
+uploadFile(file: any) {  
+  const formData = new FormData();  
+  formData.append('file', file.data);  
+  file.inProgress = true;  
+  this.fileUploadService.upload(formData).subscribe(
+    rsp => {
+      console.log(rsp.type)
 
 
-  getLinks(){
-    this.http.get("/api/firmware-file", { withCredentials: true }).subscribe(data => {
-      console.log("DATAAA GET: ", data);
-      this.fillArray(data);
+     
+},
+    error => {
+      console.log(error)
     });
-  }
 
-  fillArray(data: any) {
-    this.pathsArray = [];
-    data.forEach((e: any) => {
-      if (e.file !== null) {
-        this.pathsArray.push(e);
-      }
-    });
-  }
+}
+
+download(){  
+  this.fileUploadService.download(7);
+}
 
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.thingsboard.server.asc.model.DTO.FirmwareFileDTO;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 
 @Data
@@ -19,51 +20,28 @@ public class FirmwareFile {
     private String username;
 
     @Column(name = "file")
-    private String file;
+    private byte[] file;
 
-    @Column(name = "modelnumber")
+    @Column(name = "model_number")
     private int modelNumber;
 
-    @Column(name = "filetype")
+    @Column(name = "file_type")
     private String fileType;
 
-    @Column(name = "devicetype")
+    @Column(name = "device_type")
     private String deviceType;
 
-    @Column(name = "firmwareversion")
+    @Column(name = "firmware_version")
     private Double firmwareVersion;
 
     @Column(name = "checksum")
     private String checksum;
 
-    @Column(name = "creationdate")
+    @Column(name = "creation_date")
     private Date creationDate;
-
-    @Column(name = "sampleurl")
-    private String sampleUrl;
-
-    @Column(name = "fakeurl")
-    private String fakeUrl;
 
     @Column(name = "filename")
     private String fileName;
-
-
-    public String getSampleUrl() {
-        return sampleUrl;
-    }
-
-    public void setSampleUrl(String sampleUrl) {
-        this.sampleUrl = sampleUrl;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Long getId() {
         return id;
@@ -81,11 +59,11 @@ public class FirmwareFile {
         this.username = username;
     }
 
-    public String getFile() {
+    public byte[] getFile() {
         return file;
     }
 
-    public void setFile(String file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
 
@@ -117,8 +95,6 @@ public class FirmwareFile {
         return firmwareVersion;
     }
 
-
-
     public void setFirmwareVersion(Double firmwareVersion) {
         this.firmwareVersion = firmwareVersion;
     }
@@ -131,12 +107,12 @@ public class FirmwareFile {
         this.checksum = checksum;
     }
 
-    public String getFakeUrl() {
-        return fakeUrl;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setFakeUrl(String fakeUrl) {
-        this.fakeUrl = fakeUrl;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getFileName() {
@@ -152,15 +128,13 @@ public class FirmwareFile {
         return "FirmwareFile{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", file='" + file + '\'' +
+                ", file=" + Arrays.toString(file) +
                 ", modelNumber=" + modelNumber +
                 ", fileType='" + fileType + '\'' +
                 ", deviceType='" + deviceType + '\'' +
                 ", firmwareVersion=" + firmwareVersion +
                 ", checksum='" + checksum + '\'' +
                 ", creationDate=" + creationDate +
-                ", sampleUrl='" + sampleUrl + '\'' +
-                ", fakeUrl='" + fakeUrl + '\'' +
                 ", fileName='" + fileName + '\'' +
                 '}';
     }
@@ -176,8 +150,6 @@ public class FirmwareFile {
         dto.setFirmwareVersion(getFirmwareVersion());
         dto.setChecksum(getChecksum());
         dto.setCreationDate(getCreationDate());
-        dto.setSampleUrl(getSampleUrl());
-        dto.setFakeUrl(getFakeUrl());
         dto.setFileName(getFileName());
         return dto;
     }

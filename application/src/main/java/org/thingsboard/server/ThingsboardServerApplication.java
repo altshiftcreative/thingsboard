@@ -33,9 +33,9 @@ import java.util.Arrays;
 @EnableScheduling
 @ComponentScan({"org.thingsboard.server"})
 
-@EnableJpaRepositories("org.thingsboard.server.firmware.repository")
+@EnableJpaRepositories("org.thingsboard.server.asc.repository")
 @SpringBootApplication
-@EntityScan("org.thingsboard.server.firmware.model")
+@EntityScan("org.thingsboard.server.asc.model")
 public class ThingsboardServerApplication {
 
     private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";

@@ -38,10 +38,6 @@ public class FirmwareFileService {
             Date date = new Date();
             fileDTO.setCreationDate(date);
 
-            UUID uuid = UUID.randomUUID();
-            String fakeUrl = ""+uuid;
-            fileDTO.setFakeUrl(fakeUrl);
-
             String username = getCurrentUser().getName();
             fileDTO.setUsername(username);
         }
@@ -64,10 +60,6 @@ public class FirmwareFileService {
         return files.toDTO();
     }
 
-    public String findOneByFakeUrl(String url) {
-        String realUrl = firmwareFileRepository.findByFakeUrl(url);
-        return realUrl;
-    }
 
     public void deleteAll(){
         firmwareFileRepository.deleteAll();

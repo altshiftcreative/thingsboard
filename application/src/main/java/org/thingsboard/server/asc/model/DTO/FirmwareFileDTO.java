@@ -3,32 +3,21 @@ package org.thingsboard.server.asc.model.DTO;
 
 import org.thingsboard.server.asc.model.FirmwareFile;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class FirmwareFileDTO {
 
     private Long id;
     private String username;
-    private String file;
+    private byte[] file;
     private int modelNumber;
     private String fileType;
     private String deviceType;
     private Double firmwareVersion;
     private String checksum;
     private Date creationDate;
-    private String sampleUrl;
-    private String fakeUrl;
     private String fileName;
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Long getId() {
         return id;
@@ -46,11 +35,11 @@ public class FirmwareFileDTO {
         this.username = username;
     }
 
-    public String getFile() {
+    public byte[] getFile() {
         return file;
     }
 
-    public void setFile(String file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
 
@@ -94,20 +83,12 @@ public class FirmwareFileDTO {
         this.checksum = checksum;
     }
 
-    public String getSampleUrl() {
-        return sampleUrl;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setSampleUrl(String sampleUrl) {
-        this.sampleUrl = sampleUrl;
-    }
-
-    public String getFakeUrl() {
-        return fakeUrl;
-    }
-
-    public void setFakeUrl(String fakeUrl) {
-        this.fakeUrl = fakeUrl;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getFileName() {
@@ -118,20 +99,19 @@ public class FirmwareFileDTO {
         this.fileName = fileName;
     }
 
+
     @Override
     public String toString() {
         return "FirmwareFileDTO{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", file='" + file + '\'' +
+                ", file=" + Arrays.toString(file) +
                 ", modelNumber=" + modelNumber +
                 ", fileType='" + fileType + '\'' +
                 ", deviceType='" + deviceType + '\'' +
                 ", firmwareVersion=" + firmwareVersion +
                 ", checksum='" + checksum + '\'' +
                 ", creationDate=" + creationDate +
-                ", sampleUrl='" + sampleUrl + '\'' +
-                ", fakeUrl='" + fakeUrl + '\'' +
                 ", fileName='" + fileName + '\'' +
                 '}';
     }
@@ -147,8 +127,6 @@ public class FirmwareFileDTO {
         entity.setFirmwareVersion(getFirmwareVersion());
         entity.setChecksum(getChecksum());
         entity.setCreationDate(getCreationDate());
-        entity.setSampleUrl(getSampleUrl());
-        entity.setFakeUrl(getFakeUrl());
         entity.setFileName(getFileName());
         return entity;
     }

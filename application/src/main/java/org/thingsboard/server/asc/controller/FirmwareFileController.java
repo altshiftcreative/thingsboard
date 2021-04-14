@@ -1,11 +1,17 @@
 package org.thingsboard.server.asc.controller;
 
 
+import org.springframework.web.multipart.MultipartFile;
 import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.asc.model.DTO.FirmwareFileDTO;
 import org.springframework.web.bind.annotation.*;
 import org.thingsboard.server.asc.service.FirmwareFileService;
 
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.time.Instant;
 import java.util.List;
 
 
@@ -20,15 +26,34 @@ public class FirmwareFileController {
     }
 
     @PostMapping("/firmware-file")
-    public FirmwareFileDTO createFile(@RequestBody FirmwareFileDTO firmwareFileDTO) throws ThingsboardException {
-        if (firmwareFileDTO.getId() != null) {
-//            throw new BadRequestAlertException("A new ascOrder cannot already have an ID", ENTITY_NAME, "idexists");
-            return null;
-        } else {
-            FirmwareFileDTO result = firmwareFileService.save(firmwareFileDTO);
-            return result;
+    public FirmwareFileDTO uploadData(@RequestParam("file") MultipartFile file) throws Exception {
+        if (file == null) {
+            throw new RuntimeException("You must select the a file for uploading");
         }
 
+        Instant instant = Instant.now();
+        byte [] byteArr=file.getBytes();
+
+        FirmwareFileDTO fileDTO = new FirmwareFileDTO();
+
+        InputStream inputStream = new ByteArrayInputStream(byteArr);
+        String originalName = file.getOriginalFilename();
+        String name = file.getName();
+        String contentType = file.getContentType();
+        long size = file.getSize();
+        System.out.println("inputStream: " + inputStream);
+        System.out.println("originalName: " + originalName);
+        System.out.println("name: " + name);
+        System.out.println("contentType: " + contentType);
+        System.out.println("size: " + size);
+        // Do processing with uploaded file data in Service layer
+
+        fileDTO.setFile(byteArr);
+        fileDTO.setFileType(contentType);
+
+        FirmwareFileDTO result = firmwareFileService.save(fileDTO);
+
+        return result;
     }
 
     @GetMapping("/firmware-file")
@@ -44,16 +69,36 @@ public class FirmwareFileController {
     }
 
     @GetMapping("/firmware-file/path/{id}")
-    public String getPath(@PathVariable Long id) {
+    public FirmwareFileDTO getPath(@PathVariable Long id, HttpServletResponse response) throws IOException {
         FirmwareFileDTO fileDTO = firmwareFileService.findOne(id);
-        return fileDTO.getFile();
+
+        try {
+            InputStream inputStream = new ByteArrayInputStream(fileDTO.getFile());
+            BufferedInputStream in = new BufferedInputStream(inputStream);
+            FileOutputStream fos = new FileOutputStream(new File("/home/obada/newFile"));
+            BufferedOutputStream bout = new BufferedOutputStream(fos , 1024);
+            byte[] buffer = new byte[1024];
+            double downloaded = 0.00;
+            int read=0;
+            double percentDownloaded = 0.00;
+            while ((read = in.read(buffer,0,1024)) >=0){
+                bout.write(buffer,0,read);
+                downloaded += read;
+                percentDownloaded = (downloaded*100/500.0);
+                String percent = String.format("%.4f",percentDownloaded);
+                System.out.println("Downloaded "+percent + "% of a file.");
+            }
+            bout.close();
+            in.close();
+            System.out.println("Download Complete.");
+
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+        return fileDTO;
     }
 
-    @GetMapping("/firmware-file/fakeUrl/{url}")
-    public String getRealPath(@RequestParam String url){
-        String realUrl = firmwareFileService.findOneByFakeUrl(url);
-        return realUrl;
-    }
 
     @DeleteMapping("firmware-file")
     public String deleteAllFiles() {
