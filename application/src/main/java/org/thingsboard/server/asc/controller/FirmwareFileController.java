@@ -1,6 +1,7 @@
 package org.thingsboard.server.asc.controller;
 
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.asc.model.DTO.FirmwareFileDTO;
@@ -9,8 +10,10 @@ import org.thingsboard.server.asc.service.FirmwareFileService;
 
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
@@ -69,34 +72,49 @@ public class FirmwareFileController {
     }
 
     @GetMapping("/firmware-file/path/{id}")
-    public FirmwareFileDTO getPath(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public void getPath(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         FirmwareFileDTO fileDTO = firmwareFileService.findOne(id);
 
-        try {
-            InputStream inputStream = new ByteArrayInputStream(fileDTO.getFile());
-            BufferedInputStream in = new BufferedInputStream(inputStream);
-            FileOutputStream fos = new FileOutputStream(new File("/home/obada/newFile"));
-            BufferedOutputStream bout = new BufferedOutputStream(fos , 1024);
-            byte[] buffer = new byte[1024];
-            double downloaded = 0.00;
-            int read=0;
-            double percentDownloaded = 0.00;
-            while ((read = in.read(buffer,0,1024)) >=0){
-                bout.write(buffer,0,read);
-                downloaded += read;
-                percentDownloaded = (downloaded*100/500.0);
-                String percent = String.format("%.4f",percentDownloaded);
-                System.out.println("Downloaded "+percent + "% of a file.");
-            }
-            bout.close();
-            in.close();
-            System.out.println("Download Complete.");
+//        try {
+//            InputStream inputStream = new ByteArrayInputStream(fileDTO.getFile());
+//            BufferedInputStream in = new BufferedInputStream(inputStream);
+//            FileOutputStream fos = new FileOutputStream(new File("/home/obada/newFile"));
+//            BufferedOutputStream bout = new BufferedOutputStream(fos , 1024);
+//            byte[] buffer = new byte[1024];
+//            double downloaded = 0.00;
+//            int read=0;
+//            double percentDownloaded = 0.00;
+//            while ((read = in.read(buffer,0,1024)) >=0){
+//                bout.write(buffer,0,read);
+//                downloaded += read;
+//                percentDownloaded = (downloaded*100/500.0);
+//                String percent = String.format("%.4f",percentDownloaded);
+//                System.out.println("Downloaded "+percent + "% of a file.");
+//            }
+//            bout.close();
+//            in.close();
+//            System.out.println("Download Complete.");
+//
+//        }
+//        catch (IOException ex){
+//            ex.printStackTrace();
+//        }
 
+
+        try{
+            response.setHeader("Content-Disposition", "inline; filename=\"" + "fileName" + "\"");
+            OutputStream out = response.getOutputStream();
+            response.setContentType("application/octet-stream");
+            IOUtils.copy(new ByteArrayInputStream(fileDTO.getFile()), out);
+            out.flush();
+            out.close();
+
+
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            //Handle exception here
         }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-        return fileDTO;
+
     }
 
 
