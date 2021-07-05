@@ -31,10 +31,18 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
     public CustomerUserPermissions() {
         super();
+        //change cutomer permissions to be as tenant in device/asset/Customer
+
         put(Resource.ALARM, TenantAdminPermissions.tenantEntityPermissionChecker);
-        put(Resource.ASSET, customerEntityPermissionChecker);
-        put(Resource.DEVICE, customerEntityPermissionChecker);
-        put(Resource.CUSTOMER, customerPermissionChecker);
+        // put(Resource.ASSET, customerEntityPermissionChecker);
+        put(Resource.ASSET, TenantAdminPermissions.tenantEntityPermissionChecker);
+
+        //put(Resource.DEVICE, customerEntityPermissionChecker);
+        put(Resource.DEVICE, TenantAdminPermissions.tenantEntityPermissionChecker);
+
+        //put(Resource.CUSTOMER, customerPermissionChecker);
+        put(Resource.CUSTOMER, TenantAdminPermissions.tenantEntityPermissionChecker);
+
         put(Resource.DASHBOARD, customerDashboardPermissionChecker);
         put(Resource.ENTITY_VIEW, customerEntityPermissionChecker);
         put(Resource.USER, userPermissionChecker);
@@ -44,7 +52,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
     private static final PermissionChecker customerEntityPermissionChecker =
             new PermissionChecker.GenericPermissionChecker(Operation.READ, Operation.READ_CREDENTIALS,
-                    Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY, Operation.RPC_CALL, Operation.CLAIM_DEVICES) {
+                    Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY, Operation.RPC_CALL, Operation.CLAIM_DEVICES , Operation.WRITE_ATTRIBUTES ,Operation.ALL) { //Operation.WRITE_ATTRIBUTES ,//Operation.ALL added
 
                 @Override
                 public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
@@ -66,7 +74,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
             };
 
     private static final PermissionChecker customerPermissionChecker =
-            new PermissionChecker.GenericPermissionChecker(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY) {
+            new PermissionChecker.GenericPermissionChecker(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY,Operation.WRITE_ATTRIBUTES,Operation.WRITE) {//Operation.WRITE_ATTRIBUTES
 
                 @Override
                 public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
@@ -82,7 +90,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
             };
 
     private static final PermissionChecker customerDashboardPermissionChecker =
-            new PermissionChecker.GenericPermissionChecker<DashboardId, DashboardInfo>(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY) {
+            new PermissionChecker.GenericPermissionChecker<DashboardId, DashboardInfo>(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY,Operation.WRITE_ATTRIBUTES) {//Operation.WRITE_ATTRIBUTES
 
                 @Override
                 public boolean hasPermission(SecurityUser user, Operation operation, DashboardId dashboardId, DashboardInfo dashboard) {

@@ -196,6 +196,7 @@ public class DeviceServiceImpl extends AbstractEntityService implements DeviceSe
                     throw new DataValidationException("Device is referencing non existing device profile!");
                 }
             }
+
             device.setType(deviceProfile.getName());
             device.setDeviceData(syncDeviceData(deviceProfile, device.getDeviceData()));
 
@@ -215,6 +216,8 @@ public class DeviceServiceImpl extends AbstractEntityService implements DeviceSe
             deviceCredentials.setCredentialsId(!StringUtils.isEmpty(accessToken) ? accessToken : RandomStringUtils.randomAlphanumeric(20));
             deviceCredentialsService.createDeviceCredentials(device.getTenantId(), deviceCredentials);
         }
+
+
         return savedDevice;
     }
 

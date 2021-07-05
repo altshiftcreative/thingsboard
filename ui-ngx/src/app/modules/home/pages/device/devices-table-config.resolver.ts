@@ -106,7 +106,9 @@ export class DevicesTableConfigResolver implements Resolve<EntityTableConfig<Dev
       ));
     };
     this.config.onEntityAction = action => this.onDeviceAction(action);
-    this.config.detailsReadonly = () => this.config.componentsData.deviceScope === 'customer_user';
+
+    //comment this line to make customer able to edit the device info
+    //this.config.detailsReadonly = () => this.config.componentsData.deviceScope === 'customer_user';
 
     this.config.headerComponent = DeviceTableHeaderComponent;
 
@@ -145,9 +147,11 @@ export class DevicesTableConfigResolver implements Resolve<EntityTableConfig<Dev
         this.config.cellActionDescriptors = this.configureCellActions(this.config.componentsData.deviceScope);
         this.config.groupActionDescriptors = this.configureGroupActions(this.config.componentsData.deviceScope);
         this.config.addActionDescriptors = this.configureAddActions(this.config.componentsData.deviceScope);
-        this.config.addEnabled = this.config.componentsData.deviceScope !== 'customer_user';
-        this.config.entitiesDeleteEnabled = this.config.componentsData.deviceScope === 'tenant';
-        this.config.deleteEnabled = () => this.config.componentsData.deviceScope === 'tenant';
+       
+       //comment this line to make customer user able to add/delete device as tenant
+        // this.config.addEnabled = this.config.componentsData.deviceScope !== 'customer_user';
+        // this.config.entitiesDeleteEnabled = this.config.componentsData.deviceScope === 'tenant';
+        // this.config.deleteEnabled = () => this.config.componentsData.deviceScope === 'tenant';
         return this.config;
       })
     );
@@ -179,7 +183,7 @@ export class DevicesTableConfigResolver implements Resolve<EntityTableConfig<Dev
   }
 
   configureEntityFunctions(deviceScope: string): void {
-    if (deviceScope === 'tenant') {
+    if (deviceScope === 'tenant') { 
       this.config.entitiesFetchFunction = pageLink =>
         this.deviceService.getTenantDeviceInfosByDeviceProfileId(pageLink,
           this.config.componentsData.deviceProfileId !== null ?
@@ -259,7 +263,8 @@ export class DevicesTableConfigResolver implements Resolve<EntityTableConfig<Dev
           icon: 'security',
           isEnabled: () => true,
           onAction: ($event, entity) => this.manageCredentials($event, entity)
-        }
+        },
+      
       );
     }
     return actions;

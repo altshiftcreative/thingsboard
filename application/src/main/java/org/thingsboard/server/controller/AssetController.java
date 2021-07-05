@@ -98,6 +98,9 @@ public class AssetController extends BaseController {
 
             asset.setTenantId(getCurrentUser().getTenantId());
 
+            //if user log in as customer-user
+            asset.setCustomerId(getCurrentUser().getCustomerId());
+
            checkEntity(asset.getId(), asset, Resource.ASSET);
 
             Asset savedAsset = checkNotNull(assetService.saveAsset(asset));
@@ -106,7 +109,14 @@ public class AssetController extends BaseController {
                     savedAsset.getCustomerId(),
                     asset.getId() == null ? ActionType.ADDED : ActionType.UPDATED, null);
 
+            //if current user is customer user and he create new asset , he should also assign it to himself
+            if(asset.getCustomerId()!=null){
+                assetService.assignAssetToCustomer( savedAsset.getTenantId(), savedAsset.getId(), savedAsset.getCustomerId());
+            }
+
+
             return savedAsset;
+
         } catch (Exception e) {
             logEntityAction(emptyId(EntityType.ASSET), asset,
                     null, asset.getId() == null ? ActionType.ADDED : ActionType.UPDATED, e);
@@ -168,7 +178,7 @@ public class AssetController extends BaseController {
         }
     }
 
-    @PreAuthorize("hasAuthority('TENANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('TENANT_ADMIN','CUSTOMER_USER')")//add CUSTOMER_USER as authorized user
     @RequestMapping(value = "/customer/asset/{assetId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Asset unassignAssetFromCustomer(@PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
@@ -184,9 +194,18 @@ public class AssetController extends BaseController {
 
             Asset savedAsset = checkNotNull(assetService.unassignAssetFromCustomer(getTenantId(), assetId));
 
+            //if current user is customer user and he delete specific asset , he should also unassign it from himself
+            if(getCurrentUser().getCustomerId()!=null){
+                assetService.deleteAsset(getCurrentUser().getTenantId(), assetId);
+            }
+
+
             logEntityAction(assetId, asset,
                     asset.getCustomerId(),
                     ActionType.UNASSIGNED_FROM_CUSTOMER, null, strAssetId, customer.getId().toString(), customer.getName());
+
+
+
 
             return savedAsset;
         } catch (Exception e) {

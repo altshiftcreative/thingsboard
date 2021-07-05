@@ -112,7 +112,11 @@ public class DeviceController extends BaseController {
     public Device saveDevice(@RequestBody Device device,
                              @RequestParam(name = "accessToken", required = false) String accessToken) throws ThingsboardException {
         try {
-            device.setTenantId(getCurrentUser().getTenantId());
+            SecurityUser user = getCurrentUser();
+            device.setTenantId(user.getTenantId());
+
+             //if user log in as customer-user
+            device.setCustomerId(user.getCustomerId());
 
             checkEntity(device.getId(), device, Resource.DEVICE);
 
@@ -133,6 +137,13 @@ public class DeviceController extends BaseController {
             } else {
                 deviceStateService.onDeviceUpdated(savedDevice);
             }
+
+            //if current user is customer user and he create new device , he should also assign it to himself
+            if(device.getCustomerId()!=null){
+            deviceService.assignDeviceToCustomer( savedDevice.getTenantId(), savedDevice.getId(), savedDevice.getCustomerId());
+             }
+
+            
             return savedDevice;
         } catch (Exception e) {
             logEntityAction(emptyId(EntityType.DEVICE), device,
@@ -149,8 +160,8 @@ public class DeviceController extends BaseController {
         try {
             DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
             Device device = checkDeviceId(deviceId, Operation.DELETE);
-            deviceService.deleteDevice(getCurrentUser().getTenantId(), deviceId);
 
+            deviceService.deleteDevice(getCurrentUser().getTenantId(), deviceId);
             tbClusterService.onDeviceDeleted(device, null);
             tbClusterService.onEntityStateChange(device.getTenantId(), deviceId, ComponentLifecycleEvent.DELETED);
 
@@ -159,6 +170,10 @@ public class DeviceController extends BaseController {
                     ActionType.DELETED, null, strDeviceId);
 
             deviceStateService.onDeviceDeleted(device);
+
+
+
+
         } catch (Exception e) {
             logEntityAction(emptyId(EntityType.DEVICE),
                     null,
@@ -166,9 +181,13 @@ public class DeviceController extends BaseController {
                     ActionType.DELETED, e, strDeviceId);
             throw handleException(e);
         }
+
+
+
+
     }
 
-    @PreAuthorize("hasAuthority('TENANT_ADMIN')")
+    @PreAuthorize("hasAuthority('TENANT_ADMIN','CUSTOMER_USER')")
     @RequestMapping(value = "/customer/{customerId}/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public Device assignDeviceToCustomer(@PathVariable("customerId") String strCustomerId,
@@ -197,7 +216,7 @@ public class DeviceController extends BaseController {
         }
     }
 
-    @PreAuthorize("hasAuthority('TENANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('TENANT_ADMIN','CUSTOMER_USER')") //add CUSTOMER_USER as authorized user
     @RequestMapping(value = "/customer/device/{deviceId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Device unassignDeviceFromCustomer(@PathVariable(DEVICE_ID) String strDeviceId) throws ThingsboardException {
@@ -211,6 +230,11 @@ public class DeviceController extends BaseController {
             Customer customer = checkCustomerId(device.getCustomerId(), Operation.READ);
 
             Device savedDevice = checkNotNull(deviceService.unassignDeviceFromCustomer(getCurrentUser().getTenantId(), deviceId));
+
+            //if current user is customer user and he delete specific device , he should also unassign it from himself
+            if(getCurrentUser().getCustomerId()!=null){
+                deviceService.deleteDevice(getCurrentUser().getTenantId(), deviceId);
+            }
 
             logEntityAction(deviceId, device,
                     device.getCustomerId(),
@@ -270,7 +294,7 @@ public class DeviceController extends BaseController {
         }
     }
 
-    @PreAuthorize("hasAuthority('TENANT_ADMIN')")
+    @PreAuthorize("hasAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device/credentials", method = RequestMethod.POST)
     @ResponseBody
     public DeviceCredentials saveDeviceCredentials(@RequestBody DeviceCredentials deviceCredentials) throws ThingsboardException {
